@@ -6,6 +6,8 @@ public class Principal {
 		ArticuloGimnasio artGim = new ArticuloGimnasio("Pesas", 150);
 
 		System.out.println(artGim.toString());
+		System.out.println(artGim.getName());
+		System.out.println(artGim.getId());
 
 	}
 

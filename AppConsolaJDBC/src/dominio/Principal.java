@@ -7,6 +7,8 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		UsuarioDao usuarioDao = new UsuarioDao();
+		
+		//Crear Usuarui
 		/*
 		Usuario usuario = new Usuario("12345676", "Elaine", "Benes");
 		int filas = usuarioDao.agregarUsuario(usuario);
@@ -18,8 +20,9 @@ public class Principal {
 		}
 		*/
 		
+		
+		//Listar un solo usuario
 		/*
-		Listar un solo usuario
 		Usuario usuarioPrint = usuarioDao.obtenerUsuario("12345678");
 		System.out.println(usuarioPrint.toString());
 		*/
