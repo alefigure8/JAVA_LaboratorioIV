@@ -25,7 +25,6 @@ public class Conexion {
 		}
 	}
 	
-	
 	public static Conexion getConexion()   
 	{								
 		if(instancia == null)
