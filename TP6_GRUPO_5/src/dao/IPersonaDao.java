@@ -8,4 +8,5 @@ public interface IPersonaDao {
 	public boolean delete(Persona persona_a_eliminar);
 	public boolean update(Persona persona_a_modificar);
 	public List<Persona> readAll();
+	public int existe(String dni);
 }

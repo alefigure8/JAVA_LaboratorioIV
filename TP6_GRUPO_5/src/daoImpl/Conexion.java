@@ -7,10 +7,11 @@ import java.sql.SQLException;
 public class Conexion {
 	public static Conexion instancia;
 	private Connection connection;
-	private String host ="jdbc:mysql://localhost:33060/";
-	private String user ="root";
-	private String pass ="root";
-	private String dbName ="bdPersonas";
+	private String host ="jdbc:mysql://localhost:3306/";
+	private String user = "root";
+	private String pass = "root";
+	private String dbName = "bdPersonas";
+	//private String dbName ="bdPersonas?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC";
 	
 	private Conexion()
 	{

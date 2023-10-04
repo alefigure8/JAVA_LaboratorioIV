@@ -2,16 +2,11 @@ package presentacion.vista;
 
 import java.awt.BorderLayout;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import entidad.Persona;
-
-
 import javax.swing.JMenu;
 
 public class VentanaPrincipal extends JFrame {
@@ -22,13 +17,15 @@ public class VentanaPrincipal extends JFrame {
 	private JMenuItem mntmModificar;
 	private JMenuItem mntmEliminar;
 	private JMenuItem mntmListar;
-	private JPanel contentPane;
-	private static DefaultListModel<Persona> listModel;
+	//private JPanel contentPane;
 	
 	public VentanaPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 450);
+		//setBounds(100, 100, 500, 350);
+		setSize(500, 350);
+		setLocationRelativeTo(null);
 		setTitle("Programa");
+		
 		
 		//MENU
 		menuBar = new JMenuBar();
@@ -54,10 +51,10 @@ public class VentanaPrincipal extends JFrame {
 		mntmListar = new JMenuItem("Listar");
 		mnPersona.add(mntmListar);
 		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		//contentPane = new JPanel();
+		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		//contentPane.setLayout(new BorderLayout(0, 0));
+		//setContentPane(contentPane);
 	}
 	
 	//GETTERS & SETTERS
@@ -100,5 +97,5 @@ public class VentanaPrincipal extends JFrame {
 	public void setMntmListar(JMenuItem mntmListar) {
 		this.mntmListar = mntmListar;
 	}
-		
+	
 }
