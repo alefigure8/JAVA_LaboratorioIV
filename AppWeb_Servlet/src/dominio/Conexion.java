@@ -1,4 +1,5 @@
-package daoImpl;
+package dominio;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,8 +16,10 @@ public class Conexion {
 	
 	private Conexion()
 	{
+		
 		try
 		{
+			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(host+dbName,user,pass);
 			this.connection.setAutoCommit(false);
 		}
