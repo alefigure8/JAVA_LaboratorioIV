@@ -36,4 +36,30 @@ public class TipoSeguroDao {
 		int idTipo = rSet.getInt("idTipo");
 		return new TipoSeguro(idTipo, descripcion);
 	}
+	
+	// OBTENER DESCRIPCION X ID
+	public String obtenerTipoSeguroPorId(int idTipo) {
+	    String descripcionTipo = null;
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        String consulta = "SELECT descripcion FROM tiposseguro WHERE idTipo = ?";
+	        pStatement = conexion.getSQLConexion().prepareStatement(consulta);
+	        pStatement.setInt(1, idTipo);
+
+	        rSet = pStatement.executeQuery();
+	        System.out.println("ejecute la query");
+	        if (rSet.next()) {
+	            descripcionTipo = rSet.getString("descripcion");
+	            System.out.println("Encontre algo");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return descripcionTipo;
+	}
+
 }

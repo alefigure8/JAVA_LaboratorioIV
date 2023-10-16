@@ -51,17 +51,66 @@
 		</tr>
 		<tr>
 			<td><p>Costo Contratación</p><td>
-			<input type="text" name="contratacion" placeholder="Agregue Costo Contratación" required/></td>
-		</tr>
+			<input type="text" name="contratacion" placeholder="Agregue Costo Contratación" required oninput="this.value = this.value.replace(/[^0-9.]/g, '');
+				this.value = this.value.substring(0, 10);"/></td>
+			
+			</tr>
 		<tr>
 			<td><p>Costo Máximo Asegurado</p>
-			<td><input type="text" name="asegurado" placeholder="Agregue Costo Máximo" required/></td>
+			<td>
+
+    		<input type="text" name="asegurado" placeholder="Agregue Costo Máximo" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); 
+    			this.value = this.value.substring(0, 10);">
+    		</td>
+			
 		</tr>
 		<tr>
 			<td></td>
 			<td><input type="submit" name="btnAceptar" value="Aceptar"/></td>
 		</tr>
 	</table>
+	
+<%
+	if(request.getAttribute("agregado")!=null)
+	{ 
+		boolean agregado=(boolean)request.getAttribute("agregado");
+		if(agregado){
+		%>
+			<p>Seguro agregado exitosamente.</p>
+		<%
+		}
+		else{
+		%>
+			<p>No se pudo agregar el seguro.</p>
+		<%}
+	}
+%>
+
+<%
+	if(request.getAttribute("verificarDescripcion")!=null){
+		boolean verificarDescripcion=(boolean)request.getAttribute("verificarDescripcion");
+		if(!verificarDescripcion){
+			%>
+			<p>No se pudo agregar el seguro. Máximo 200 caracteres en descripción.</p>
+			<%
+		}
+	}
+%>
+
+
+<%
+	if(request.getAttribute("verificarCostos")!=null){
+		boolean verificarCostos=(boolean)request.getAttribute("verificarCostos");
+		if(!verificarCostos){
+			%>
+			<p>No se pudo agregar el seguro. El costo máximo asegurado debe ser mayor al costo de contratación.</p>
+			<%
+		}
+	}
+%>
+
+
+
 </form>
 
 </body>
