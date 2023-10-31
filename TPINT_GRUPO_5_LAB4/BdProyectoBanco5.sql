@@ -103,9 +103,6 @@ CREATE TABLE Prestamos (
 );
 
 
-
-
-
 CREATE TABLE CuotasPrestamo (
     ID INT AUTO_INCREMENT,
     IDPrestamo INT,

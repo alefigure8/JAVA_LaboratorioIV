@@ -1,87 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
 
-<title>Banco Cinco</title>
-
-
-	<!-- AGREGAMOS DETALLE DE FUENTES Y ESTILOS -->
-	<meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inicio Sesion</title>
-    <!--FONTAWESOME-->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <!--BOOSTRAP-->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!--GOOGLE FONTS-->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-	
-	<!-- AGREGAMOS LINK A CSS -->
-	<link rel="stylesheet" type="text/css" href="Styles.css"/>
-
-
-
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#table_id').DataTable();s
-        });
-    </script>
-    
-	
-</head>
-<body>
- <!--MAIN-->
- <div class="container-fluid flex-grow-1">
-    <div class="row flex-grow-1 m-0">
-      <!--SIDEBAR-->
-      <div class="sidebar col-lg-3 col-md-12 bg-light">
-        <div class="w-100 d-flex justify-content-center">
-          <span class="fw-bold mt-4 mb-4 fs-5 p-2 text-white bg-main"
-            >Banco Cinco</span
-          >
-        </div>
-        <div class="d-flex align-items-center ms-3 mb-4">
-          <div class="me-2">
-            <i
-              class="fa-regular fa-user opacity-50 border border-opacity-50 border-1 border-black rounded-circle p-1"
-            ></i>
-          </div>
-          <span class="fw-lighter">Nombre Usuario</span>
-        </div>
-        <ul class="list-group border-0">
-          <li
-            class="list-group-item border-0 border-bottom border-secondary bg-transparent">
-            
-          </li>
-          <li class="list-group-item border-0 bg-transparent"><a  href=#>Inicio</a></li>
-          <li class="list-group-item border-0 bg-transparent"><a  href=#>Estadisticas Prestamos</a></li>
-          <li class="list-group-item border-0 bg-transparent"><a  href=#>Estadisticas Banco</a></li>
-          <li class="list-group-item border-0 bg-transparent mt-4"><a  href=#>Cerrar Sesion</a></li>
-        </ul>
-      </div>
+<body:wrapper>
 
       <!--CONTENT-->
 
@@ -270,12 +191,4 @@
 </div>
 </div>
 </div>
-</body>
-
-<footer class="footer flex-grow-0">
-     <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-       <p class="fw-bold">EQUIPO 5 - LABORATORIO IV - UTN</p>
-     </div>
-   </footer>
-  
-</html>
+</body:wrapper>
