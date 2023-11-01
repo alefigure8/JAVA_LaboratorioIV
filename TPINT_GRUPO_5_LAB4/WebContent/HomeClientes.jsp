@@ -4,7 +4,6 @@
 
 <body:wrapper>
 
-
          <!--CONTENT-->
         <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
             <div class="w-100 pt-2">
