@@ -9,7 +9,7 @@ public class Movimiento {
     private int numeroReferencia;
     private String cbudestino;
     private double monto;
-    private String operacion;
+    private Operacion operacion;
     private LocalDate fechaMovimiento; 
     private Estado estado;
     private String concepto;
@@ -22,7 +22,7 @@ public class Movimiento {
 	}
 
 	public Movimiento(int id, TipoMovimiento tipoMovimiento, int numeroReferencia, String cbudestino, double monto,
-			String operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
+			Operacion operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
 		super();
 		this.id = id;
 		this.tipoMovimiento = tipoMovimiento;
@@ -78,10 +78,10 @@ public class Movimiento {
 	}
 
 	public String getOperacion() {
-		return this.operacion;
+		return this.operacion.name();
 	}
 
-	public void setOperacion(String operacion) {
+	public void setOperacion(Operacion operacion) {
 		this.operacion = operacion;
 	}
 

@@ -11,12 +11,12 @@ public class Prestamo {
 		private double montoPedido;
 		private double montoConIntereses;
 		private TipoTasa tipoTasa;
-		private int plazoPago;
 		private ArrayList<CuotaPrestamo> cuotasPrestamo;
 		private double montoxMes;
 	    private Estado estado;
-	    private boolean activo;
-	    private LocalDate fechaPrestamo;
+	    private int NumeroCuenta;   
+	  	private LocalDate fechaPrestamo;
+	    private boolean cancelado;
 	    
 	    // CONSTRUCTORES
 	    
@@ -25,23 +25,25 @@ public class Prestamo {
 			// TODO Auto-generated constructor stub
 		}
 		
+
+		
 		public Prestamo(int id, int idCliente, double montoPedido, double montoConIntereses, TipoTasa tipoTasa,
-				int plazoPago, ArrayList<CuotaPrestamo> cuotasPrestamo, double montoxMes, Estado estado, boolean activo,
-				LocalDate fechaPrestamo) {
+				ArrayList<CuotaPrestamo> cuotasPrestamo, double montoxMes, Estado estado, int numeroCuenta,
+				LocalDate fechaPrestamo, boolean cancelado) {
 			super();
 			this.id = id;
 			this.idCliente = idCliente;
 			this.montoPedido = montoPedido;
 			this.montoConIntereses = montoConIntereses;
 			this.tipoTasa = tipoTasa;
-			this.plazoPago = plazoPago;
 			this.cuotasPrestamo = cuotasPrestamo;
 			this.montoxMes = montoxMes;
 			this.estado = estado;
-			this.activo = activo;
+			this.NumeroCuenta = numeroCuenta;
 			this.fechaPrestamo = fechaPrestamo;
+			this.cancelado = cancelado;
 		}
-		
+
 		// GETTERS & SETTERS
 
 		public int getId() {
@@ -84,14 +86,7 @@ public class Prestamo {
 			this.tipoTasa = tipoTasa;
 		}
 
-		public int getPlazoPago() {
-			return this.plazoPago;
-		}
-
-		public void setPlazoPago(int plazoPago) {
-			this.plazoPago = plazoPago;
-		}
-
+	
 		public ArrayList<CuotaPrestamo> getCuotasPrestamo() {
 			return this.cuotasPrestamo;
 		}
@@ -116,14 +111,6 @@ public class Prestamo {
 			this.estado = estado;
 		}
 
-		public boolean isActivo() {
-			return this.activo;
-		}
-
-		public void setActivo(boolean activo) {
-			this.activo = activo;
-		}
-
 		public LocalDate getFechaPrestamo() {
 			return this.fechaPrestamo;
 		}
@@ -133,16 +120,37 @@ public class Prestamo {
 		}
 
 		
-		// TO STRING
+		public boolean isCancelado() {
+			return cancelado;
+		}
+
+		  public int getNumeroCuenta() {
+				return NumeroCuenta;
+			}
+
+			public void setNumeroCuenta(int numeroCuenta) {
+				this.NumeroCuenta = numeroCuenta;
+			}
+
 		
+		public void setCancelado(boolean cancelado) {
+			this.cancelado = cancelado;
+		}
+
+
+
 		@Override
 		public String toString() {
 			return "Prestamo [id=" + id + ", idCliente=" + idCliente + ", montoPedido=" + montoPedido
-					+ ", montoConIntereses=" + montoConIntereses + ", tipoTasa=" + tipoTasa + ", plazoPago=" + plazoPago
-					+ ", cuotasPrestamo=" + cuotasPrestamo + ", montoxMes=" + montoxMes + ", estado=" + estado
-					+ ", activo=" + activo + ", fechaPrestamo=" + fechaPrestamo + "]";
-		}    
+					+ ", montoConIntereses=" + montoConIntereses + ", tipoTasa=" + tipoTasa + ", cuotasPrestamo="
+					+ cuotasPrestamo + ", montoxMes=" + montoxMes + ", estado=" + estado + ", NumeroCuenta="
+					+ NumeroCuenta + ", fechaPrestamo=" + fechaPrestamo + ", cancelado=" + cancelado + "]";
+		}
+
+	
 		
+		// TO STRING
+	
 		
 	    
 	    

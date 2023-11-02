@@ -5,7 +5,7 @@ public class Direccion {
 	private int id;
 	private String calle;
 	private int numero;	
-	private String tipoDireccion;
+	private TipoDireccion tipoDireccion;
 	private String numeroDepartamento;
 	private int codigoPostal;
 	private Localidad localidad;
@@ -18,7 +18,7 @@ public class Direccion {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Direccion(int id, String calle, int numero, String tipoDireccion, String numeroDepartamento,
+	public Direccion(int id, String calle, int numero, TipoDireccion tipoDireccion, String numeroDepartamento,
 			int codigoPostal, Localidad localidad, Provincia provincia) {
 		super();
 		this.id = id;
@@ -55,11 +55,11 @@ public class Direccion {
 		this.numero = numero;
 	}
 
-	public String getTipoDireccion() {
+	public TipoDireccion getTipoDireccion() {
 		return this.tipoDireccion;
 	}
 
-	public void setTipoDireccion(String tipoDireccion) {
+	public void setTipoDireccion(TipoDireccion tipoDireccion) {
 		this.tipoDireccion = tipoDireccion;
 	}
 

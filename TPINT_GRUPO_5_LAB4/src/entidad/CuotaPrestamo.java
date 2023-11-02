@@ -9,12 +9,21 @@ public class CuotaPrestamo {
 	private int idPrestamo;
 	private int numeroCuota;
     private double montoCuota;
+    private EstadoCuota estado;
     private LocalDate fechaVencimiento;
     private LocalDate fechaPago;
-    private Boolean estado;
+ 
     
     // CONSTRUCTORES
     
+	public EstadoCuota getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoCuota estado) {
+		this.estado = estado;
+	}
+
 	public CuotaPrestamo() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -29,7 +38,7 @@ public class CuotaPrestamo {
 		this.montoCuota = montoCuota;
 		this.fechaVencimiento = fechaVencimiento;
 		this.fechaPago = fechaPago;
-		this.estado = estado;
+
 	}
 
 	// GETTERS & SETTERS
@@ -82,13 +91,6 @@ public class CuotaPrestamo {
 		this.fechaPago = fechaPago;
 	}
 
-	public Boolean getEstado() {
-		return this.estado;
-	}
-
-	public void setEstado(Boolean estado) {
-		this.estado = estado;
-	}
 
 	// TO STRING
 	

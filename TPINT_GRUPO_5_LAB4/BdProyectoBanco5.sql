@@ -1,5 +1,4 @@
-create database bdBancos;
-
+ create database bdBancos;
 use bdBancos;
 
 CREATE TABLE Usuarios (
@@ -8,12 +7,10 @@ CREATE TABLE Usuarios (
     Apellido VARCHAR(50) NOT NULL,
     Usuario VARCHAR(50) NOT NULL UNIQUE,
     Contrasena VARCHAR(100) NOT NULL,
-    TipoAcceso ENUM('1', '2') NOT NULL,
+    TipoAcceso ENUM('Administrador', 'Cliente') NOT NULL,
     Fechaalta date not null,
     Activo bit default 1
 );
-
-
 
 CREATE TABLE Provincias(
     IDProvincia int not null primary key AUTO_INCREMENT,
@@ -90,11 +87,9 @@ CREATE TABLE Prestamos (
     MontoPedido DECIMAL(10, 2) NOT NULL,
     MontoConIntereses DECIMAL(10, 2) NOT NULL,
     IdTasaxCuotas int not null,
-    PlazoPago int not null,
     MontoXmes DECIMAL(10, 2) NOT NULL,
     IdEstados INT NOT NULL,
-    /*Estado ENUM('Pendiente', 'Aprobado', 'Rechazado') NOT NULL,*/
-    Activo bit default 0 not null, 
+    Cancelado bit default 0 not null, 
     FechaPrestamo date not null,
     IdCliente INT not null,
     FOREIGN KEY (IdCliente) REFERENCES Usuarios(ID),
@@ -114,6 +109,10 @@ CREATE TABLE CuotasPrestamo (
     PRIMARY KEY (ID, IDPrestamo),
     FOREIGN KEY (IDPrestamo) REFERENCES Prestamos(ID)
 );
+
+ALTER TABLE CuotasPrestamo
+MODIFY FechaPagoCuota DATE DEFAULT NULL;
+
 
 ALTER TABLE Prestamos
 ADD COLUMN NumeroCuenta INT,
@@ -158,3 +157,72 @@ ALTER TABLE Cuentas
 ADD COLUMN IdEstados INT,
 ADD FOREIGN KEY (IdEstados) REFERENCES Estados(IdEstados);
 */
+
+
+/******** INSERTS ********/
+/******** PROVINCIAS  ********/
+INSERT INTO Provincias (NombreProvincia) VALUES
+('Buenos Aires'), ('Catamarca'), ('Chaco'), ('Chubut'), ('Córdoba'), ('Corrientes'), ('Entre Ríos'), 
+('Formosa'), ('Jujuy'), ('La Pampa'), ('La Rioja'), ('Mendoza'), ('Misiones'), ('Neuquén'), ('Río Negro'), 
+('Salta'), ('San Juan'), ('San Luis'), ('Santa Cruz'), ('Santa Fe'), ('Santiago del Estero'), ('Tierra del Fuego'), ('Tucumán');
+
+/******** LOCALIDADES ********/
+-- Insertar 3 localidades para Buenos Aires
+INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
+('La Plata', 1),
+('Mar del Plata', 1),
+('Quilmes', 1);
+
+
+
+
+/******** ADMIN ********/
+-- Insertar usuario Administrador
+INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('Admin', 'AdminApellido', 'admin', 'admin', 'Administrador', '2023-11-01');
+
+
+/******** CLIENTE 1 ********/
+-- Insertar usuario Cliente
+INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('Juan', 'Pérez', 'cliente1', 'cliente1', 'Cliente', '2023-11-01');
+
+/******** DOMICILIO 1 ********/
+-- Insertar primer domicilio
+INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
+VALUES (1, 1000, 'Calle 1', 123, 'Casa', NULL);
+
+-- Obtener el último ID insertado en Usuarios
+SET @id_cliente1 = (SELECT MAX(Id) FROM Usuarios);
+SET @id_domicilio1= (SELECT MAX(IdDireccion) FROM Direcciones);
+
+-- Insertar datos del primer cliente en la tabla Clientes
+INSERT INTO Clientes (Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
+VALUES (@id_cliente1, 123456789, 987654321, 'M', 'Argentina', '1990-05-15', 'cliente1@email.com', 123456789, @id_domicilio1);
+
+/******** CLIENTE 2 ********/
+-- Insertar segundo cliente en la tabla Usuarios
+INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('María', 'Gómez', 'cliente2', 'cliente2', 'Cliente', '2023-11-01');
+
+/******** DOMICILIO 2 ********/
+-- Insertar segundo domicilio
+INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
+VALUES (2, 2000, 'Calle 2', 456, 'Departamento', 'Apt 3B');
+
+-- Obtener el último ID insertado en Usuarios
+SET @id_cliente2 = (SELECT MAX(Id) FROM Usuarios);
+SET @id_domicilio2= (SELECT MAX(IdDireccion) FROM Direcciones);
+
+-- Insertar datos del segundo cliente en la tabla Clientes
+INSERT INTO Clientes (Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
+VALUES (@id_cliente2, 987654321, 123456789, 'F', 'México', '1995-08-20', 'cliente2@email.com', 987654321, @id_domicilio2);
+
+
+/******** SELECT TODOS LOS CLIENTES ********/
+
+select * from Clientes C 
+inner join Usuarios U on U.Id=C.Id
+inner join Direcciones D on D.IdDireccion=C.IDDomicilio
+inner join Localidades L on L.IdLocalidad=D.IdLocalidad
+inner join Provincias P on P.IdProvincia=L.IdProvincia
