@@ -13,26 +13,53 @@ import dao.Conexion;
 import dao.IMovimientosDao;
 import entidad.Estado;
 import entidad.Movimiento;
+import entidad.Operacion;
 import entidad.TipoMovimiento;
 
 public class MovimientosDaoImpl implements IMovimientosDao{
 	
+	/**** MOVIMIENTOS ****/
+	
 	//QUERIES
-	private static final String selectAll = "SELECT * FROM movimientos";
-	private static final String selectOne = "SELECT * FROM movimientos WHERE ID = ?";
-	private static final String selectPorNumeroReferencia = "SELECT * FROM movimientos WHERE NumeroReferencia = ?";
-	private static final String selectPorNumeroCuenta= "SELECT * FROM movimientos WHERE CBU = ?";
-	private static final String insert = "INSERT INTO Movimientos (ID, idTipoMovimiento, NumeroReferencia, CBU, " +
-            "Monto, Operacion, FechaMovimiento, idEstado, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"; //NUMERO REFERENCIA GENERAR DESDE NEGOCIO
+	private static final String selectAll = 	"select * from Movimientos M " +
+												"inner join Estados E " +
+												"on M.IdEstados=E.IdEstados " + 
+												"inner join TiposMovimiento TM " +
+												"on TM.IdTipoMovimiento=M.IdTipoMovimiento";
+	
+	private static final String selectOne = 	"select * from Movimientos M " +
+												"inner join Estados E " +
+												"on M.IdEstados=E.IdEstados " + 
+												"inner join TiposMovimiento TM " +
+												"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+												"where ID = ?";
+			
+	private static final String selectPorNumeroReferencia = "select * from Movimientos M " +
+																"inner join Estados E " +
+																"on M.IdEstados=E.IdEstados " + 
+																"inner join TiposMovimiento TM " +
+																"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+																"where NumeroReferencia = ?";
+			
+	private static final String selectPorNumeroCuenta = "select * from Movimientos M " +
+															"inner join Estados E " +
+															"on M.IdEstados=E.IdEstados " + 
+															"inner join TiposMovimiento TM " +
+															"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+															"where CBU = ?";
+	
+	private static final String insert = "INSERT INTO Movimientos (idTipoMovimiento, NumeroReferencia, CBU, " +
+            "Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	
 	private static final String update = "UPDATE Movimientos " +
-            "SET idTipoMovimiento = ?, NumeroReferencia = ?, CBU = ?, Monto = ?, " +
-            "Operacion = ?, FechaMovimiento = ?, idEstado = ?, Concepto = ? " +
-            "WHERE ID = ?";
+								            "SET idTipoMovimiento = ?, NumeroReferencia = ?, CBU = ?, Monto = ?, " +
+								            "Operacion = ?, FechaMovimiento = ?, idEstado = ?, Concepto = ? " +
+								            "WHERE ID = ?";
+	
 	private static final String delete = "DELETE FROM movimientos WHERE ID = ?";
-	private static final String selectOneTipoMovimiento = "SELECT * FROM tipoMovimiento WHERE idTipoMovimiento = ?";
-
+	
 	//OBTENER TODOS
-	/*public List<Movimiento> obtenerTodos() throws SQLException {
+	public List<Movimiento> obtenerTodos() throws SQLException {
 		PreparedStatement pStatement;
 		ResultSet rSet;
 		ArrayList<Movimiento> movimientos=new ArrayList<Movimiento>();
@@ -51,7 +78,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		}
 		
 		return movimientos;
-	}*/
+	}
 
 	//OBTENER POR NUMERO DE REFERENCIA
 	public List<Movimiento> obtenerPorNumeroDeReferencia(int numeroReferencia) throws SQLException {
@@ -76,15 +103,16 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		return movimientos;
 	}
 	
-	public List<Movimiento> obtenerPorCBU(int CBU) throws SQLException {
+	//OBTENER POR CBU
+	public List<Movimiento> obtenerPorCBU(String CBU) throws SQLException {
 		PreparedStatement pStatement;
 		ResultSet rSet;
-		ArrayList<Movimiento> movimientos=new ArrayList<Movimiento>();
+		List<Movimiento> movimientos=new ArrayList<Movimiento>();
 		Conexion conexion = Conexion.getConexion();
 		
 		try {
 			pStatement=conexion.getSQLConexion().prepareStatement(selectPorNumeroCuenta);
-			pStatement.setInt(1, CBU);
+			pStatement.setString(1, CBU);
 			rSet=pStatement.executeQuery();
 			
 			while(rSet.next()) {
@@ -97,7 +125,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return movimientos;
 	}
-
+	
 	//INSERTAR
 	public boolean insertar(Movimiento movimiento) throws SQLException {
 		PreparedStatement pStatement;
@@ -114,7 +142,6 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 			pStatement.setDate(6, Date.valueOf(movimiento.getFechaMovimiento()));
 			pStatement.setInt(7, movimiento.getEstado().getIdEstado());
 			pStatement.setString(8, movimiento.getConcepto());
-			pStatement.setInt(9, movimiento.getId());
 			
 			if(pStatement.executeUpdate() > 0) {
 				connection.commit();
@@ -135,6 +162,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		try {
 			pStatement = connection.prepareStatement(update);
+			
 			pStatement.setInt(1, movimiento.getTipoMovimiento().getId());
 			pStatement.setString(3, movimiento.getCbudestino());
 			pStatement.setDouble(4, movimiento.getMonto());
@@ -179,31 +207,39 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 	
 	//GET MOVIMIENTO
 	private Movimiento getMovimiento(ResultSet rSet) throws SQLException {
-			//MOVIMIENTO
-			Movimiento movimiento = new Movimiento();
-			movimiento.setId(rSet.getInt("ID"));
-			movimiento.setNumeroReferencia(rSet.getInt("NumeroReferencia"));
-			movimiento.setCbudestino(rSet.getString("CBU"));
-			movimiento.setMonto(rSet.getDouble("Monto"));
-			movimiento.setOperacion(rSet.getString("Operacion"));
-			movimiento.setFechaMovimiento(rSet.getDate("FechaMovimiento").toLocalDate());
-			movimiento.setConcepto(rSet.getString("Concepto"));
-			
-			//ESTADO
-			Estado estado = new Estado();
-			
-			movimiento.setEstado(estado);
-			
-			//TIPOMOVIMIENTO
-			TipoMovimiento tipoMovimiento = new TipoMovimiento();
-			tipoMovimiento = ObtenerTipoMovimientoPorId(movimiento.getId());
-			movimiento.setTipoMovimiento(tipoMovimiento);
-			
-			return movimiento;
+		//MOVIMIENTO
+		Movimiento movimiento = new Movimiento();
+		movimiento.setId(rSet.getInt("ID"));
+		movimiento.setNumeroReferencia(rSet.getInt("NumeroReferencia"));
+		movimiento.setCbudestino(rSet.getString("CBU"));
+		movimiento.setMonto(rSet.getDouble("Monto"));
+		movimiento.setOperacion(Operacion.valueOf(rSet.getString("Operacion")));
+		movimiento.setFechaMovimiento(rSet.getDate("FechaMovimiento").toLocalDate());
+		movimiento.setConcepto(rSet.getString("Concepto"));
+		
+		//ESTADO
+		Estado estado = new Estado();
+		estado.setIdEstado(rSet.getInt("IdEstados"));
+		estado.setDescripcion(rSet.getNString("Descripcion"));
+		movimiento.setEstado(estado);
+				
+		//TIPOMOVIMIENTO
+		TipoMovimiento tipoMovimiento = new TipoMovimiento();
+		tipoMovimiento.setId(rSet.getInt("IdTipoMovimiento"));
+		tipoMovimiento.setDescripcion(rSet.getString("descripcion"));
+		movimiento.setTipoMovimiento(tipoMovimiento);
+		
+		return movimiento;
 	}
 	
+	/**** TIPO DE MOVIMIENTOS ****/
+	
+	//QUERIES
+	private static final String selectOneTipoMovimiento = "SELECT * FROM TiposMovimiento WHERE IdTipoMovimiento = ?";
+	private static final String selectAllTipoMovimientos = "SELECT * FROM TiposMovimiento";
+	
 	//TIPOS MOVIMIENTOS POR ID
-	public TipoMovimiento ObtenerTipoMovimientoPorId(int id) throws SQLException{
+	public TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException{
 		PreparedStatement pStatement;
 		ResultSet rSet;
 		TipoMovimiento tipoMovimiento = new TipoMovimiento();
@@ -216,14 +252,46 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 			
 			rSet.next();
 				
-			tipoMovimiento.setId(rSet.getInt("IdTipoMovimiento"));
-			tipoMovimiento.setDescripcion(rSet.getString("descripcion"));
+			tipoMovimiento = getTipoMovimiento(rSet);
 			
-
 		} catch (SQLException e) {
 			throw e;
 		}
 		
+		return tipoMovimiento;
+	}
+	
+	
+	// OBTENER LISTA DE TIPOS DE MOVIMIENTOS
+	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException {
+		List<TipoMovimiento> tipoMovimientos = new ArrayList<TipoMovimiento>();
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(selectAllTipoMovimientos);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				tipoMovimientos.add(getTipoMovimiento(rSet));
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+		}
+		
+		return tipoMovimientos;
+		
+	}
+	
+	//GET TIPOMOVIMIENTO
+	private TipoMovimiento getTipoMovimiento(ResultSet rSet) throws SQLException {
+		//MOVIMIENTO
+		TipoMovimiento tipoMovimiento = new TipoMovimiento();
+		tipoMovimiento.setId(rSet.getInt("IdTipoMovimiento"));
+		tipoMovimiento.setDescripcion(rSet.getString("descripcion"));
+						
 		return tipoMovimiento;
 	}
 

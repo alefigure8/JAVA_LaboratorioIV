@@ -3,7 +3,7 @@ package entidad;
 public class TipoMovimiento {
 
 	private int id;
-	private int descripcion;
+	private String descripcion;
 	
 	// CONSTRUCTORES
 	
@@ -14,7 +14,7 @@ public class TipoMovimiento {
 	
 	// GETTERS & SETTERS
 	
-	public TipoMovimiento(int id, int descripcion) {
+	public TipoMovimiento(int id, String descripcion) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
@@ -25,10 +25,10 @@ public class TipoMovimiento {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getDescripcion() {
+	public String getDescripcion() {
 		return this.descripcion;
 	}
-	public void setDescripcion(int descripcion) {
+	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 	

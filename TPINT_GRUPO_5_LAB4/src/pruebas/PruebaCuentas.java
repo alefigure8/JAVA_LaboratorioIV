@@ -13,15 +13,15 @@ import entidad.TipoCuenta;
 
 public class PruebaCuentas {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		CuentaDaoImp ctaDao = new CuentaDaoImp();
 		
-		List<Cuenta> listaCuentas = new ArrayList<Cuenta>();
+		//List<Cuenta> listaCuentas = new ArrayList<Cuenta>();
 		
 
 		System.out.println("PRUEBA LISTAR TODAS LAS CUENTAS DE UN CLIENTE");
 		try {
-			listaCuentas = ctaDao.obtenerCuentasCliente(1) ;
+			listaCuentas = ctaDao.obtenerTodas() ;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,5 +104,5 @@ public class PruebaCuentas {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 }

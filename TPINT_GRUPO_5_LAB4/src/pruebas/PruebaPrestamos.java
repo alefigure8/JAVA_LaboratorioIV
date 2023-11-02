@@ -15,14 +15,14 @@ import daoImp.PrestamosImpl;
 
 public class PruebaPrestamos {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 			IPrestamosDao prestamos = new PrestamosImpl();
 			Prestamo prestamo = prestamos.obteneruno(2);
 			ArrayList<Prestamo> listado ;
 			ArrayList<CuotaPrestamo> listadocuotas ;
 			ArrayList<TipoTasa> tasas = new ArrayList<TipoTasa>(); 
-		/*
+		
 			TipoTasa tasa = new TipoTasa();
 			Estado estado = new Estado();
 			
@@ -44,8 +44,7 @@ public class PruebaPrestamos {
 			System.out.println("hola?");
 			prestamos.insertarprestamo(prestamo);
 			
-			*/
-			/*
+
 			listado = (ArrayList<Prestamo>) prestamos.obtenerTodosxcuenta(1000000004);
 			
 			for (Prestamo p : listado) {
@@ -54,8 +53,7 @@ public class PruebaPrestamos {
 				System.out.println(p.toString());
 			}
 			
-			*/
-			/*
+
 			tasas = (ArrayList<TipoTasa>) prestamos.obtenerTodosTiposTasas();
 			
 			for (TipoTasa p : tasas) {
@@ -63,24 +61,23 @@ public class PruebaPrestamos {
 				
 				System.out.println(p.toString());
 			}
-			*/
 			
-			///prestamos.insertarcuotas(prestamo);
+			prestamos.insertarcuotas(prestamo);
 			
-			//listadocuotas = (ArrayList<CuotaPrestamo>) prestamos.obtenerCuotasxprestamo(2);
+			listadocuotas = (ArrayList<CuotaPrestamo>) prestamos.obtenerCuotasxprestamo(2);
 			
-			//CuotaPrestamo cuota = prestamos.obtenerUnaCuota(1, 2);
+			CuotaPrestamo cuota = prestamos.obtenerUnaCuota(1, 2);
 			
-			//System.out.println(cuota.toString());
-			/*
+			System.out.println(cuota.toString());
+
 			for (CuotaPrestamo p : listadocuotas) {
 				
 				
 				System.out.println(cuota.toString());
 			}
-			*/
+
 			
 			prestamos.setcuotapagada(2, 1);
-	}
+	}*/
 
 }
