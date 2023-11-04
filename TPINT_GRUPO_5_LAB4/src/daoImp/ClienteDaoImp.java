@@ -8,6 +8,11 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.jasper.tagplugins.jstl.core.If;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import dao.Conexion;
 import dao.IClienteDao;
 import entidad.Cliente;
@@ -16,6 +21,7 @@ import entidad.Localidad;
 import entidad.Provincia;
 import entidad.TipoAcceso;
 import entidad.TipoDireccion;
+import entidad.Usuario;
 
 
 public class ClienteDaoImp implements IClienteDao{
@@ -202,8 +208,52 @@ public class ClienteDaoImp implements IClienteDao{
 	/***************** BORRAR ********************/
 	@Override
 	public boolean borrar(int idCliente) {
-		// TODO Auto-generated method stub
-		return false;
+	    Connection connection = null;
+	    PreparedStatement pStatementUsuarios = null;
+	    boolean deleteExitoso = false;
+
+	    try {
+	        connection = Conexion.getConexion().getSQLConexion();
+
+	        // Desactivar el usuario
+	        String desactivarUsuario = "UPDATE Usuarios SET Activo = 0 WHERE Id = ?";
+	        pStatementUsuarios = connection.prepareStatement(desactivarUsuario);
+	        pStatementUsuarios.setInt(1, idCliente);
+
+	        int filasAfectadas = pStatementUsuarios.executeUpdate();
+
+	        if (filasAfectadas > 0) {
+	            deleteExitoso = true;
+	            connection.commit();
+	        }
+	    } catch (Exception e) {
+	        try {
+	            if (connection != null) {
+	                connection.rollback();
+	            }
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        // Cerrar recursos
+	        if (pStatementUsuarios != null) {
+	            try {
+	                pStatementUsuarios.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (connection != null) {
+	            try {
+	                connection.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    return deleteExitoso;
 	}
 
 	
@@ -286,5 +336,66 @@ public class ClienteDaoImp implements IClienteDao{
 			// TODO Auto-generated method stub
 			return null;
 		}
+		
+/***************** USUARIO EXISTE ********************/
+String existeUsuario = "select count(*) as existe from Usuarios where Usuario = ? and Contrasena = ?";
 
+public boolean existeUsuario(String usuario, String contrasena) throws SQLException {
+	
+	boolean existe = false;
+	
+	PreparedStatement pStatement;
+	ResultSet rSet;
+
+	Conexion conexion= Conexion.getConexion();
+	
+	try {
+		pStatement=conexion.getSQLConexion().prepareStatement(existeUsuario);
+		pStatement.setString(1, usuario);
+		pStatement.setString(2, contrasena);
+		rSet=pStatement.executeQuery();
+		
+		rSet.next();
+		
+		existe = Boolean.valueOf(rSet.getBoolean("existe"));
+		
+	} catch (Exception e) {
+		throw e;
+	}
+	
+	return existe;
+}
+
+/***************** OBTENER USUARIO POR USUARIO ********************/
+	String obtenerUsuarioPorUsuario = "select * from Usuarios where Usuario = ?";
+	
+	public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException {
+		
+		PreparedStatement pStatement;
+		ResultSet rSet;
+	
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(obtenerUsuarioPorUsuario);
+			pStatement.setString(1, usuario);
+			rSet=pStatement.executeQuery();
+			
+			if(rSet.next()) {
+				int id=rSet.getInt("Id");
+				String nombre=rSet.getString("Nombre");
+				String apellido=rSet.getString("Apellido");
+				String contrasena=rSet.getString("Contrasena");
+				TipoAcceso tipoAcceso=TipoAcceso.valueOf(rSet.getString("TipoAcceso"));
+				LocalDate fechaAlta=rSet.getDate("Fechaalta").toLocalDate();
+			    Boolean activo =rSet.getBoolean("Activo");
+				
+			    return new Usuario(usuario, id, nombre, apellido, contrasena, fechaAlta, activo, tipoAcceso );
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return null;
+	}
 }

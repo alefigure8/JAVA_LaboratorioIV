@@ -24,6 +24,9 @@
      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
      rel="stylesheet"
    />
+   
+   <!-- BOOSTRAP JS -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.3/dist/js/bootstrap.min.js"></script>
 
 	<!-- AGREGAMOS LINK A CSS -->
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/Styles.css">

@@ -1,6 +1,4 @@
-<%@tag description="default" pageEncoding="UTF-8"%>
-
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 	<!-- HEAD -->
 	<% 
@@ -16,13 +14,14 @@
 		    <div class="row flex-grow-1 m-0">
 		      <!--SIDEBAR-->
 		      <jsp:include page= "/WEB-INF/Components/menu_cliente.jsp">
-		      	<jsp:param name="usuario" value="RamÃ³n Ramirez" />
+		      	<jsp:param name="usuario" value="Ramón Ramirez" />
 		      </jsp:include>
-		      <!-- CONTENIDO -->
-			  <jsp:doBody/>
+		      
+			      <!-- CONTENIDO -->
+				  <jsp:doBody/>
 			  
 	       </div>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
-</html>
+</html> 

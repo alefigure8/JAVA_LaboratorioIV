@@ -2,8 +2,27 @@
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
 
-<body:wrapper>
 
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+	<!-- HEAD -->
+	<% 
+		//TITULO DEL ARCHIVO COMO TITULO DE LA PAGINA
+		String PATH = request.getRequestURI().split("/")[2];
+		String[] palabras = PATH.split("(?=[A-Z]|\\s)");
+		String URL = String.join(" ", palabras).split(".jsp")[0];
+	%>
+	<jsp:include page= "/WEB-INF/Components/head.jsp">
+		<jsp:param name="titulo" value="<%=URL%>"/>
+	</jsp:include>
+	<body class="d-flex flex-column">
+		    <div class="row flex-grow-1 m-0">
+		      <!--SIDEBAR-->
+		      <jsp:include page= "/WEB-INF/Components/menu_cliente.jsp">
+		      	<jsp:param name="usuario" value="Ramón Ramirez" />
+		      </jsp:include>
+		      
 
       <!--CONTENT-->
       <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
@@ -16,67 +35,67 @@
 		
 
 
-<form>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
-            </div>
-            <div class="form-group">
-                <label for="dni">DNI</label>
-                <input type="text" class="form-control" id="dni" placeholder="Ingrese el DNI">
-            </div>
-            <div class="form-group">
-                <label for="cuil">CUIL</label>
-                <input type="text" class="form-control" id="cuil" placeholder="Ingrese el CUIL">
-            </div>
-            <div class="form-group">
-                <label for="nacionalidad">Nacionalidad</label>
-                <input type="text" class="form-control" id="nacionalidad" placeholder="Ingrese la nacionalidad">
-            </div>
-            <div class="form-group">
-                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                <input type="text" class="form-control" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento">
-            </div>
-           
-        </div>
-        <div class="col-md-6">
-             <div class="form-group">
-                <label for="sexo">Género</label>
-                <select class="form-control" id="sexo">
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="correo">Correo</label>
-                <input type="text" class="form-control" id="correo" placeholder="Ingrese el correo">
-            </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono">
-            </div>
-            <div class="form-group">
-                <label for="NombreUsuario">Nombre de Usuario</label>
-                <input type="text" class="form-control" id="NombreUsuario" placeholder="Ingrese el nombre de usuario">
-            </div>
-            <div class="form-group">
-                <label for="claveNueva">Contraseña</label>
-                <input type="password" class="form-control" id="claveNueva" placeholder="Ingrese la contraseña">
-            </div>
-        </div>
-    </div>
-    <div class="text-center" style="margin-top:5%">
-        <button type="submit" class="btn btn-primary">Alta de Cliente</button>
-    </div>
-</form>
+		<form>
+		    <div class="row">
+		        <div class="col-md-6">
+		            <div class="form-group">
+		                <label for="nombre">Nombre</label>
+		                <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
+		            </div>
+		            <div class="form-group">
+		                <label for="dni">DNI</label>
+		                <input type="text" class="form-control" id="dni" placeholder="Ingrese el DNI">
+		            </div>
+		            <div class="form-group">
+		                <label for="cuil">CUIL</label>
+		                <input type="text" class="form-control" id="cuil" placeholder="Ingrese el CUIL">
+		            </div>
+		            <div class="form-group">
+		                <label for="nacionalidad">Nacionalidad</label>
+		                <input type="text" class="form-control" id="nacionalidad" placeholder="Ingrese la nacionalidad">
+		            </div>
+		            <div class="form-group">
+		                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+		                <input type="text" class="form-control" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento">
+		            </div>
+		           
+		        </div>
+		        <div class="col-md-6">
+		             <div class="form-group">
+		                <label for="sexo">Género</label>
+		                <select class="form-control" id="sexo">
+		                    <option value="masculino">Masculino</option>
+		                    <option value="femenino">Femenino</option>
+		                </select>
+		            </div>
+		            <div class="form-group">
+		                <label for="correo">Correo</label>
+		                <input type="text" class="form-control" id="correo" placeholder="Ingrese el correo">
+		            </div>
+		            <div class="form-group">
+		                <label for="telefono">Teléfono</label>
+		                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono">
+		            </div>
+		            <div class="form-group">
+		                <label for="NombreUsuario">Nombre de Usuario</label>
+		                <input type="text" class="form-control" id="NombreUsuario" placeholder="Ingrese el nombre de usuario">
+		            </div>
+		            <div class="form-group">
+		                <label for="claveNueva">Contraseña</label>
+		                <input type="password" class="form-control" id="claveNueva" placeholder="Ingrese la contraseña">
+		            </div>
+		        </div>
+		    </div>
+		    <div class="text-center" style="margin-top:5%">
+		        <button type="submit" class="btn btn-primary">Alta de Cliente</button>
+		    </div>
+		</form>
 
-			
-			
-			
-			
         </div>
-        
       </div>
-</body:wrapper>
+      
+ </div>
+	 	<!--FOOTER-->
+	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
+	 </body>
+</html>

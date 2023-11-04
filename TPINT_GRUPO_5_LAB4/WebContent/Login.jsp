@@ -1,94 +1,78 @@
+<%@page import="entidad.Usuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-
-
-<title>Banco Cinco</title>
-
-
-	<!-- AGREGAMOS DETALLE DE FUENTES Y ESTILOS -->
-	<meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inicio Sesion</title>
-    <!--FONTAWESOME-->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <!--BOOSTRAP-->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!--GOOGLE FONTS-->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+	<!--HEAD-->
+	<% 
+		//TITULO DEL ARCHIVO COMO TITULO DE LA PAGINA
+		String PATH = request.getRequestURI().split("/")[2];
+		String[] palabras = PATH.split("(?=[A-Z]|\\s)");
+		String URL = String.join(" ", palabras).split(".jsp")[0];
+	%>
+	<jsp:include page= "/WEB-INF/Components/head.jsp">
+		<jsp:param name="titulo" value="<%=URL%>"/>
+	</jsp:include>
+	<!--FIN HEAD-->
 	
-	<!-- AGREGAMOS LINK A CSS -->
-	<link rel="stylesheet" type="text/css" href="Styles.css"/>
-
-</head>
-
-
-<body> 
-<div class="container d-flex flex-column justify-content-center align-items-center" style="margin-top: 10%;" >
-
-
-	<div class="card d-flex justify-content-center align-items-center" style="margin-top: 20px; background-color: var(--color-main); color: whitesmoke; min-width: 400px;">
-		<label style="font-size: xx-large;"> Banco Cinco <i class="fa-solid fa-building-columns"></i></label>
-	</div>
-	
-		
-		<div class="card" style="min-width: 400px; margin-top: 5px;">
-			<div class="card-header btnEnviar" style="color:whitesmoke">
-				<h3>Iniciar Sesion</h3>
+	<!--BODY-->
+	<body> 
+		<div class="container d-flex flex-column justify-content-center align-items-center" style="margin-top: 10%;" >
+			<div class="card d-flex justify-content-center align-items-center" style="margin-top: 20px; background-color: var(--color-main); color: whitesmoke; min-width: 400px;">
+				<h1 style="font-size: 34px; height: 60px;" class="m-0 p-2"> Banco Cinco <i class="fa-solid fa-building-columns"></i></h1>
 			</div>
-			<div class="card-body">
-				<form>
-				
-					<div class="input-group form-group" >
-						<span class="input-group-text" style="background-color: var(--color-main)"><i class="fa-solid fa-user" style="color:whitesmoke"></i></span>  							
-						<input name="usuario" type="text" class="form-control" placeholder="Usuario">
+			<div class="card" style="min-width: 400px; margin-top: 5px;">
+				<div class="card-header btnEnviar" style="color:whitesmoke">
+					<h3 class="text-center m-0">Iniciar Sesion</h3>
+				</div>
+				<div class="card-body">
+					<!-- FORMULARIO -->
+					<form action="servletLogin" method="GET" class="mb-3">
+						<div class="input-group form-group" >
+							<span class="input-group-text" style="background-color: var(--color-main)"><i class="fa-solid fa-user" style="color:whitesmoke"></i></span>  							
+							<input name="usuario" type="text" class="form-control" placeholder="Usuario">
+						</div>
+						<div class="input-group form-group mt-2">
+							<span class="input-group-text" style="background-color: var(--color-main)"><i class="fas fa-key" style="color:whitesmoke"></i>	</span>		
+							<input name="pass" type="password" class="form-control" placeholder="Contraseña">
+						</div>
+						<div class="form-group" style="text-align: center;margin-top: 20px">
+							<input type="submit" name="btnAceptar" value="Ingresar" class="btn btn-primary btnEnviar" style="background-color: var(--color-main)">
+						</div>
+					</form>
+					<!-- FIN FORMULARIO -->
+					<div class="d-flex justify-content-center">
+						<% 
+							if(request.getAttribute("existeCliente") != null){
+								
+							boolean existeCliente = Boolean.TRUE == request.getAttribute("existeCliente");
+							
+							if(!existeCliente){
+							%>
+							<p class="text-danger">Usuario o Contraseña Incorrecta</p>
+						<% }
+						}%>
 					</div>
-					<div class="input-group form-group">
-						<span class="input-group-text" style="background-color: var(--color-main)"><i class="fas fa-key" style="color:whitesmoke"></i>	</span>		
-						<input name="pass" type="password" class="form-control" placeholder="Contraseña">
-					</div>
-					
-					<div class="form-group" style="text-align: center;margin-top: 20px">
-						<input name="btnAceptar" type="submit" value="Ingresar" class="btn btn-primary btnEnviar" style="background-color: var(--color-main)">
-					</div>
-					
-				</form>
-				
-						<br>
-			<div class="d-flex justify-content-center">
-			<a style="margin-right: 5px;">¿Olvidaste tu contraseña?  </a> <a> Registrate </a>		
+				</div>
 			</div>
-			</div>
-				
 		</div>
-	</div>
+		
+		<!-- POPUP -->
+		<%if(request.getAttribute("error") != null){
+			%>
+			<jsp:include page="/WEB-INF/Components/popup.jsp">
+				<jsp:param name="mensaje" value="<%= request.getAttribute(\"error\") %>"/>
+				<jsp:param name="titulo" value="Error"/>
+			</jsp:include>
+		<% } %>
+		<!-- FIN POPUP -->
+		
+	</body>
+	<!--FIN BODY-->
 	
-
-
-</body>
-
- <footer class="footer flex-grow-0">
-      <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-        <p class="fw-bold">EQUIPO 5 - LABORATORIO IV - UTN</p>
-      </div>
-    </footer>
+	<!--FOOTER-->
+    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
+    
 
 </html>
