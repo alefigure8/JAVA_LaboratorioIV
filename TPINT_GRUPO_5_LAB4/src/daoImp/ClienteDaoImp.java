@@ -8,14 +8,10 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.jasper.tagplugins.jstl.core.If;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import dao.Conexion;
 import dao.IClienteDao;
 import entidad.Cliente;
+import entidad.Cuenta;
 import entidad.Direccion;
 import entidad.Localidad;
 import entidad.Provincia;
@@ -39,6 +35,18 @@ public class ClienteDaoImp implements IClienteDao{
 			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
 			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
 			"inner join Provincias P on P.IdProvincia = L.IDProvincia";
+	
+	private static final String leerUno="select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
+			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
+			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
+			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
+			"where C.id=?";
+	
+	private static final String obtenerClientePorDni="select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
+			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
+			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
+			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
+			"where C.dni=?";
 	
 	
 	/***************** INSERTAR ********************/
@@ -333,69 +341,112 @@ public class ClienteDaoImp implements IClienteDao{
 /***************** OBTENER UNO ********************/
 		@Override
 		public Cliente obtenerUno(int id) {
-			// TODO Auto-generated method stub
+			PreparedStatement pStatement;
+			ResultSet rSet;
+			Cliente cliente = new Cliente();
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(leerUno);
+				pStatement.setInt(1, id);
+				rSet=pStatement.executeQuery();
+				
+				while(rSet.next()) {
+					cliente = getCliente(rSet);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();;
+			}
+			
+			return cliente;
+		}
+
+		
+
+		@Override
+		public Cliente obtenerCliente(int dni) {
+			PreparedStatement pStatement;
+			ResultSet rSet;
+			Cliente cliente = new Cliente();
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorDni);
+				pStatement.setInt(1, dni);
+				rSet=pStatement.executeQuery();
+				
+				while(rSet.next()) {
+					cliente = getCliente(rSet);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return cliente;
+		}
+		
+		/***************** USUARIO EXISTE ********************/
+		String existeUsuario = "select count(*) as existe from Usuarios where Usuario = ? and Contrasena = ?";
+
+		public boolean existeUsuario(String usuario, String contrasena) throws SQLException {
+			
+			boolean existe = false;
+			
+			PreparedStatement pStatement;
+			ResultSet rSet;
+
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(existeUsuario);
+				pStatement.setString(1, usuario);
+				pStatement.setString(2, contrasena);
+				rSet=pStatement.executeQuery();
+				
+				rSet.next();
+				
+				existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				
+			} catch (Exception e) {
+				throw e;
+			}
+			
+			return existe;
+		}
+
+		/***************** OBTENER USUARIO POR USUARIO ********************/
+		String obtenerUsuarioPorUsuario = "select * from Usuarios where Usuario = ?";
+		
+		public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException {
+			
+			PreparedStatement pStatement;
+			ResultSet rSet;
+		
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(obtenerUsuarioPorUsuario);
+				pStatement.setString(1, usuario);
+				rSet=pStatement.executeQuery();
+				
+				if(rSet.next()) {
+					int id=rSet.getInt("Id");
+					String nombre=rSet.getString("Nombre");
+					String apellido=rSet.getString("Apellido");
+					String contrasena=rSet.getString("Contrasena");
+					TipoAcceso tipoAcceso=TipoAcceso.valueOf(rSet.getString("TipoAcceso"));
+					LocalDate fechaAlta=rSet.getDate("Fechaalta").toLocalDate();
+				    Boolean activo =rSet.getBoolean("Activo");
+					
+				    return new Usuario(usuario, id, nombre, apellido, contrasena, fechaAlta, activo, tipoAcceso );
+				}
+			} catch (Exception e) {
+				throw e;
+			}
+			
 			return null;
 		}
-		
-/***************** USUARIO EXISTE ********************/
-String existeUsuario = "select count(*) as existe from Usuarios where Usuario = ? and Contrasena = ?";
 
-public boolean existeUsuario(String usuario, String contrasena) throws SQLException {
-	
-	boolean existe = false;
-	
-	PreparedStatement pStatement;
-	ResultSet rSet;
-
-	Conexion conexion= Conexion.getConexion();
-	
-	try {
-		pStatement=conexion.getSQLConexion().prepareStatement(existeUsuario);
-		pStatement.setString(1, usuario);
-		pStatement.setString(2, contrasena);
-		rSet=pStatement.executeQuery();
-		
-		rSet.next();
-		
-		existe = Boolean.valueOf(rSet.getBoolean("existe"));
-		
-	} catch (Exception e) {
-		throw e;
-	}
-	
-	return existe;
-}
-
-/***************** OBTENER USUARIO POR USUARIO ********************/
-	String obtenerUsuarioPorUsuario = "select * from Usuarios where Usuario = ?";
-	
-	public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException {
-		
-		PreparedStatement pStatement;
-		ResultSet rSet;
-	
-		Conexion conexion= Conexion.getConexion();
-		
-		try {
-			pStatement=conexion.getSQLConexion().prepareStatement(obtenerUsuarioPorUsuario);
-			pStatement.setString(1, usuario);
-			rSet=pStatement.executeQuery();
-			
-			if(rSet.next()) {
-				int id=rSet.getInt("Id");
-				String nombre=rSet.getString("Nombre");
-				String apellido=rSet.getString("Apellido");
-				String contrasena=rSet.getString("Contrasena");
-				TipoAcceso tipoAcceso=TipoAcceso.valueOf(rSet.getString("TipoAcceso"));
-				LocalDate fechaAlta=rSet.getDate("Fechaalta").toLocalDate();
-			    Boolean activo =rSet.getBoolean("Activo");
-				
-			    return new Usuario(usuario, id, nombre, apellido, contrasena, fechaAlta, activo, tipoAcceso );
-			}
-		} catch (Exception e) {
-			throw e;
-		}
-		
-		return null;
-	}
 }

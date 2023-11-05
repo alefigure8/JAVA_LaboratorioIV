@@ -58,12 +58,14 @@
 			</div>
 		</div>
 		
-		<!-- POPUP -->
-		<%if(request.getAttribute("error") != null){
+		
+		<!-- POPUP ERROR DE AUTENTICACION-->
+		<%if(request.getAttribute("tipo") != null){
 			%>
 			<jsp:include page="/WEB-INF/Components/popup.jsp">
-				<jsp:param name="mensaje" value="<%= request.getAttribute(\"error\") %>"/>
-				<jsp:param name="titulo" value="Error"/>
+				<jsp:param name="tipo" value="<%= request.getAttribute(\"tipo\") %>"/>
+				<jsp:param name="mensaje" value="<%= request.getAttribute(\"mensaje\") %>"/>
+				<jsp:param name="titulo" value="<%= request.getAttribute(\"titulo\") %>"/>
 			</jsp:include>
 		<% } %>
 		<!-- FIN POPUP -->

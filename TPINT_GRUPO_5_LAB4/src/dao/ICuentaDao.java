@@ -15,5 +15,7 @@ public interface ICuentaDao {
 	 public Cuenta obtenerUna(int nroCuenta) throws SQLException;
 	 public int cantidadCuentas(int idCliente) throws SQLException; // devuelve la cantidad de cuentas existentes del cliente
 	 public List<TipoCuenta> listarTiposCuenta() throws SQLException;
-
+	 public boolean cbuExiste(String cbu) throws SQLException;
+	 public int obtenerUltimaInsertada(int idCliente)throws SQLException;
+	 public String obtenerDescripcion(int id)throws SQLException;
 }

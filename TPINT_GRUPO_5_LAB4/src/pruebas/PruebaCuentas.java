@@ -40,10 +40,10 @@ public class PruebaCuentas {
 		TipoCuenta tipoCuenta = new TipoCuenta(1, "cajita");
 		int idCliente = 2;
 		LocalDate fechaCreacion = LocalDate.now();
-	    Estado estado = new Estado(1, "Pendiente");
+	   /* Estado estado = new Estado(1, "Pendiente");*/
 	    boolean activo = true;
 		
-		Cuenta cuenta1 = new Cuenta(numeroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, estado, activo);
+		Cuenta cuenta1 = new Cuenta(numeroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, /*estado, */activo);
 		/*
 		try {
 			ctaDao.insertar(cuenta1);

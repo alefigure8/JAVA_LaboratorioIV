@@ -1,3 +1,4 @@
+    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 	<!-- HEAD -->
@@ -13,7 +14,7 @@
 	<body class="d-flex flex-column">
 		    <div class="row flex-grow-1 m-0">
 		      <!--SIDEBAR-->
-		      <jsp:include page= "/WEB-INF/Components/menu_cliente.jsp">
+		      <jsp:include page= "/WEB-INF/Components/menu.jsp">
 		      	<jsp:param name="usuario" value="Ramón Ramirez" />
 		      </jsp:include>
 		      
@@ -24,4 +25,6 @@
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
-</html> 
+</html>
+            	
+            

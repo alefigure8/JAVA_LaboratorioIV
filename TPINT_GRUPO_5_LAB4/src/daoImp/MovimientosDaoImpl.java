@@ -58,6 +58,8 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 	
 	private static final String delete = "DELETE FROM movimientos WHERE ID = ?";
 	
+	private static final String obtenerUltimoIdMovimiento="select MAX(ID) as MaxId from movimientos";
+	
 	//OBTENER TODOS
 	public List<Movimiento> obtenerTodos() throws SQLException {
 		PreparedStatement pStatement;
@@ -125,7 +127,9 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return movimientos;
 	}
-	
+
+
+
 	//INSERTAR
 	public boolean insertar(Movimiento movimiento) throws SQLException {
 		PreparedStatement pStatement;
@@ -293,6 +297,28 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		tipoMovimiento.setDescripcion(rSet.getString("descripcion"));
 						
 		return tipoMovimiento;
+	}
+
+	@Override
+	public int obtenerUltimoIdMovimiento() throws SQLException {
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		int ultimoId = 0;
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(obtenerUltimoIdMovimiento);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				ultimoId = rSet.getInt("MaxId");
+			}
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return ultimoId;
 	}
 
 }

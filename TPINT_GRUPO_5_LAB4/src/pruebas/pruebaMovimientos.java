@@ -26,7 +26,7 @@ public class pruebaMovimientos {
 			insert into Estados (descripcion) values ("Aprobado"), ("Pendiente"), ("Rechazado");
 			
 			-- Insertar Tipo Movimientos
-			insert into TiposMovimiento (descripcion) values ("Transferencia"), ("Prestamo");
+			insert into TiposMovimiento (descripcion) values ("Alta de cuenta"),("Alta de un prestamo"),("Pago prestamo"),("Transferencia");
 			
 			-- InsertCuenta
 			insert into TiposCuenta (Descripcion) values ("Cuenta Ahorro"), ("Cuenta Corriente");

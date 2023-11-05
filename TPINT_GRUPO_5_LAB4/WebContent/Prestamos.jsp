@@ -1,6 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@taglib prefix="body" tagdir="/WEB-INF/tags" %>
+<%@page import="entidad.TipoAcceso"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+
+<!-- AUTENTICACION -->
+<jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
+	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
+</jsp:include>
+<!-- FIN AUTENTICACION -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -14,14 +19,15 @@
 	<jsp:include page= "/WEB-INF/Components/head.jsp">
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
+	<!-- FIN HEAD -->
 	<body class="d-flex flex-column">
-		    <div class="row flex-grow-1 m-0">
-		      <!--SIDEBAR-->
-		      <jsp:include page= "/WEB-INF/Components/menu_cliente.jsp">
-		      	<jsp:param name="usuario" value="Ramón Ramirez" />
-		      </jsp:include>
+	    <div class="row flex-grow-1 m-0">
+	      <!--SIDEBAR-->
+	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
+	      	<jsp:param name="usuario" value="Ramón Ramirez" />
+	      </jsp:include>
 		      
-      <!--CONTENT-->
+      <!--MAIN-->
       <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
         <div class="w-100 pt-2">
           <h1>MIS PRESTAMOS</h1>
@@ -131,6 +137,7 @@
       
       
 	       </div>
+	       <!-- FIN MAIN -->
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>

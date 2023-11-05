@@ -11,7 +11,7 @@ public class Cuenta {
 	private TipoCuenta tipoCuenta;
 	private int idCliente;
     private LocalDate fechaCreacion;   
-    private Estado estado;
+    /*private Estado estado;*/
     private boolean activo;
 //    private List<Movimiento> movimientosCuenta;
     
@@ -23,7 +23,7 @@ public class Cuenta {
 	}
 
 	public Cuenta(int numeroCuenta, String cbu, double saldo, TipoCuenta tipoCuenta, int idCliente,
-			LocalDate fechaCreacion, Estado estado, boolean activo/*, List<Movimiento> movimientosCuenta*/) {
+			LocalDate fechaCreacion, /*Estado estado,*/ boolean activo/*, List<Movimiento> movimientosCuenta*/) {
 		super();
 		this.numeroCuenta = numeroCuenta;
 		this.cbu = cbu;
@@ -31,7 +31,7 @@ public class Cuenta {
 		this.idCliente = idCliente;
 		this.tipoCuenta = tipoCuenta;
 		this.fechaCreacion = fechaCreacion;
-		this.estado = estado;
+		/*this.estado = estado;*/
 		this.activo = activo;
 //		this.movimientosCuenta = movimientosCuenta;
 	}
@@ -86,13 +86,13 @@ public class Cuenta {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Estado getEstado() {
+	/*public Estado getEstado() {
 		return this.estado;
 	}
 
 	public void setEstado(Estado estado) {
 		this.estado = estado;
-	}
+	}*/
 
 	public boolean isActivo() {
 		return this.activo;
@@ -116,7 +116,7 @@ public class Cuenta {
 	@Override
 	public String toString() {
 		return "Cuenta [idCliente=" + idCliente + ", numeroCuenta=" + numeroCuenta + ", cbu=" + cbu + ", saldo=" + saldo
-				+ ", tipoCuenta=" + tipoCuenta + ", fechaCreacion=" + fechaCreacion + ", estado=" + estado + ", activo="
+				+ ", tipoCuenta=" + tipoCuenta + ", fechaCreacion=" + fechaCreacion + /*", estado=" + estado + */",activo="
 				+ activo /*+ ", movimientosCuenta=" + movimientosCuenta + "]"*/;
 	} 
 	

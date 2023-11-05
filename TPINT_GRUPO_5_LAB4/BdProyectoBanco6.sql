@@ -67,11 +67,10 @@ CREATE TABLE Cuentas (
     IdTipoCuenta int not null,
     IdCliente INT not null,
     fechaCreacion Date not null,
-    IdEstados INT NOT NULL,
     Activo bit default 1,
     FOREIGN KEY (IdCliente) REFERENCES Usuarios(ID),
-    FOREIGN KEY (IdTipoCuenta) REFERENCES TiposCuenta(IdTipoCuenta),
-    FOREIGN KEY (IdEstados) REFERENCES Estados(IdEstados)
+    FOREIGN KEY (IdTipoCuenta) REFERENCES TiposCuenta(IdTipoCuenta)
+    
 );
 
 ALTER TABLE Cuentas AUTO_INCREMENT = 1000000000;
@@ -194,10 +193,10 @@ VALUES (@id_cliente2, 987654321, 123456789, 'F', 'México', '1995-08-20', 'clien
 insert into Estados (descripcion) values ("Aprobado"), ("Pendiente"), ("Rechazado");
 
 -- Insertar Tipo Movimientos
-insert into TiposMovimiento (descripcion) values ("Transferencia"), ("Prestamo");
+insert into TiposMovimiento (descripcion) values ("Alta de cuenta"),("Alta de un prestamo"),("Pago prestamo"),("Transferencia");
 
 -- InsertCuenta
-insert into TiposCuenta (Descripcion) values ("Cuenta Ahorro"), ("Cuenta Corriente");
+insert into TiposCuenta (Descripcion) values ("Caja de Ahorro"), ("Cuenta Corriente");
 
 -- Insert Cuenta
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, IdEstados, Activo) 
@@ -230,3 +229,7 @@ SELECT * FROM Movimientos WHERE CBU = "123456789";
 select * from Movimientos M 
 inner join Estados E on M.IdEstados=E.IdEstados
 inner join TiposMovimiento TM on TM.IdTipoMovimiento=C.IdTipoMovimiento
+
+/******** INSERT TIPOS DE CUENTA ********/
+insert into TiposCuenta (descripcion) values ('Caja de ahorro');
+insert into TiposCuenta (descripcion) values ('Cuenta corriente');

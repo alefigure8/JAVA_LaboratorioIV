@@ -46,6 +46,8 @@ h1 {
    background-color: var(--color-main);
  }
  
+
+ 
  .btn_main{
   background-color: var(--color-btn);
   color: var(--text-secondary);

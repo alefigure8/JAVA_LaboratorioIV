@@ -15,4 +15,5 @@ public interface IMovimientosDao {
 	public boolean borrar(int id) throws SQLException;
 	TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException;
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException;
+	public int obtenerUltimoIdMovimiento() throws SQLException;
 }

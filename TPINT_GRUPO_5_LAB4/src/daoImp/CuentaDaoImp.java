@@ -18,23 +18,25 @@ import entidad.TipoCuenta;
 
 public class CuentaDaoImp implements ICuentaDao{
 	
-	private static final String insertCuenta = "Insert into cuentas (NumeroCuenta, CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, IdEstados, Activo) values (?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String updateCuenta = "Update Cuentas set NumeroCuenta = ?, CBU = ?, Saldo = ?, IdTipoCuenta = ?, IdCliente = ?, fechaCreacion = ?, IdEstados = ?, Activo = ? where NumeroCuenta = ?";
+	private static final String insertCuenta = "Insert into cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) values (?, ?, ?, ?, ?, ?)";
+	private static final String updateCuenta = "Update Cuentas set NumeroCuenta = ?, CBU = ?, Saldo = ?, IdTipoCuenta = ?, IdCliente = ?, fechaCreacion = ?, Activo = ? where NumeroCuenta = ?";
 	private static final String deleteCuenta = "Update Cuentas set Activo = 0 where NumeroCuenta = ?";
 	private static final String readAllCuentas = "select * from cuentas c \r\n" + 
-			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta \r\n" + 
-			"inner join estados e on c.IdEstados = e.IdEstados";
+			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta ";
+			/*"inner join estados e on c.IdEstados = e.IdEstados";*/
 	private static final String readAllCuentasPorCliente = "select * from cuentas c \r\n" + 
 			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta \r\n" + 
-			"inner join estados e on c.IdEstados = e.IdEstados \r\n"
-			+ "where c.IdCliente = ?";
+			 "where c.IdCliente = ?";
+	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
 	private static final String readOnePorNroCuenta = "select * from cuentas c \r\n" + 
 			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta \r\n" + 
-			"inner join estados e on c.IdEstados = e.IdEstados \r\n"
-			+ "where c.NumeroCuenta = ?";
-	private static final String countCuentasPorCliente = "select count(*) as 'Total' from cuentas where IdCliente = ?";
+			"where c.NumeroCuenta = ?";
+	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
+	private static final String countCuentasPorCliente = "select count(*) as 'Total' from cuentas where IdCliente = ? and Activo=1";
 	private static final String readAllTiposCuenta = "select * from tiposcuenta";
-	
+	private static final String countCbu="select count(*) as Count from cuentas where Cbu = ?";
+	private static final String ultimaCuentaInsertada="select max(NumeroCuenta) as NumeroCuenta from Cuentas c inner join Clientes ct on ct.Id=c.IdCliente where c.IdCliente = ? ";
+	private static final String obtenerDescripcion="select descripcion from TiposCuenta where IdTipoCuenta = ?";
 
 	// INSERTAR CUENTA
 	@Override
@@ -45,15 +47,15 @@ public class CuentaDaoImp implements ICuentaDao{
 		
 		try {
 	        pStatement = connection.prepareStatement(insertCuenta);
-	        pStatement.setInt(1, cuenta.getNumeroCuenta());
-	        pStatement.setString(2, cuenta.getCbu());
-	        pStatement.setDouble(3, cuenta.getSaldo());
-	        pStatement.setInt(4, (cuenta.getTipoCuenta()).getId());
-	        pStatement.setInt(5, cuenta.getIdCliente());
+	       /* pStatement.setInt(1, cuenta.getNumeroCuenta());*/
+	        pStatement.setString(1, cuenta.getCbu());
+	        pStatement.setDouble(2, cuenta.getSaldo());
+	        pStatement.setInt(3, (cuenta.getTipoCuenta()).getId());
+	        pStatement.setInt(4, cuenta.getIdCliente());
 			java.sql.Date fechaCreacionSQL = java.sql.Date.valueOf(cuenta.getFechaCreacion()); 
-			pStatement.setDate(6, fechaCreacionSQL);
-			pStatement.setInt(7, (cuenta.getEstado()).getIdEstado());
-			pStatement.setBoolean(8,  cuenta.isActivo());
+			pStatement.setDate(5, fechaCreacionSQL);
+			/*pStatement.setInt(7, (cuenta.getEstado()).getIdEstado());*/
+			pStatement.setBoolean(6,  cuenta.isActivo());
 			
 			if (pStatement.executeUpdate() > 0) {
 	                insertExitoso = true;
@@ -83,9 +85,9 @@ public class CuentaDaoImp implements ICuentaDao{
 		        pStatement.setInt(5, cuenta.getIdCliente());
 				java.sql.Date fechaCreacionSQL = java.sql.Date.valueOf(cuenta.getFechaCreacion()); 
 				pStatement.setDate(6, fechaCreacionSQL);
-				pStatement.setInt(7, (cuenta.getEstado()).getIdEstado());
-				pStatement.setBoolean(8,cuenta.isActivo());
-				pStatement.setInt(9, cuenta.getNumeroCuenta());
+				/*pStatement.setInt(7, (cuenta.getEstado()).getIdEstado());*/
+				pStatement.setBoolean(7,cuenta.isActivo());
+				pStatement.setInt(8, cuenta.getNumeroCuenta());
 				
 				if(pStatement.executeUpdate() > 0) {
 					connection.commit();
@@ -208,13 +210,13 @@ public class CuentaDaoImp implements ICuentaDao{
 		LocalDate fechaCreacion = rSet.getDate("fechaCreacion").toLocalDate();
 		
 			// armo el estado
-			int idEstado = rSet.getInt("IdEstados");
+			/*int idEstado = rSet.getInt("IdEstados");*/
 			String descripcionEstado = rSet.getString("Descripcion");
-		Estado estadoCuenta = new Estado(idEstado, descripcionEstado); // creo el objeto estado
+		/*Estado estadoCuenta = new Estado(idEstado, descripcionEstado); // creo el objeto estado*/
 		
 	    boolean activo = rSet.getBoolean("Activo");
 	    
-	    return new Cuenta(nroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, estadoCuenta, activo);
+	    return new Cuenta(nroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, /*estadoCuenta, */activo);
 		
 	}
 	
@@ -271,6 +273,80 @@ public class CuentaDaoImp implements ICuentaDao{
 		int idTipoCuenta  = rSet.getInt("IdTipoCuenta");
 		String descripcion = rSet.getString("descripcion");
 	    return new TipoCuenta(idTipoCuenta, descripcion);
+	}
+
+	@Override
+	public boolean cbuExiste(String cbu) throws SQLException{
+		
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(countCbu);
+			pStatement.setString(1, cbu);
+			rSet=pStatement.executeQuery();
+			
+			if(rSet.next()) {
+				int count = rSet.getInt("Count");
+				return count>0;
+			}
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		
+		return false;
+	}
+	
+	//ULTIMO NRO. CUENTA INSERTADA SEGUN UN ID CLIENTE
+	@Override
+	public int obtenerUltimaInsertada(int idCliente) throws SQLException {
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		int cuenta = 0;
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(ultimaCuentaInsertada);
+			pStatement.setInt(1, idCliente);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				cuenta = rSet.getInt("NumeroCuenta");
+			}
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return cuenta;
+		
+	}
+
+	@Override
+	public String obtenerDescripcion(int id) throws SQLException {
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		Conexion conexion= Conexion.getConexion();
+		String descripcion="";
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(obtenerDescripcion);
+			pStatement.setInt(1, id);
+			rSet=pStatement.executeQuery();
+			
+			if(rSet.next()) {
+				descripcion= rSet.getString("descripcion");
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+			
+		return descripcion;
+		
 	}
 	
 

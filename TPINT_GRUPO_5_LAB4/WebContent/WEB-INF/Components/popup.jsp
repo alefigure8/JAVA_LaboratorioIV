@@ -39,8 +39,14 @@
 	        <div class="popup-container">
 	            <h3 class="fs-5"><%=request.getParameter("titulo")%></h3>
 	            <p><%=request.getParameter("mensaje")%></p>
-	            <!-- Botón de cierre -->
-	            <span id="cerrarPopup" class="close-button fs-5">&times;</span>
+	            <span id="cerrarPopup" class="close-button fs-5 me-2 text-danger">&times;</span>
+	            <% String tipo = request.getParameter("tipo");
+	            	if(tipo.compareTo("exito")==0){
+	            %>
+	            <i class="fa-solid fa-circle-check text-success fs-2"></i>
+	            <%} else {%>
+	            <i class="fa-solid fa-circle-exclamation text-danger fs-2"></i>
+	            <%}%>
 	        </div>
 	    </div>
     </div>
@@ -51,8 +57,8 @@
 
         popup.style.display = "block";
 
-        popup.onclick = function(event) {
-            if (event.target === popup) {
+        popup.onclick = function(e) {
+            if (e.target === popup) {
                 popup.style.display = "none";
             }
         };

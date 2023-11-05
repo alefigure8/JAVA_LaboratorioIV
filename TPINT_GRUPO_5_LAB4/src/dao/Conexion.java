@@ -28,7 +28,8 @@ public class Conexion {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("ERRORES " + e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 	
