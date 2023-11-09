@@ -46,6 +46,7 @@
 	          	
 	          	Cliente cliente= new Cliente();
 	          	List<Localidad> listaLocalidad = new ArrayList<Localidad>();
+	          	List<Provincia> listaProvincia = new ArrayList<Provincia>();
 	          	//USUARIO
 	          	if(request.getAttribute("cliente")!=null){
 	          		cliente = (Cliente)request.getAttribute("cliente");
@@ -54,6 +55,11 @@
 	          	//LOCALIDADES
 	          	if(request.getAttribute("localidades")!=null){
 	          		listaLocalidad = (List<Localidad>)request.getAttribute("localidades");
+	          	}
+	          	
+	          	//PROVINCIA
+	          	if(request.getAttribute("provincias")!=null){
+	          		listaProvincia = (List<Provincia>)request.getAttribute("provincias");
 	          	}
 	          %>
 				<form action="servletModificarCliente" method="get">
@@ -125,12 +131,22 @@
 					                <label for="codpos">Código Postal</label>
 					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 10); validateInput(this, 4);">
 					            </div>
-					            <div class="form-group">
+					            <!--  <div class="form-group">
 					                <label for="provincia">Provincia</label>
 									<input type="text" class="form-control bg-light text-secondary" name="provincia" id="provincia" value="<%=cliente.getDireccion().getProvincia().getNombre()%>" readOnly>
+					            </div> -->
+					             <div class="form-group">
+					                  <label for="provincia">Localidad</label>
+					                	
+					                <select class="form-select" id="provinciaID" name="provincia" data-provinciaID="<%=cliente.getDireccion().getLocalidad().getIdProvincia()%>" onchange="seleccionarProvincia()">
+					                	<%
+				                		for(Provincia provincia : listaProvincia){%>
+					                		<option value="<%= provincia.getIdProvincia() %>"> <%= provincia.getNombre() %> </option>
+					                	<%}%>
+					                </select>
 					            </div>
 					            <div class="form-group">
-					                  <label for="provincia">Localidad</label>
+					                  <label for="localidadID">Localidad</label>
 					                	
 					                <select class="form-select" id="localidadID" name="localidadID" data-localidadID="<%=cliente.getDireccion().getLocalidad().getIdLocalidad()%>">
 					                	<%
@@ -218,7 +234,12 @@
 	 	//SELECT LOCALIDAD
 	 	const localidad = document.getElementById("localidadID");
 	 	const localidadID = localidad.getAttribute('data-localidadID');
-	 	localidad.value=localidadID;	 	
+	 	localidad.value=localidadID;	 
+	 	
+	 	//SELECT PROVINCIA
+	 	const provincia = document.getElementById("provinciaID");
+	 	const provinciaID = provincia.getAttribute('data-provinciaID');
+	 	provincia.value=provinciaID;
 	 	
 	 	//SELECT SEXO
 	 	const sexo = document.getElementById("sexo");
@@ -240,6 +261,49 @@
 	    	        input.classList.remove("is-invalid");
 	    	        input.classList.add("is-valid");
 	    	    }
+	    }
+	    
+	    var provinciasArray = [];
+	    var localidadesArray = [];
+
+	    <% if (request.getAttribute("provincias") != null) {
+	        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+	        for (Provincia provincia : provincias) { %>
+	            provinciasArray.push({ id: "<%= provincia.getIdProvincia() %>", nombre: "<%= provincia.getNombre() %>" });
+	        <% }
+	    } %>
+
+	    <% if (request.getAttribute("localidades") != null) {
+	        List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
+	        for (Localidad localidad : localidades) { %>
+	            localidadesArray.push({ id: "<%= localidad.getIdLocalidad() %>", nombre: "<%= localidad.getNombre() %>", idProvincia: "<%= localidad.getIdProvincia() %>" });
+	        <% }
+	    } %>
+	    
+	    function seleccionarProvincia() {
+	        var provinciaSelect = document.getElementById("provinciaID");
+	        var localidadSelect = document.getElementById("localidadID");
+	        var selectedProvinciaId = provinciaSelect.value;
+		
+	        //borramos select de localidades
+	        localidadSelect.innerHTML = "";
+
+	        //localidad default
+	        var defaultOption = document.createElement("option");
+	        defaultOption.value = "";
+	        defaultOption.text = "Selecciona una localidad";
+	        localidadSelect.appendChild(defaultOption);
+
+	        // localidad s/provincia
+	        for (var i = 0; i < localidadesArray.length; i++) {
+	            var localidad = localidadesArray[i];
+	            if (localidad.idProvincia === selectedProvinciaId) {
+	                var option = document.createElement("option");
+	                option.value = localidad.id;
+	                option.text = localidad.nombre;
+	                localidadSelect.appendChild(option);
+	            }
+	        }
 	    }
 
     </script>

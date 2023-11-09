@@ -18,23 +18,23 @@ import entidad.TipoCuenta;
 
 public class CuentaDaoImp implements ICuentaDao{
 	
-	private static final String insertCuenta = "Insert into cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) values (?, ?, ?, ?, ?, ?)";
+	private static final String insertCuenta = "Insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) values (?, ?, ?, ?, ?, ?)";
 	private static final String updateCuenta = "Update Cuentas set NumeroCuenta = ?, CBU = ?, Saldo = ?, IdTipoCuenta = ?, IdCliente = ?, fechaCreacion = ?, Activo = ? where NumeroCuenta = ?";
 	private static final String deleteCuenta = "Update Cuentas set Activo = 0 where NumeroCuenta = ?";
-	private static final String readAllCuentas = "select * from cuentas c \r\n" + 
-			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta ";
+	private static final String readAllCuentas = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta ";
 			/*"inner join estados e on c.IdEstados = e.IdEstados";*/
-	private static final String readAllCuentasPorCliente = "select * from cuentas c \r\n" + 
-			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta \r\n" + 
+	private static final String readAllCuentasPorCliente = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
 			 "where c.IdCliente = ?";
 	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
-	private static final String readOnePorNroCuenta = "select * from cuentas c \r\n" + 
-			"inner join tiposcuenta tc on c.idtipocuenta = tc.idtipocuenta \r\n" + 
+	private static final String readOnePorNroCuenta = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
 			"where c.NumeroCuenta = ?";
 	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
-	private static final String countCuentasPorCliente = "select count(*) as 'Total' from cuentas where IdCliente = ? and Activo=1";
-	private static final String readAllTiposCuenta = "select * from tiposcuenta";
-	private static final String countCbu="select count(*) as Count from cuentas where Cbu = ?";
+	private static final String countCuentasPorCliente = "select count(*) as 'Total' from Cuentas where IdCliente = ? and Activo=1";
+	private static final String readAllTiposCuenta = "select * from TiposCuenta";
+	private static final String countCbu="select count(*) as Count from Cuentas where Cbu = ?";
 	private static final String ultimaCuentaInsertada="select max(NumeroCuenta) as NumeroCuenta from Cuentas c inner join Clientes ct on ct.Id=c.IdCliente where c.IdCliente = ? ";
 	private static final String obtenerDescripcion="select descripcion from TiposCuenta where IdTipoCuenta = ?";
 

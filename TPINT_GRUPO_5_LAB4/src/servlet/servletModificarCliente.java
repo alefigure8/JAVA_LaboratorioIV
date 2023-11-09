@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import Helper.GUI;
 import daoImp.LocalidadDaoImp;
+import daoImp.ProvinciaDaoImp;
 import entidad.Cliente;
 import entidad.Localidad;
+import entidad.Provincia;
 import entidad.TipoDireccion;
 import negocioDaoImp.ClienteNegocioDaoImp;
+import sun.security.util.math.intpoly.P256OrderField;
 
 
 @WebServlet("/servletModificarCliente")
@@ -45,12 +48,16 @@ public class servletModificarCliente extends HttpServlet {
 				
 				//Buscar localidades
 				LocalidadDaoImp localidadNegocioDao = new LocalidadDaoImp();
-	        	List<Localidad> listaLocalidad = new ArrayList<Localidad>();
-			  	listaLocalidad = localidadNegocioDao.obtenerTodas();
+	        	List<Localidad> listaLocalidad = localidadNegocioDao.obtenerTodas();
+				  	
+			  	//Buscar provincias
+			  	ProvinciaDaoImp provinciaDaoImp = new ProvinciaDaoImp();
+			  	List<Provincia> listaProvincia = provinciaDaoImp.obtenerTodas();
 				
 				//Redirigir a página de Modificar cliente
 				request.setAttribute("cliente", cliente);
 				request.setAttribute("localidades", listaLocalidad);
+				request.setAttribute("provincias", listaProvincia);
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 			} catch (Exception e) {

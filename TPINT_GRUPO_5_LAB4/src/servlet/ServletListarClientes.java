@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Helper.GUI;
+import daoImp.CuentaDaoImp;
 import entidad.Cliente;
+import entidad.Cuenta;
 import negocioDaoImp.ClienteNegocioDaoImp;
 
 @WebServlet("/ServletListarClientes")
@@ -70,12 +73,23 @@ public class ServletListarClientes extends HttpServlet {
 						
 						if(clienteBorrado) {
 
+							//Listamos clinetes
 							List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
 					    	    
+							//Mandamos lista de clientes con request
 							request.setAttribute("clientes", ListarClientesActivos(listaClientes));
 							
-							//Popup de Exito
-							request = GUI.mensajes(request, "exito", "Cliente eliminado", "El cliente se borró correctamente");
+							//Borramos cuentas					
+							boolean cuentasBorradas = BorrarCuentasClientes(Integer.parseInt(ID));
+							
+							if(cuentasBorradas) {
+								//Popup de Exito
+								request = GUI.mensajes(request, "exito", "Cliente eliminado", "El cliente se borró correctamente");
+							} else {
+								//Popup de Exito
+								request = GUI.mensajes(request, "error", "Cuentas", "Las Cuentas del cliente no pudieron ser borradas");
+							}
+							
 							
 				    	    // Envía la solicitud al archivo JSP para mostrar la tabla
 				    	    RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
@@ -83,6 +97,7 @@ public class ServletListarClientes extends HttpServlet {
 						} else {
 							//Popup de error
 							request = GUI.mensajes(request, "error", "Cliente no existes", "El cliente que intenta borrar no existe");
+							
 							RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 							dispatcher.forward(request, response);
 						}
@@ -91,6 +106,7 @@ public class ServletListarClientes extends HttpServlet {
 				} else {
 					//Popup de error
 					request = GUI.mensajes(request, "error", "Cliente no existes", "El cliente que intenta borrar no existe");
+					
 					RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 					dispatcher.forward(request, response);
 				}
@@ -99,6 +115,7 @@ public class ServletListarClientes extends HttpServlet {
 		} catch (Exception e) {
 			//Popup de error
 			request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
+			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 			dispatcher.forward(request, response);
 		}
@@ -121,6 +138,37 @@ public class ServletListarClientes extends HttpServlet {
 		}
 		    
 		return listaClientesActivos;
+	}
+	
+	/** BORRAR CUENTAS CLIENTES **/
+	private boolean BorrarCuentasClientes(int idCliente) {
+		boolean cuentasBorradas = true;
+		
+		try {
+			CuentaDaoImp cuentaDaoImp = new CuentaDaoImp();
+			
+			List<Cuenta> cuentasABorrar = cuentaDaoImp.obtenerCuentasCliente(idCliente);
+			
+			Iterator<Cuenta> it;
+			it = cuentasABorrar.iterator();
+			
+			while(it.hasNext()) {
+				Cuenta cuenta = it.next();
+				System.out.println(cuenta.getNumeroCuenta());
+				boolean cuentaBorrada = cuentaDaoImp.borrar(cuenta.getNumeroCuenta());
+				
+				if(!cuentaBorrada){
+					cuentasBorradas = false;
+					break;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return cuentasBorradas = false;
+		}
+		
+		return cuentasBorradas;
 	}
 	
 }
