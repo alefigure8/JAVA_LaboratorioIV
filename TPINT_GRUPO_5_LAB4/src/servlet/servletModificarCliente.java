@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Helper.GUI;
 import daoImp.LocalidadDaoImp;
 import entidad.Cliente;
 import entidad.Localidad;
@@ -54,9 +55,8 @@ public class servletModificarCliente extends HttpServlet {
 				rd.forward(request, response);
 			} catch (Exception e) {
 				//Popup de error
-				request.setAttribute("tipo", "error");
-				request.setAttribute("titulo", "Erro Base de Datos");
-				request.setAttribute("mensaje", e.getMessage());
+				request = GUI.mensajes(request, "error", "Error Base de Datoso", e.getMessage());
+				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 			}
@@ -71,13 +71,12 @@ public class servletModificarCliente extends HttpServlet {
 				//Modificar Cliente
 				cliente = obtenerCliente(request, response);
 				
-				if(cliente != null)
-					clienteNegocioDaoImp.editar(cliente);
+				if(cliente != null) 
+					clienteNegocioDaoImp.editar(cliente);				
 				
 				//Popup de exito
-				request.setAttribute("tipo", "exito");
-				request.setAttribute("titulo", "Cliente modificado");
-				request.setAttribute("mensaje", "El cliente se modificó correctamente");
+				request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
+
 				RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 				rd.forward(request, response);
 			} catch (Exception e) {
@@ -85,9 +84,8 @@ public class servletModificarCliente extends HttpServlet {
 				request.setAttribute("cliente", cliente); 
 				
 				//Popup de error
-				request.setAttribute("tipo", "error");
-				request.setAttribute("titulo", "Error Base de Datos");
-				request.setAttribute("mensaje", e.getMessage());
+				request = GUI.mensajes(request, "error", "Error Base de Datoso", e.getMessage());
+				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 			}
@@ -172,9 +170,8 @@ public class servletModificarCliente extends HttpServlet {
 				request.setAttribute("cliente", cliente); 
 				
 				//Popup de error
-				request.setAttribute("tipo", "error");
-				request.setAttribute("titulo", "Contraseña invalida");
-				request.setAttribute("mensaje", "La contraseña no puede ser modificada");
+				request = GUI.mensajes(request, "error", "Contraseña invalida", "La contraseña no puede ser modificada");
+				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 				
@@ -202,9 +199,8 @@ public class servletModificarCliente extends HttpServlet {
 				request.setAttribute("cliente", cliente); 
 				
 				//Popup de error
-				request.setAttribute("tipo", "error");
-				request.setAttribute("titulo", "Datos incorrectos");
-				request.setAttribute("mensaje", "Todos los datos deben ser completados");
+				request = GUI.mensajes(request, "error", "Datos incorrectos", "Todos los datos deben ser completados");
+				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 				

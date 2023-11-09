@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Helper.GUI;
 import entidad.Cliente;
 import negocioDaoImp.ClienteNegocioDaoImp;
 
@@ -33,13 +34,6 @@ public class ServletListarClientes extends HttpServlet {
     		try {
         	    // Llama al método para obtener la lista de clientes
         	    List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
-        	    List<Cliente> listaClientesActivos = new ArrayList<Cliente>();
-        	    
-        	    for(Cliente cliente : listaClientes) {
-        	    	if(cliente.getActivo()) {
-        	    		listaClientesActivos.add(cliente);
-        	    	}
-        	    }
         	    
          	    // Verifica si la lista de clientes es null o vacía
     		    if (listaClientes == null || listaClientes.isEmpty()) {
@@ -47,7 +41,7 @@ public class ServletListarClientes extends HttpServlet {
     	   	        request.setAttribute("mensajeError", "No se encontraron clientes" );
     	   	    } else {
         	        // Configura un atributo de solicitud con la lista de clientes
-    	   	    	request.setAttribute("clientes", listaClientesActivos);
+    	   	    	request.setAttribute("clientes", ListarClientesActivos(listaClientes));
     	   	    }
 
         	    // Envía la solicitud al archivo JSP para mostrar la tabla
@@ -76,29 +70,19 @@ public class ServletListarClientes extends HttpServlet {
 						
 						if(clienteBorrado) {
 
-							 List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
-							 List<Cliente> listaClientesActivos = new ArrayList<Cliente>();
+							List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
 					    	    
-					    	    for(Cliente cliente : listaClientes) {
-					    	    	if(cliente.getActivo()) {
-					    	    		listaClientesActivos.add(cliente);
-					    	    	}
-					    	    }
-							request.setAttribute("clientes", listaClientesActivos);
+							request.setAttribute("clientes", ListarClientesActivos(listaClientes));
 							
-							//Popup de error
-							request.setAttribute("tipo", "exito");
-							request.setAttribute("titulo", "Cliente eliminado");
-							request.setAttribute("mensaje", "El cliente se borró correctamente");
-
+							//Popup de Exito
+							request = GUI.mensajes(request, "exito", "Cliente eliminado", "El cliente se borró correctamente");
+							
 				    	    // Envía la solicitud al archivo JSP para mostrar la tabla
 				    	    RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 				    	    dispatcher.forward(request, response);
 						} else {
 							//Popup de error
-							request.setAttribute("tipo", "error");
-							request.setAttribute("titulo", "Cliente no existe");
-							request.setAttribute("mensaje", "El cliente que intenta borrar no existe");
+							request = GUI.mensajes(request, "error", "Cliente no existes", "El cliente que intenta borrar no existe");
 							RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 							dispatcher.forward(request, response);
 						}
@@ -106,9 +90,7 @@ public class ServletListarClientes extends HttpServlet {
 					
 				} else {
 					//Popup de error
-					request.setAttribute("tipo", "error");
-					request.setAttribute("titulo", "Cliente no existe");
-					request.setAttribute("mensaje", "El cliente que intenta borrar no existe");
+					request = GUI.mensajes(request, "error", "Cliente no existes", "El cliente que intenta borrar no existe");
 					RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 					dispatcher.forward(request, response);
 				}
@@ -116,9 +98,7 @@ public class ServletListarClientes extends HttpServlet {
 			}
 		} catch (Exception e) {
 			//Popup de error
-			request.setAttribute("tipo", "error");
-			request.setAttribute("titulo", "Erro Base de Datos");
-			request.setAttribute("mensaje", e.getMessage());
+			request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 			dispatcher.forward(request, response);
 		}
@@ -128,5 +108,19 @@ public class ServletListarClientes extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
+	
+	/** LISTAR CLIENTES ACTIVOS **/
+	private List<Cliente> ListarClientesActivos(List<Cliente> listaClientes) {
+		listaClientes = clienteNegocioDao.obtenerTodos();
+		 List<Cliente> listaClientesActivos = new ArrayList<Cliente>();
+    	    
+		 for(Cliente cliente : listaClientes) {
+			if(cliente.getActivo()) {
+				listaClientesActivos.add(cliente);
+			}
+		}
+		    
+		return listaClientesActivos;
+	}
+	
 }

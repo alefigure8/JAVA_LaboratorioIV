@@ -209,7 +209,7 @@ select * from Clientes C
 inner join Usuarios U on U.Id=C.Id
 inner join Direcciones D on D.IdDireccion=C.IDDomicilio
 inner join Localidades L on L.IdLocalidad=D.IdLocalidad
-inner join Provincias P on P.IdProvincia=L.IdProvincia
+inner join Provincias P on P.IdProvincia=L.IdProvincia;
 
 /* Estados */
 select * from Estados;
@@ -228,7 +228,7 @@ select * from Movimientos;
 SELECT * FROM Movimientos WHERE CBU = "123456789";
 select * from Movimientos M 
 inner join Estados E on M.IdEstados=E.IdEstados
-inner join TiposMovimiento TM on TM.IdTipoMovimiento=C.IdTipoMovimiento
+inner join TiposMovimiento TM on TM.IdTipoMovimiento=C.IdTipoMovimiento;
 
 /******** INSERT TIPOS DE CUENTA ********/
 insert into TiposCuenta (descripcion) values ('Caja de ahorro');

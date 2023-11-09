@@ -66,27 +66,27 @@
 					    		<legend class="w-auto">Cliente:</legend>
 					    		<div class="form-group">
 					                <label for="nombre">Nombre</label>
-					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
 					            </div>
 					            <div class="form-group">
 					                <label for="apellido">Apellido</label>
-					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
 					            </div>
 					            <div class="form-group">
 					                <label for="dni">DNI</label>
-					                <input type="text" class="form-control" name="dni" id="dni" value="<%=cliente.getDni() %>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="dni" id="dni" value="<%=cliente.getDni() %>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 8); validateInput(this, 8)">
 					            </div>
 					            <div class="form-group">
 					                <label for="cuil">CUIL</label>
-					                <input type="text" class="form-control" name="cuil"  id="cuil" value="<%=cliente.getCuil()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="cuil"  id="cuil" value="<%=cliente.getCuil()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 11); validateInput(this, 11)">
 					            </div>
 					            <div class="form-group">
 					                <label for="nacionalidad">Nacionalidad</label>
-					                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" value="<%=cliente.getNacionalidad() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" value="<%=cliente.getNacionalidad() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
 					            </div>
 					            <div class="form-group">
 					                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-					                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required>
 					            </div>
    					            <div class="form-group">
 					                <label for="sexo">Sexo</label>
@@ -103,11 +103,11 @@
 					    		<legend class="w-auto">Contactos:</legend>
 					          	<div class="form-group">
 					                <label for="calle">Calle</label>
-					                <input type="text" class="form-control" name="calle" id="calle" value="<%=cliente.getDireccion().getCalle()%>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="calle" id="calle" value="<%=cliente.getDireccion().getCalle()%>" required oninput="this.value = this.value.substring(0, 20); validateInput(this, 2);">
 					            </div>
 					            <div class="form-group">
 					                <label for="numero">Numero</label>
-					                <input type="text" class="form-control" name="numero" id="numero" value="<%=cliente.getDireccion().getNumero()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="numero" id="numero" value="<%=cliente.getDireccion().getNumero()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 10); validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="tipoDireccion">Tipo Dirección</label>
@@ -123,7 +123,7 @@
 					            </div>
 					            <div class="form-group">
 					                <label for="codpos">Código Postal</label>
-					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 10); validateInput(this, 4);">
 					            </div>
 					            <div class="form-group">
 					                <label for="provincia">Provincia</label>
@@ -141,7 +141,7 @@
 					            </div>
 					            <div class="form-group">
 					                <label for="telefono">Teléfono</label>
-					                <input type="text" class="form-control" name="telefono" id="telefono" value="<%=cliente.getTelefono()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+					                <input type="text" class="form-control" name="telefono" id="telefono" value="<%=cliente.getTelefono()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 20); validateInput(this, 8)">
 					            </div>
 					            <div class="form-group">
 					                <label for="correo">Correo</label>
@@ -168,9 +168,14 @@
 					    		</fieldset>
 					        </div>
 					    </div>
-					    <div class="text-center mt-5">
-					        <button type="submit" class="btn btn-primary" name="modificar" value="true">Modificar Clave</button>
-					    </div>
+					    <div class="d-flex gap-4 justify-content-center">
+						    <div class="text-center mt-5">
+						        <button type="submit" class="btn btn-primary" name="modificar" value="true">Modificar Usuario</button>
+						    </div>
+						    <div class="text-center mt-5">
+						        <a class="btn btn-danger" href="ServletListarClientes?obtener=true">Cancelar</a>
+						    </div>
+					   </div>
 				</form>
 	       		</div>
       		  </div>
@@ -210,77 +215,6 @@
 	 		apartamento.classList.add("text-secondary")
 	 	}
 	 	
-	 	//VALIDACION CAMPOS	
-	 	const nombre = document.getElementById("nombre");
-	 	if(nombre.value == "" || nombre == undefined){
-	 		nombre.classList.add("is-invalid");
-	 	} else {
-	 		nombre.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const apellido = document.getElementById("apellido");
-	 	if(apellido.value == "" || apellido == undefined){
-	 		apellido.classList.add("is-invalid");
-	 	} else {
-	 		apellido.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const dni = document.getElementById("dni");
-	 	if(dni.value == "0" || dni == undefined){
-	 		dni.classList.add("is-invalid");
-	 	} else {
-	 		dni.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const cuil = document.getElementById("cuil");
-	 	if(cuil.value == "0" || cuil == undefined){
-	 		cuil.classList.add("is-invalid");
-	 	} else {
-	 		cuil.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const nacionalidad = document.getElementById("nacionalidad");
-	 	if(nacionalidad.value == "" || nacionalidad == undefined){
-	 		nacionalidad.classList.add("is-invalid");
-	 	} else {
-	 		nacionalidad.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const calle = document.getElementById("calle");
-	 	if(calle.value == "" || calle == undefined){
-	 		calle.classList.add("is-invalid");
-	 	} else {
-	 		calle.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const numero = document.getElementById("numero");
-	 	if(numero.value == "0" || numero == undefined){
-	 		numero.classList.add("is-invalid");
-	 	} else {
-	 		numero.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const codPos = document.getElementById("codpos");
-	 	if(codPos.value == "0" || codPos == undefined){
-	 		codPos.classList.add("is-invalid");
-	 	} else {
-	 		codPos.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const telefono = document.getElementById("telefono");
-	 	if(telefono.value == "0" || telefono == undefined){
-	 		telefono.classList.add("is-invalid");
-	 	} else {
-	 		telefono.classList.remove("is-invalid");
-	 	}
-	 	
-	 	const correo = document.getElementById("correo");
-	 	if(correo.value == "" || correo == undefined){
-	 		correo.classList.add("is-invalid");
-	 	} else {
-	 		correo.classList.remove("is-invalid");
-	 	}
-	 	
 	 	//SELECT LOCALIDAD
 	 	const localidad = document.getElementById("localidadID");
 	 	const localidadID = localidad.getAttribute('data-localidadID');
@@ -295,20 +229,18 @@
 	 	const tipoCasa = document.getElementById("tipoDireccion");
 	 	const tipoCasaID = tipoCasa.getAttribute('data-TipoDireccionID');
 	 	tipoCasa.value=tipoCasaID;	
-	 	
-	 </script>
-	 
-	 
-	  <script>
     
-		    function validateInput(input, minLength) {
-		    	 const trimmedValue = input.value.trim();
-		    	    if (trimmedValue.length < minLength || !trimmedValue) {
-		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
-		    	    } else {
-		    	        input.setCustomValidity('');
-		    	    }
-		    }
+	    function validateInput(input, minLength) {
+	    	 const trimmedValue = input.value.trim();
+	    	    if (trimmedValue.length < minLength || !trimmedValue) {
+	    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
+	    	        input.classList.add("is-invalid");
+	    	    } else {
+	    	        input.setCustomValidity('');
+	    	        input.classList.remove("is-invalid");
+	    	        input.classList.add("is-valid");
+	    	    }
+	    }
 
     </script>
 	 
