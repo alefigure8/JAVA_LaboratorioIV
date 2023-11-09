@@ -29,7 +29,6 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 
 	@Override
 	public boolean editar(Cliente cliente) {
-		//validaciones
 		return clienteDao.editar(cliente);
 	}
 

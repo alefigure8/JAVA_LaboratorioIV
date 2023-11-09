@@ -10,8 +10,7 @@
 <%@page import="negocioDaoImp.CuentaNegocioDaoImp"%>
 
 <!-- PRUEBA -->
-<%@page import="java.util.List"%>
-
+<%@page import="java.util.ArrayList"%>
 <!-- AUTENTICACION -->
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Administrador%>" />
@@ -45,20 +44,23 @@
 				     </div>
 				   <div class="flex-grow-1">
 				          <!-- CONTENIDO-->
-			    	 <%  ClienteNegocioDaoImp clienteNegocio=new ClienteNegocioDaoImp();
-			    	 	CuentaNegocioDaoImp cuentaNegocio=new CuentaNegocioDaoImp();
-			    	 	Cliente cliente=new Cliente();
-			    	 	Cuenta cuenta=new Cuenta();
-			    	 	cliente=clienteNegocio.obtenerUno(4);
-			    	 	cuenta=cuentaNegocio.obtenerUna(1000000035);
+			    	 <%
+			    	 	Cliente cliente=null;
+			    	 	Cuenta cuenta=null;
+			    	 	ArrayList<TipoCuenta> tiposCuenta = null;
+			    	 	Integer cantidadcuentas = null;
 			    	 %>
 			    	 
-			    	   <!-- <% /*if(request.getAttribute("cliente")!=null && request.getAttribute("cuenta")!=null && request.getAttribute("tiposCuenta")!=null) {
-			    	 	Cliente cliente=(Cliente)request.getAttribute("cliente");
-			    	 	Cuenta cuenta=(Cuenta)request.getAttribute("cuenta");*/
-			    	 	
+			    	   <!-- <% 
+			    	   
+			    	   if(request.getAttribute("cliente")!=null && request.getAttribute("cuenta")!=null && request.getAttribute("tiposCuenta")!=null && request.getAttribute("cantidadCuentas")!=null) {
+			    	 	cliente=(Cliente)request.getAttribute("cliente");
+			    	 	cuenta=(Cuenta)request.getAttribute("cuenta");
+			    	 	tiposCuenta = (ArrayList<TipoCuenta>)request.getAttribute("tiposCuenta");
+			    	 	cantidadcuentas = Integer.parseInt(request.getAttribute("cantidadCuentas").toString());
+			    	   
 			    	 %> -->
-			    	  <form action="ServletModificarCuenta" method="post" onsubmit="return confirm('¿Está seguro que desea modificar la cuenta?')">
+			    	  <form action="ServletModificarCuenta" method="get" onsubmit="return confirm('¿Está seguro que desea modificar la cuenta?')">
 						    <div class="row justify-content-center">
 						        <div class="col-md-4">
 						            <div class="form-group">
@@ -88,9 +90,8 @@
 							             <label for="tipoCuenta">Tipo Cuenta</label>
 								             <select class="form-control" id="tipoCuenta" name="tipoCuenta">
 
-						                	  <% /*List<TipoCuenta> tiposCuenta = (List<TipoCuenta>)request.getAttribute("tiposCuenta"); */
-							            		 List<TipoCuenta> tiposCuenta=(List<TipoCuenta>)cuentaNegocio.listarTiposCuenta();
-						                	  		
+						                	  <% 
+						                	  					                	  		
 							            		 for(TipoCuenta tc: tiposCuenta){
 						                	  			int valorActual = tc.getId();
 						                	  	        boolean seleccionado = valorActual==(cuenta.getTipoCuenta().getId());
@@ -119,6 +120,9 @@
 							            
 							            <div class="form-group">
 							                <label for="activa">Cuenta Activa</label>
+							                 
+							                 <% if (cantidadcuentas<=2){%>
+							                 }
 							                 <select class="form-control mt-2 me-2" name="activa" id="activa" value="<%= cuenta.getSaldo() %>">
 								                 <%
 												    boolean valorDefecto = true; 
@@ -129,20 +133,53 @@
 												    <option value="false" <%=!valorActual ? "selected" : ""%>>No</option>
 
 								            </select>
+								            <%} else{
+								            	if(cuenta.isActivo()){
+								            	%>
+								            	
+								            
+								                  <select class="form-control mt-2 me-2" name="activa" id="activa" value="<%= cuenta.getSaldo() %>">
+								                 <%
+												    boolean valorDefecto = true; 
+												    boolean valorActual = cuenta.isActivo(); 
+												    
+												    %>
+												   <option value="false" <%=!valorActual ? "selected" : ""%>>No</option>
+ 												
+								            </select>
+								            
+								            	<label style="color: red" for="activa">Este cliente ya cuenta con 3 cuentas activas</label>
+								            
+								            
+								            <%} else{ %>
+								               <select class="form-control mt-2 me-2" name="activa" id="activa" value="<%= cuenta.getSaldo() %>">
+								                 <%
+												    boolean valorDefecto = true; 
+												    boolean valorActual = cuenta.isActivo(); 
+												    
+												    %>
+												    <option value="true" <%=valorActual ? "selected" : ""%>>Si</option>
+												    <option value="false" <%=!valorActual ? "selected" : ""%>>No</option>
+
+								            </select>
+								            
+								            
+								            <%}} %>
 							         </div>
 							           
 							        </div>
 						    </div>
 						    <div class="text-center" style="margin-top:5%">
 						        <input type="submit" class="btn btn-primary" name="btnModificarCuentaCiente" value="Modificar Cuenta Cliente">
+			        
 						    </div>
 						    
 						     <div class="text-center" style="margin-top:1%">
-						    		<a href="#" class="btn btn-success btnVolver" width="200px">Volver al listado</a>
+						         <a type="submit" class="btn btn-primary" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>							    		
 						    </div>
 						    
 						</form>
-			    	 <!--   <% /*}*/ %> -->
+			    	 <!--   <%}%> -->
 			    	
 			    </div>
 			</div>

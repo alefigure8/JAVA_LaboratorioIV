@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente extends Usuario{
+	
+	private String nombre;
+	private String apellido;
 	private int dni;
 	private int cuil;
 	private String nacionalidad;
@@ -13,9 +16,7 @@ public class Cliente extends Usuario{
 	private Direccion direccion;
 	private String email;
 	private int telefono;
-	//private boolean estado;
-	/*List<Cuenta> listaCuentas;
-	List<Prestamo> listaPrestamos;*/
+	
 	
 	// CONSTRUCTORES
 	
@@ -26,8 +27,10 @@ public class Cliente extends Usuario{
 	
 	public Cliente(String usuario, int iD, String nombre, String apellido, String contrasenia, LocalDate fechaAlta,
 			Boolean activo, TipoAcceso tipoAcceso, int dni, int cuil, String nacionalidad, String sexo, LocalDate nacimiento, Direccion direccion, String email,
-			int telefono/*,  List<Cuenta> listaCuentas, List<Prestamo> listaPrestamos*/) {
-		super(usuario, iD, nombre, apellido, contrasenia, fechaAlta, activo, tipoAcceso);
+			int telefono) {
+		super(usuario, iD, contrasenia, fechaAlta, activo, tipoAcceso);
+		this.nombre = nombre;
+		this.apellido = apellido;
 		this.dni = dni;
 		this.cuil = cuil;
 		this.nacionalidad = nacionalidad;
@@ -36,12 +39,26 @@ public class Cliente extends Usuario{
 		this.direccion = direccion;
 		this.email = email;
 		this.telefono = telefono;
-		/*this.listaCuentas = listaCuentas;
-		this.listaPrestamos = listaPrestamos;*/
+		
 	}
 	
 	// GETTERS & SETTERS 
-
+	public String getNombre() {
+		return this.nombre;
+	}
+	
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public String getApellido() {
+		return this.apellido;
+	}
+	
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+	
 
 	public int getDni() {
 		return this.dni;
@@ -92,33 +109,14 @@ public class Cliente extends Usuario{
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
 	}
-	/*public boolean isEstado() {
-		return this.estado;
-	}
-	public void setEstado(boolean estado) {
-		this.estado = estado;
-	}*/
 	
-	/*public List<Cuenta> getListaCuentas() {
-		return this.listaCuentas;
-	}
-	public void setListaCuentas(ArrayList<Cuenta> listaCuentas) {
-		this.listaCuentas = listaCuentas;
-	}
-	public List<Prestamo> getListaPrestamos() {
-		return this.listaPrestamos;
-	}
-	public void setListaPrestamos(ArrayList<Prestamo> listaPrestamos) {
-		this.listaPrestamos = listaPrestamos;
-	}*/
 	
 	// TOSTRING
 
 	@Override
 	public String toString() {
-		return super.toString() + "Cliente [dni=" + dni + ", cuil=" + cuil + ", sexo=" + sexo + ", nacimiento=" + nacimiento
-				+ ", direccion=" + direccion + ", email=" + email + ", telefono=" + telefono + /*", estado=" + estado
-				+ *//*", listaCuentas=" + listaCuentas + ", listaPrestamos=" + listaPrestamos +*/ "]";
+		return super.toString() + "Cliente [nombre=" + nombre + ", apellido=" + apellido + dni + ", cuil=" + cuil + ", sexo=" + sexo + ", nacimiento=" + nacimiento
+				+ ", direccion=" + direccion + ", email=" + email + ", telefono=" + telefono + "]";
 	}
 
 

@@ -17,4 +17,5 @@ public interface IClienteDao {
 	 public Cliente obtenerCliente(int dni);
 	 public boolean existeUsuario(String usuario, String contrasena) throws SQLException;
 	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException;
+	 
 }

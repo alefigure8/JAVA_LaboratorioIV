@@ -34,9 +34,9 @@
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
 			    <ul class="list-group" style="margin-top:10%">
-			        <li class="list-group-item"><a href="ListadoClientes.jsp">Listado de Clientes</a></li>
+			        <li class="list-group-item"><a href="ServletListarClientes?obtener=true">Listado de Clientes</a></li>
 			        <li class="list-group-item"><a href="AltaCliente.jsp">Alta de Cliente</a></li>
-			        <li class="list-group-item"><a href="AltaCuentaClientes.jsp">Alta de Cuenta de Cliente</a></li>
+			        <li class="list-group-item"><a href="AltaCuentaCliente.jsp">Alta de Cuenta de Cliente</a></li>
 			    </ul>
 	        </div>
 	      </div>

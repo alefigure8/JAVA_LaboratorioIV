@@ -75,7 +75,7 @@
 						        
 						        
 						         <div class="text-center" style="margin-top:5%">
-						         	<a href="#" class="btn btn-primary btnEnviar">Volver al listado de cuentas</a>
+						         	<a type="submit" class="btn btn-primary" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>
 						        	
 						    	</div>
 				          <% } %>

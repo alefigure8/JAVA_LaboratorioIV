@@ -78,7 +78,7 @@ public class servletModificarCliente extends HttpServlet {
 				request.setAttribute("tipo", "exito");
 				request.setAttribute("titulo", "Cliente modificado");
 				request.setAttribute("mensaje", "El cliente se modificó correctamente");
-				RequestDispatcher rd = request.getRequestDispatcher("ListadoClientes.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 				rd.forward(request, response);
 			} catch (Exception e) {
 				//Retornamos cliente modificado para que corrija datos

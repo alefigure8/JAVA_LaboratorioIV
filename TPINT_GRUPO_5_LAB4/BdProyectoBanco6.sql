@@ -3,8 +3,6 @@ use bdBancos;
 
 CREATE TABLE Usuarios (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Nombre VARCHAR(50) NOT NULL,
-    Apellido VARCHAR(50) NOT NULL,
     Usuario VARCHAR(50) NOT NULL UNIQUE,
     Contrasena VARCHAR(100) NOT NULL,
     TipoAcceso ENUM('Administrador', 'Cliente') NOT NULL,
@@ -36,8 +34,10 @@ create table Direcciones(
 );
 
 CREATE TABLE Clientes(
+ 	Nombre VARCHAR(50) NOT NULL,
+    Apellido VARCHAR(50) NOT NULL,
     Id int not null, 
-    Dni int not null,
+    Dni int not null UNIQUE,
 	Cuil int not null,
 	Sexo char(1) not null,
 	Nacionalidad varchar(50) not null,
@@ -68,7 +68,7 @@ CREATE TABLE Cuentas (
     IdCliente INT not null,
     fechaCreacion Date not null,
     Activo bit default 1,
-    FOREIGN KEY (IdCliente) REFERENCES Usuarios(ID),
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
     FOREIGN KEY (IdTipoCuenta) REFERENCES TiposCuenta(IdTipoCuenta)
     
 );
@@ -150,13 +150,13 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 
 /******** ADMIN ********/
 -- Insertar usuario Administrador
-INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
-VALUES ('Admin', 'AdminApellido', 'admin', 'admin', 'Administrador', '2023-11-01');
+INSERT INTO Usuarios (Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('admin', 'admin', 'Administrador', '2023-11-01');
 
 /******** CLIENTE 1 ********/
 -- Insertar usuario Cliente
-INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
-VALUES ('Juan', 'Pérez', 'cliente1', 'cliente1', 'Cliente', '2023-11-01');
+INSERT INTO Usuarios (Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('cliente1', 'cliente1', 'Cliente', '2023-11-01');
 
 /******** DOMICILIO 1 ********/
 -- Insertar primer domicilio
@@ -168,13 +168,13 @@ SET @id_cliente1 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio1= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insertar datos del primer cliente en la tabla Clientes
-INSERT INTO Clientes (Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES (@id_cliente1, 123456789, 987654321, 'M', 'Argentina', '1990-05-15', 'cliente1@email.com', 123456789, @id_domicilio1);
+INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
+VALUES ('Juan', 'Pérez',@id_cliente1, 123456789, 987654321, 'M', 'Argentina', '1990-05-15', 'cliente1@email.com', 123456789, @id_domicilio1);
 
 /******** CLIENTE 2 ********/
 -- Insertar segundo cliente en la tabla Usuarios
-INSERT INTO Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta)
-VALUES ('María', 'Gómez', 'cliente2', 'cliente2', 'Cliente', '2023-11-01');
+INSERT INTO Usuarios ( Usuario, Contrasena, TipoAcceso, Fechaalta)
+VALUES ('cliente2', 'cliente2', 'Cliente', '2023-11-01');
 
 /******** DOMICILIO 2 ********/
 -- Insertar segundo domicilio
@@ -186,8 +186,8 @@ SET @id_cliente2 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio2= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insertar datos del segundo cliente en la tabla Clientes
-INSERT INTO Clientes (Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES (@id_cliente2, 987654321, 123456789, 'F', 'México', '1995-08-20', 'cliente2@email.com', 987654321, @id_domicilio2);
+INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
+VALUES ('María', 'Gómez',@id_cliente2, 987654321, 123456789, 'F', 'México', '1995-08-20', 'cliente2@email.com', 987654321, @id_domicilio2);
 
 -- Insertar Estados
 insert into Estados (descripcion) values ("Aprobado"), ("Pendiente"), ("Rechazado");
@@ -233,3 +233,28 @@ inner join TiposMovimiento TM on TM.IdTipoMovimiento=C.IdTipoMovimiento
 /******** INSERT TIPOS DE CUENTA ********/
 insert into TiposCuenta (descripcion) values ('Caja de ahorro');
 insert into TiposCuenta (descripcion) values ('Cuenta corriente');
+
+
+
+
+/******************** MODIFICACIONES 1ERA ENTREGA *******************/
+/********************** Modificar dni unique *************************/
+ALTER TABLE Clientes
+ADD CONSTRAINT UNIQUE (Dni);
+
+
+/********************** Modificar usuario y cliente ***********************/
+ALTER TABLE Usuarios
+DROP COLUMN Nombre,
+DROP COLUMN Apellido;
+
+ALTER TABLE Clientes
+ADD COLUMN Nombre VARCHAR(50) NOT NULL,
+ADD COLUMN Apellido VARCHAR(50) NOT NULL;
+
+/************* Modificar cuentas con idCliente, no con idUsuario *************/
+ALTER TABLE Cuentas
+DROP FOREIGN KEY cuentas_ibfk_1;
+
+ALTER TABLE Cuentas
+ADD FOREIGN KEY (IdCliente) REFERENCES Clientes(Id);

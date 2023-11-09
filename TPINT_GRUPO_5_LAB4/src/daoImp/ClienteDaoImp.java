@@ -23,13 +23,13 @@ import entidad.Usuario;
 public class ClienteDaoImp implements IClienteDao{
 
 	
-	private static final String insertUsuarios = "Insert into Usuarios (Nombre, Apellido, Usuario, Contrasena, TipoAcceso, Fechaalta) values (?, ?, ?, ?, ?, ?)";
+	private static final String insertUsuarios = "Insert into Usuarios (Usuario, Contrasena, TipoAcceso, Fechaalta) values (?, ?, ?, ?)";
 	private static final String insertDirecciones = "Insert into Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento) values (?, ?, ?, ?, ?, ?)";
-	private static final String insertClientes = "Insert into Clientes (Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String insertClientes = "Insert into Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String updateUsuarios = "Update Usuarios set Nombre = ?, Apellido = ?, Usuario = ?, Contrasena = ?, TipoAcceso = ?, Fechaalta = ? where Id = ?";
+	private static final String updateUsuarios = "Update Usuarios set  Usuario = ?, Contrasena = ?, TipoAcceso = ?, Fechaalta = ? where Id = ?";
 	private static final String updateDirecciones = "Update Direcciones set IdLocalidad = ?, CodigoPostal = ?, Calle = ?, Numero = ?, TipoDireccion = ?, NumeroDepartamento = ? where IdDireccion = ?";
-	private static final String updateClientes = "Update Clientes set Dni = ?, Cuil = ?, Sexo = ?, Nacionalidad = ?, FechaNacimiento = ?, Correo = ?, Telefono = ? where Id = ?";
+	private static final String updateClientes = "Update Clientes set Nombre = ?, Apellido = ?, Dni = ?, Cuil = ?, Sexo = ?, Nacionalidad = ?, FechaNacimiento = ?, Correo = ?, Telefono = ? where Id = ?";
 	
 	private static final String leerTodos = "select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
 			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
@@ -66,13 +66,11 @@ public class ClienteDaoImp implements IClienteDao{
 
 	        // usuarios
 	        usuarioStatement = connection.prepareStatement(insertUsuarios, Statement.RETURN_GENERATED_KEYS);
-	        usuarioStatement.setString(1, cliente.getNombre());
-	        usuarioStatement.setString(2, cliente.getApellido());
-	        usuarioStatement.setString(3, cliente.getUsuario());
-	        usuarioStatement.setString(4, cliente.getContrasenia());
-	        usuarioStatement.setString(5, cliente.getTipoAcceso().name());
+	        usuarioStatement.setString(1, cliente.getUsuario());
+	        usuarioStatement.setString(2, cliente.getContrasenia());
+	        usuarioStatement.setString(3, cliente.getTipoAcceso().name());
 			java.sql.Date fechaAltaSQL = java.sql.Date.valueOf(cliente.getFechaAlta()); // pasa de localDate a java.sql.date para la bd
-			usuarioStatement.setDate(6, fechaAltaSQL);
+			usuarioStatement.setDate(4, fechaAltaSQL);
 
 	        int filasInsertadasUsuarios = usuarioStatement.executeUpdate();
 	        if (filasInsertadasUsuarios > 0) {
@@ -103,16 +101,18 @@ public class ClienteDaoImp implements IClienteDao{
 	            
 		    // cliente
 		    clienteStatement = connection.prepareStatement(insertClientes);
-		    clienteStatement.setInt(1, idUsuario);
-		    clienteStatement.setInt(2, cliente.getDni());
-		    clienteStatement.setInt(3, cliente.getCuil());
-		    clienteStatement.setString(4, cliente.getSexo());
-		    clienteStatement.setString(5, cliente.getNacionalidad());
+		    clienteStatement.setString(1, cliente.getNombre());
+		    clienteStatement.setString(2, cliente.getApellido());
+		    clienteStatement.setInt(3, idUsuario);
+		    clienteStatement.setInt(4, cliente.getDni());
+		    clienteStatement.setInt(5, cliente.getCuil());
+		    clienteStatement.setString(6, cliente.getSexo());
+		    clienteStatement.setString(7, cliente.getNacionalidad());
 	    	java.sql.Date fechaNacSQL = java.sql.Date.valueOf(cliente.getNacimiento()); // pasa de localDate a java.sql.date para la bd
-	    	clienteStatement.setDate(6, fechaNacSQL);
-	    	clienteStatement.setString(7, cliente.getEmail());
-	    	clienteStatement.setInt(8, cliente.getTelefono());
-	    	clienteStatement.setInt(9, idDireccion);
+	    	clienteStatement.setDate(8, fechaNacSQL);
+	    	clienteStatement.setString(9, cliente.getEmail());
+	    	clienteStatement.setInt(10, cliente.getTelefono());
+	    	clienteStatement.setInt(11, idDireccion);
 	           
 	        int filasInsertadasClientes = clienteStatement.executeUpdate();
 	            if (filasInsertadasClientes > 0) {
@@ -152,14 +152,12 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			// usuarios
 	        pStatementUsuarios = connection.prepareStatement(updateUsuarios);
-	        pStatementUsuarios.setString(1, cliente.getNombre());
-	        pStatementUsuarios.setString(2, cliente.getApellido());
-	        pStatementUsuarios.setString(3, cliente.getUsuario());
-	        pStatementUsuarios.setString(4, cliente.getContrasenia());
-	        pStatementUsuarios.setString(5, cliente.getTipoAcceso().name());
+	        pStatementUsuarios.setString(1, cliente.getUsuario());
+	        pStatementUsuarios.setString(2, cliente.getContrasenia());
+	        pStatementUsuarios.setString(3, cliente.getTipoAcceso().name());
 	        java.sql.Date fechaAltaSQL = java.sql.Date.valueOf(cliente.getFechaAlta());
-	        pStatementUsuarios.setDate(6, fechaAltaSQL);
-	        pStatementUsuarios.setInt(7, cliente.getId());
+	        pStatementUsuarios.setDate(4, fechaAltaSQL);
+	        pStatementUsuarios.setInt(5, cliente.getId());
 	        
 	        int filasUsuarios = pStatementUsuarios.executeUpdate();
 
@@ -177,15 +175,17 @@ public class ClienteDaoImp implements IClienteDao{
 
 	        // cliente
 	        pStatementClientes = connection.prepareStatement(updateClientes);
-	        pStatementClientes.setInt(1, cliente.getDni());
-	        pStatementClientes.setInt(2, cliente.getCuil());
-	        pStatementClientes.setString(3, cliente.getSexo());
-	        pStatementClientes.setString(4, cliente.getNacionalidad());
+	        pStatementClientes.setString(1, cliente.getNombre());
+	        pStatementClientes.setString(2, cliente.getApellido());
+	        pStatementClientes.setInt(3, cliente.getDni());
+	        pStatementClientes.setInt(4, cliente.getCuil());
+	        pStatementClientes.setString(5, cliente.getSexo());
+	        pStatementClientes.setString(6, cliente.getNacionalidad());
 	        java.sql.Date fechaNacSQL = java.sql.Date.valueOf(cliente.getNacimiento());
-	        pStatementClientes.setDate(5, fechaNacSQL);
-	        pStatementClientes.setString(6, cliente.getEmail());
-	        pStatementClientes.setInt(7, cliente.getTelefono());
-	        pStatementClientes.setInt(8, cliente.getId());
+	        pStatementClientes.setDate(7, fechaNacSQL);
+	        pStatementClientes.setString(8, cliente.getEmail());
+	        pStatementClientes.setInt(9, cliente.getTelefono());
+	        pStatementClientes.setInt(10, cliente.getId());
 
 	       
 	        int filasClientes = pStatementClientes.executeUpdate();
@@ -216,19 +216,18 @@ public class ClienteDaoImp implements IClienteDao{
 	/***************** BORRAR ********************/
 	@Override
 	public boolean borrar(int idCliente) {
-	    Connection connection = null;
-	    PreparedStatement pStatementUsuarios = null;
+		PreparedStatement pStatement;
+		Connection connection=Conexion.getConexion().getSQLConexion();
 	    boolean deleteExitoso = false;
 
 	    try {
-	        connection = Conexion.getConexion().getSQLConexion();
 
 	        // Desactivar el usuario
 	        String desactivarUsuario = "UPDATE Usuarios SET Activo = 0 WHERE Id = ?";
-	        pStatementUsuarios = connection.prepareStatement(desactivarUsuario);
-	        pStatementUsuarios.setInt(1, idCliente);
+	        pStatement = connection.prepareStatement(desactivarUsuario);
+	        pStatement.setInt(1, idCliente);
 
-	        int filasAfectadas = pStatementUsuarios.executeUpdate();
+	        int filasAfectadas = pStatement.executeUpdate();
 
 	        if (filasAfectadas > 0) {
 	            deleteExitoso = true;
@@ -243,22 +242,6 @@ public class ClienteDaoImp implements IClienteDao{
 	            ex.printStackTrace();
 	        }
 	        e.printStackTrace();
-	    } finally {
-	        // Cerrar recursos
-	        if (pStatementUsuarios != null) {
-	            try {
-	                pStatementUsuarios.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
 	    }
 
 	    return deleteExitoso;
@@ -269,7 +252,6 @@ public class ClienteDaoImp implements IClienteDao{
 	/***************** OBTENER TODOS ********************/
 	@Override
 	public List<Cliente> obtenerTodos() {
-		// TODO Auto-generated method stub
 		PreparedStatement pStatement;
 		ResultSet rSet;
 		List<Cliente> clientes = new ArrayList<Cliente>();
@@ -296,8 +278,6 @@ public class ClienteDaoImp implements IClienteDao{
 		private Cliente getCliente(ResultSet rSet) throws SQLException{
 			//Atributos usuario
 			int id=rSet.getInt("Id");
-			String nombre=rSet.getString("Nombre");
-			String apellido=rSet.getString("Apellido");
 			String usuario=rSet.getString("Usuario");
 			String contrasena=rSet.getString("Contrasena");
 			TipoAcceso tipoAcceso=TipoAcceso.valueOf(rSet.getString("TipoAcceso"));
@@ -305,6 +285,8 @@ public class ClienteDaoImp implements IClienteDao{
 		    Boolean activo =rSet.getBoolean("Activo");
 		    
 			//Atributos cliente
+		    String nombre=rSet.getString("Nombre");
+			String apellido=rSet.getString("Apellido");
 			int dni=rSet.getInt("Dni");
 			int cuil=rSet.getInt("Cuil");
 			String sexo=rSet.getString("Sexo");
@@ -433,14 +415,14 @@ public class ClienteDaoImp implements IClienteDao{
 				
 				if(rSet.next()) {
 					int id=rSet.getInt("Id");
-					String nombre=rSet.getString("Nombre");
-					String apellido=rSet.getString("Apellido");
+					/*String nombre=rSet.getString("Nombre");
+					String apellido=rSet.getString("Apellido");*/
 					String contrasena=rSet.getString("Contrasena");
 					TipoAcceso tipoAcceso=TipoAcceso.valueOf(rSet.getString("TipoAcceso"));
 					LocalDate fechaAlta=rSet.getDate("Fechaalta").toLocalDate();
 				    Boolean activo =rSet.getBoolean("Activo");
 					
-				    return new Usuario(usuario, id, nombre, apellido, contrasena, fechaAlta, activo, tipoAcceso );
+				    return new Usuario(usuario, id, contrasena, fechaAlta, activo, tipoAcceso );
 				}
 			} catch (Exception e) {
 				throw e;

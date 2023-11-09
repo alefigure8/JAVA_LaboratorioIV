@@ -2,9 +2,21 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
-<jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
+	<jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Administrador%>" />
-</jsp:include>
+	</jsp:include>
+<!-- FIN AUTENTICACION -->
+
+<%@page import="entidad.Cliente"%>
+<%@page import="entidad.Provincia"%>
+<%@page import="entidad.Localidad"%>
+<%@page import="negocioDaoImp.ProvinciaNegocioDaoImp"%>
+<%@page import="negocioDaoImp.LocalidadNegocioDaoImp"%>
+<%@page import="java.util.List"%>
+<%@page import="entidad.TipoDireccion"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -28,70 +40,524 @@
 	      <!--MAIN-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 	        <div class="w-100 pt-2">
-	          <h1 style="margin-bottom:10%">ALTA DE CLIENTE</h1>
+	          <h1 id="tituloCliente" style="margin-bottom:5%">ALTA DE CLIENTE</h1>
 	        </div>
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
-				<form>
-				    <div class="row">
-				        <div class="col-md-6">
+	          
+	          <%if(session.getAttribute("clienteAmodificar")!=null && session.getAttribute("clienteAgregado")==null){
+	        	  Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAmodificar");
+	        	  if (clienteAmodificar != null) {
+	        	      System.out.println("Cliente: " + clienteAmodificar.getNombre()); // verificar cliente
+	        	  }
+	        	  
+				%>
+	          
+	          <form action="ServletAltaCliente" method="post"  onsubmit="return validarContraseñas()" onsubmit="return confirm('¿Está seguro que desea realizar el alta?')">
+				    <div class="row justify-content-center">
+				        <div class="col-md-3">
 				            <div class="form-group">
 				                <label for="nombre">Nombre</label>
-				                <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
+				               
+				                <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese el nombre"  value="<%= clienteAmodificar.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="apellido">Apellido</label>
+				                <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese el apellido" value="<%= clienteAmodificar.getApellido() %>"  required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 				            </div>
 				            <div class="form-group">
 				                <label for="dni">DNI</label>
-				                <input type="text" class="form-control" id="dni" placeholder="Ingrese el DNI">
+				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" value="<%= clienteAmodificar.getDni() %>"   required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+				            	    
+				            	    
+				            	    <small id="dniError" class="text-danger" style="<% if ((String)request.getAttribute("error") != null && !((String)request.getAttribute("error")).isEmpty()) { %> display: block; <% } else { %> display: none; <% } %>"></small>
 				            </div>
 				            <div class="form-group">
 				                <label for="cuil">CUIL</label>
-				                <input type="text" class="form-control" id="cuil" placeholder="Ingrese el CUIL">
+				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" value="<%= clienteAmodificar.getCuil() %>"  required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
 				            </div>
 				            <div class="form-group">
 				                <label for="nacionalidad">Nacionalidad</label>
-				                <input type="text" class="form-control" id="nacionalidad" placeholder="Ingrese la nacionalidad">
+				                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" placeholder="Ingrese la nacionalidad"  value="<%= clienteAmodificar.getNacionalidad() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 				            </div>
-				            <div class="form-group">
-				                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-				                <input type="text" class="form-control" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento">
-				            </div>
-				           
-				        </div>
-				        <div class="col-md-6">
+				            
 				             <div class="form-group">
 				                <label for="sexo">Género</label>
-				                <select class="form-control" id="sexo">
-				                    <option value="masculino">Masculino</option>
-				                    <option value="femenino">Femenino</option>
-				                </select>
+				                <select class="form-control" id="sexo" required name="sexo">
+							        <option value="M" <%= clienteAmodificar.getSexo().equals("M") ? "selected" : "" %>>Masculino</option>
+							        <option value="F" <%= clienteAmodificar.getSexo().equals("F") ? "selected" : "" %>>Femenino</option>
+							    </select>
 				            </div>
-				            <div class="form-group">
-				                <label for="correo">Correo</label>
-				                <input type="text" class="form-control" id="correo" placeholder="Ingrese el correo">
+				            
+				             <div class="form-group">
+				                <label for="correo" >Correo</label>
+				                <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo" name="correo"  value="<%= clienteAmodificar.getEmail() %>" required oninput="this.value =  this.value = this.value.substring(0, 30);validateInput(this, 1);">
 				            </div>
 				            <div class="form-group">
 				                <label for="telefono">Teléfono</label>
-				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono">
+				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required  value="<%= clienteAmodificar.getTelefono() %>"  oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
 				            </div>
+				            
 				            <div class="form-group">
-				                <label for="NombreUsuario">Nombre de Usuario</label>
-				                <input type="text" class="form-control" id="NombreUsuario" placeholder="Ingrese el nombre de usuario">
+				                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+				                <% LocalDate fechaNacimiento = clienteAmodificar.getNacimiento();
+
+				                String fechaNacimientoStr = (fechaNacimiento != null) ? fechaNacimiento.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : ""; %>
+				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" value="<%= fechaNacimientoStr %>" required>
 				            </div>
-				            <div class="form-group">
-				                <label for="claveNueva">Contraseña</label>
-				                <input type="password" class="form-control" id="claveNueva" placeholder="Ingrese la contraseña">
-				            </div>
+				           
 				        </div>
+				        
+				        
+				        
+				        <div class="col-md-3">
+				            
+				            
+				            <!-- Provincia  y localidad -->
+				            <div class="form-group">
+					            <label for="provincia">Provincia</label>
+					            <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
+							        <% 
+							        ProvinciaNegocioDaoImp provinciaNegocio = new ProvinciaNegocioDaoImp();
+							        List<Provincia> provincias = (List<Provincia>)provinciaNegocio.obtenerTodas(); 
+							        for (Provincia provincia : provincias) {
+							            String selected = "";
+							            if (clienteAmodificar.getDireccion().getProvincia().getIdProvincia() == provincia.getIdProvincia()) {
+							                selected = "selected";
+							            }
+							        %>
+							        <option value="<%= provincia.getIdProvincia() %>" <%= selected %>> <%= provincia.getNombre() %> </option>
+							        <% } %>
+							    </select>
+					        </div>
+					
+					        <div class="form-group">
+					            <label for="localidad">Localidad</label>
+					            <select class="form-control" id="localidad" name="localidad" required>
+					                <% 
+									    LocalidadNegocioDaoImp localidadNegocio = new LocalidadNegocioDaoImp();
+									    List<Localidad> localidades = (List<Localidad>)localidadNegocio.obtenerTodas(); 
+									 	 for (Localidad localidad : localidades) {
+									       	  String selected = "";
+									      	 if (clienteAmodificar.getDireccion().getLocalidad().getIdLocalidad() == localidad.getIdLocalidad()) {
+									            selected = "selected";
+									            }
+									        %>
+									        <option value="<%= localidad.getIdLocalidad() %>" <%= selected %>> <%= localidad.getNombre() %> </option>
+									 <% } %>
+					           
+					            </select>
+					        </div>
+						    
+						    <!-- Direccion -->
+						    <div class="form-group">
+						        <label for="codigoPostal">Código Postal</label>
+						        <input type="text" class="form-control" name="codigoPostal" id="codigoPostal" value="<%= clienteAmodificar.getDireccion().getCodigoPostal() %>"   placeholder="Ingrese el código postal" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 6);validateInput(this, 1);">
+						    </div>
+						    <div class="form-group">
+						        <label for="calle">Calle</label>
+						        <input type="text" class="form-control" name="calle" id="calle" value="<%= clienteAmodificar.getDireccion().getCalle() %>"  placeholder="Ingrese la calle" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						    </div>
+						    <div class="form-group">
+						        <label for="numero">Número</label>
+						        <input type="text"  class="form-control" name="numero" id="numero" value="<%= clienteAmodificar.getDireccion().getNumero()%>"  placeholder="Ingrese el número" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+						    </div>
+						    
+						    <div class="form-group">
+							    <label for="tipoDireccion">Tipo de Dirección</label>
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required>
+							        <% 
+							        for (TipoDireccion tipo : TipoDireccion.values()) {
+							            String selected = "";
+							            if (clienteAmodificar.getDireccion().getTipoDireccion() == tipo) {
+							                selected = "selected";
+							            }
+							        %>
+							        <option value="<%= tipo.name() %>" <%= selected %>><%= tipo.name() %></option>
+							        <% } %>
+							    </select>
+							</div>
+
+						    
+						    <div class="form-group">
+						        <label for="numeroDepartamento">Número de Departamento</label>
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						    </div>
+				            
+				            
+				            
+				        </div>
+				        
+				         <div class="col-md-3">
+				         		<div class="form-group">
+				                <label for="usuario">Nombre de Usuario</label>
+				                <input type="text" class="form-control" id="usuario" placeholder="Ingrese el nombre de usuario" value="<%= clienteAmodificar.getUsuario() %>"  name="usuario" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				           		<small id="usuarioError" class="text-danger" style="<% if ((String)request.getAttribute("errorUsuario") != null && !((String)request.getAttribute("errorUsuario")).isEmpty()) { %> display: block; <% } else { %> display: none; <% } %>"></small>
+				           
+				           
+				            </div>
+				            <div class="form-group">
+				                <label for="contraseña">Contraseña</label>
+				                <input type="password" class="form-control" id="contraseña" placeholder="Ingrese la contraseña"  value="<%= clienteAmodificar.getContrasenia() %>" name="contraseña"  required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            
+				            <div class="form-group">
+				                <label for="confirmarContraseña">Re ingrese contraseña</label>
+				                <input type="password" class="form-control" id="confirmarContraseña" placeholder="Reingrese la contraseña" value="<%= clienteAmodificar.getContrasenia() %>" name="confirmarContraseña" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            
+				            <div class="d-flex justify-content-end" style="margin-top:5%">
+						        <button type="submit" class="btn btn-primary btnEnviar " name="btnAltaCliente">Alta de Cliente</button>
+						    </div>
+						    
+						    <div class="d-flex justify-content-end" style="margin-top:5%">
+							    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
+							</div>
+							
+							<div class="d-flex justify-content-end" style="margin-top:5%">
+							    <a href="PerfilBanco.jsp" class="btn btn-success ">Inicio</a>
+							</div>
+						    
+				         </div>
+				        
 				    </div>
-				    <div class="text-center" style="margin-top:5%">
-				        <button type="submit" class="btn btn-primary">Alta de Cliente</button>
-				    </div>
+				    
 				</form>
+				
+	          <%
+				} if(session.getAttribute("clienteAmodificar")==null && session.getAttribute("clienteAgregado")==null) {
+				%>
+	          
+	          
+	          
+	          
+				<form action="ServletAltaCliente" method="post" onsubmit="return validarContraseñas()" onsubmit="return confirm('¿Está seguro que desea realizar el alta?')" >
+				    <div class="row justify-content-center">
+				        <div class="col-md-3">
+				            <div class="form-group">
+				                <label for="nombre">Nombre</label>
+				               
+				                <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese el nombre" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="apellido">Apellido</label>
+				                <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese el apellido" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="dni">DNI</label>
+				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+				            	
+				            </div>
+				            <div class="form-group">
+				                <label for="cuil">CUIL</label>
+				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="nacionalidad">Nacionalidad</label>
+				                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" placeholder="Ingrese la nacionalidad" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            
+				             <div class="form-group">
+				                <label for="sexo">Género</label>
+				                <select class="form-control" id="sexo" required name="sexo">
+				                    <option value="M">Masculino</option>
+				                    <option value="F">Femenino</option>
+				                </select>
+				            </div>
+				            
+				             <div class="form-group">
+				                <label for="correo" >Correo</label>
+				                <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo" name="correo" required oninput="this.value =  this.value = this.value.substring(0, 30);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="telefono">Teléfono</label>
+				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				            </div>
+				            
+				            <div class="form-group">
+				                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" required>
+				            </div>
+				           
+				        </div>
+				        
+				        
+				        
+				        <div class="col-md-3">
+				            
+				            
+				            <!-- Provincia  y localidad -->
+				            <div class="form-group">
+					            <label for="provincia">Provincia</label>
+					            <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
+					            <% ProvinciaNegocioDaoImp provinciaNegocio= new ProvinciaNegocioDaoImp();
+					            	List<Provincia> provincias= (List<Provincia>)provinciaNegocio.obtenerTodas(); 
+					            	for(Provincia provincia: provincias){
+					            %>
+					                <option value="<%= provincia.getIdProvincia() %>"> <%= provincia.getNombre() %>  </option>
+					           <%} %>
+					            </select>
+					        </div>
+					
+					        <div class="form-group">
+					            <label for="localidad">Localidad</label>
+					            <select class="form-control" id="localidad" name="localidad" required>
+					                <% LocalidadNegocioDaoImp localidadNegocio= new LocalidadNegocioDaoImp();
+					            	List<Localidad> localidades= (List<Localidad>)localidadNegocio.obtenerTodas(); 
+					            	for(Localidad localidad: localidades){
+					            %>
+					                <option value="<%= localidad.getIdLocalidad() %>"> <%= localidad.getNombre() %>  </option>
+					           <%} %>
+					            </select>
+					        </div>
+						    
+						    <!-- Direccion -->
+						    <div class="form-group">
+						        <label for="codigoPostal">Código Postal</label>
+						        <input type="text" class="form-control" name="codigoPostal" id="codigoPostal" placeholder="Ingrese el código postal" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 6);validateInput(this, 1);">
+						    </div>
+						    <div class="form-group">
+						        <label for="calle">Calle</label>
+						        <input type="text" class="form-control" name="calle" id="calle" placeholder="Ingrese la calle" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						    </div>
+						    <div class="form-group">
+						        <label for="numero">Número</label>
+						        <input type="text"  class="form-control" name="numero" id="numero" placeholder="Ingrese el número" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+						    </div>
+						    
+						    <div class="form-group">
+							    <label for="tipoDireccion">Tipo de Dirección</label>
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required>
+							        <% for (TipoDireccion tipo : TipoDireccion.values()) { %>
+							            <option value="<%= tipo.name() %>"><%= tipo.name() %></option>
+							        <% } %>
+							    </select>
+							</div>
+
+						    
+						    <div class="form-group">
+						        <label for="numeroDepartamento">Número de Departamento</label>
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						    </div>
+				            
+				            
+				            
+				        </div>
+				        
+				         <div class="col-md-3">
+				         		<div class="form-group">
+				                <label for="usuario">Nombre de Usuario</label>
+				                <input type="text" class="form-control" id="usuario" placeholder="Ingrese el nombre de usuario" name="usuario" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            <div class="form-group">
+				                <label for="contraseña">Contraseña</label>
+				                <input type="password" class="form-control" id="contraseña" placeholder="Ingrese la contraseña" name="contraseña"  required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            
+				            <div class="form-group">
+				                <label for="confirmarContraseña">Re ingrese contraseña</label>
+				                <input type="password" class="form-control" id="confirmarContraseña" placeholder="Reingrese la contraseña" name="confirmarContraseña" required oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+				            </div>
+				            
+				            <div class="d-flex justify-content-end" style="margin-top:5%">
+						        <button type="submit" class="btn btn-primary btnEnviar " name="btnAltaCliente">Alta de Cliente</button>
+						    </div>
+						    
+						    <div class="d-flex justify-content-end" style="margin-top:5%">
+							    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
+							</div>
+							
+							<div class="d-flex justify-content-end" style="margin-top:5%">
+							    <a href="PerfilBanco.jsp" class="btn btn-success ">Inicio</a>
+							</div>
+				         </div>
+				        
+				    </div>
+				    
+				</form>
+				
+				<%
+				
+				} if(session.getAttribute("clienteAgregado")!=null) {
+					 Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAgregado");
+				%>
+					
+					<script>
+					        document.getElementById('tituloCliente').innerText = "CLIENTE AGREGADO EXITOSAMENTE";
+					</script>
+					
+					<div class="row justify-content-center">
+					    <!-- Columna de Datos Personales -->
+					    <div class="col-md-3">
+					        <h3>Datos Personales</h3>
+					        <table class="table">
+					            <tbody>
+					                <tr>
+					                    <th>Nombre</th>
+					                    <td><%= clienteAmodificar.getNombre() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Apellido</th>
+					                    <td><%= clienteAmodificar.getApellido() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Fecha de Alta</th>
+					                    <td><%= clienteAmodificar.getFechaAlta() %></td>
+					                </tr>
+					                <tr>
+					                    <th>DNI</th>
+					                    <td><%= clienteAmodificar.getDni() %></td>
+					                </tr>
+					                <tr>
+					                    <th>CUIL</th>
+					                    <td><%= clienteAmodificar.getCuil() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Nacionalidad</th>
+					                    <td><%= clienteAmodificar.getNacionalidad() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Género</th>
+					                    <td><%= clienteAmodificar.getSexo() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Correo</th>
+					                    <td><%= clienteAmodificar.getEmail() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Teléfono</th>
+					                    <td><%= clienteAmodificar.getTelefono() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Fecha de Nacimiento</th>
+					                    <td><%= clienteAmodificar.getNacimiento() %></td>
+					                </tr>
+					            </tbody>
+					        </table>
+					    </div>
+					    
+					    <!-- Columna de Datos de Dirección -->
+					    <div class="col-md-3">
+					        <h3>Datos de Dirección</h3>
+					        <table class="table">
+					            <tbody>
+					                <tr>
+					                    <th>Provincia</th>
+					                    <td><%= clienteAmodificar.getDireccion().getProvincia().getNombre() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Localidad</th>
+					                    <td><%= clienteAmodificar.getDireccion().getLocalidad().getNombre() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Código Postal</th>
+					                    <td><%= clienteAmodificar.getDireccion().getCodigoPostal() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Calle</th>
+					                    <td><%= clienteAmodificar.getDireccion().getCalle() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Número</th>
+					                    <td><%= clienteAmodificar.getDireccion().getNumero() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Número de Departamento</th>
+					                    <td><%= clienteAmodificar.getDireccion().getNumeroDepartamento() %></td>
+					                </tr>
+					                <tr>
+					                    <th>Tipo de Dirección</th>
+					                    <td><%= clienteAmodificar.getDireccion().getTipoDireccion() %></td>
+					                </tr>
+					            </tbody>
+					        </table>
+					    </div>
+					    
+					    
+					    <div class="col-md-3">
+					        <h3>Datos de usuario</h3>
+					        <table class="table">
+					           
+					                <tbody>
+						                <tr>
+						                    <th>Usuario</th>
+						                    <td><%= clienteAmodificar.getUsuario() %></td>
+						                </tr>
+						                <tr>
+						                    <th>Contraseña</th>
+						                    <td><%= clienteAmodificar.getContrasenia() %></td>
+						                </tr>
+						            </tbody>
+					           
+					        </table>
+					    </div>
+					</div>
+
+					
+					<div style="text-align: center;">
+					    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
+					</div>
+					
+					<div class="mt-4" style="text-align: center;">
+					    <a href="PerfilBanco.jsp" class="btn btn-success ">Inicio</a>
+					</div>
+					
+					
+				<%} %>
+					
         	</div>
      	 </div>
  	</div>
 	<!--FIN MAIN-->
  	<!--FOOTER-->
     <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
+    
+	 <script>
+		function validarContraseñas() {
+		    var password = document.getElementById("contraseña").value;
+		    var confirmPassword = document.getElementById("confirmarContraseña").value;
+		
+		    if (password !== confirmPassword) {
+		        alert("Las contraseñas no coinciden");
+		        return false; // detiene el envio del formulario 
+		    }
+		    return true; // envia del formulario
+		}
+	</script>
+
+	
+	<script>
+	    var error = "<%= (String) request.getAttribute("error") %>";
+	    var dniError = document.getElementById("dniError");
+	
+	    if (error) {
+	        dniError.innerText = error;
+	    }
+	</script>
+    
+    
+    <script>
+	    var error = "<%= (String) request.getAttribute("errorUsuario") %>";
+	    var usuarioError = document.getElementById("usuarioError");
+	
+	    if (error) {
+	        usuarioError.innerText = error;
+	    }
+	</script>
+    
+    <script>
+    
+		    function validateInput(input, minLength) {
+		    	 const trimmedValue = input.value.trim();
+		    	    if (trimmedValue.length < minLength || !trimmedValue) {
+		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
+		    	    } else {
+		    	        input.setCustomValidity('');
+		    	    }
+		    }
+
+    </script>
+    
+    
  </body>
 </html>

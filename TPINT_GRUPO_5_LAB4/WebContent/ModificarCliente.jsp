@@ -66,27 +66,27 @@
 					    		<legend class="w-auto">Cliente:</legend>
 					    		<div class="form-group">
 					                <label for="nombre">Nombre</label>
-					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required>
+					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="apellido">Apellido</label>
-					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required>
+					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="dni">DNI</label>
-					                <input type="text" class="form-control" name="dni" id="dni" value="<%=cliente.getDni() %>" onkeypress="return /[0-9]/i.test(event.key)" required>
+					                <input type="text" class="form-control" name="dni" id="dni" value="<%=cliente.getDni() %>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="cuil">CUIL</label>
-					                <input type="text" class="form-control" name="cuil"  id="cuil" value="<%=cliente.getCuil()%>" onkeypress="return /[0-9]/i.test(event.key)" required>
+					                <input type="text" class="form-control" name="cuil"  id="cuil" value="<%=cliente.getCuil()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="nacionalidad">Nacionalidad</label>
-					                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" value="<%=cliente.getNacionalidad() %>" required>
+					                <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" value="<%=cliente.getNacionalidad() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-					                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required>
+					                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
    					            <div class="form-group">
 					                <label for="sexo">Sexo</label>
@@ -103,11 +103,11 @@
 					    		<legend class="w-auto">Contactos:</legend>
 					          	<div class="form-group">
 					                <label for="calle">Calle</label>
-					                <input type="text" class="form-control" name="calle" id="calle" value="<%=cliente.getDireccion().getCalle()%>" required>
+					                <input type="text" class="form-control" name="calle" id="calle" value="<%=cliente.getDireccion().getCalle()%>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="numero">Numero</label>
-					                <input type="text" class="form-control" name="numero" id="numero" value="<%=cliente.getDireccion().getNumero()%>" onkeypress="return /[0-9]/i.test(event.key)" required>
+					                <input type="text" class="form-control" name="numero" id="numero" value="<%=cliente.getDireccion().getNumero()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="tipoDireccion">Tipo Dirección</label>
@@ -123,7 +123,7 @@
 					            </div>
 					            <div class="form-group">
 					                <label for="codpos">Código Postal</label>
-					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required>
+					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="provincia">Provincia</label>
@@ -141,11 +141,11 @@
 					            </div>
 					            <div class="form-group">
 					                <label for="telefono">Teléfono</label>
-					                <input type="text" class="form-control" name="telefono" id="telefono" value="<%=cliente.getTelefono()%>" onkeypress="return /[0-9]/i.test(event.key)" required>
+					                <input type="text" class="form-control" name="telefono" id="telefono" value="<%=cliente.getTelefono()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
 					            </div>
 					            <div class="form-group">
 					                <label for="correo">Correo</label>
-					                <input type=email class="form-control" name="correo" id="correo" value="<%=cliente.getEmail()%>" required>
+					                <input type=email class="form-control" name="correo" id="correo" value="<%=cliente.getEmail()%>" required >
 					            </div>
 
 				            </fieldset>
@@ -297,4 +297,19 @@
 	 	tipoCasa.value=tipoCasaID;	
 	 	
 	 </script>
+	 
+	 
+	  <script>
+    
+		    function validateInput(input, minLength) {
+		    	 const trimmedValue = input.value.trim();
+		    	    if (trimmedValue.length < minLength || !trimmedValue) {
+		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
+		    	    } else {
+		    	        input.setCustomValidity('');
+		    	    }
+		    }
+
+    </script>
+	 
 </html>

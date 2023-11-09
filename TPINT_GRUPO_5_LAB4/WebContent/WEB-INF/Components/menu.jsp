@@ -4,7 +4,7 @@
 <% 
 	if(session.getAttribute("usuario") != null){
 	Usuario usuario = (Usuario)session.getAttribute("usuario");
-	String usarioNombre = usuario.getNombre() + " " +usuario.getApellido();
+	String usarioNombre = "ADMIN";
 
 	if(usuario.getTipoAcceso() == TipoAcceso.Administrador){%>
 		<jsp:include page= "/WEB-INF/Components/menu/menu_admin.jsp">

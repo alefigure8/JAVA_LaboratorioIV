@@ -44,22 +44,28 @@ public class ServletAltaCuenta extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+	
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
+		
 		HttpSession session = request.getSession();
-	
+
 		//CLICK BUSCAR DNI
 		if(request.getParameter("btnBuscarDni")!=null) {
 			String dni=request.getParameter("dni");
+	
 			//Validamos que no contenga espacios vacios
 			if(!dni.trim().isEmpty()) {
 				//Validamos que exista ese dni en clientes y lo devolvemos como con un request
 				if(clienteNegocioDao.existeDni(Integer.parseInt(dni))){
 					//Agregamos cliente
+					boolean existedni=true;
+					request.setAttribute("existedni",existedni);
 					Cliente cliente=new Cliente();
 					cliente=clienteNegocioDao.obtenerCliente(Integer.parseInt(dni));
 					int idCliente=cliente.getId();
@@ -89,7 +95,16 @@ public class ServletAltaCuenta extends HttpServlet {
 					
 					RequestDispatcher rDispatcher=request.getRequestDispatcher("AltaCuentaCliente.jsp");
 					rDispatcher.forward(request, response);
+				}else {
+					
+					boolean existedni=false;
+					request.setAttribute("existedni",existedni);;
+					RequestDispatcher rDispatcher=request.getRequestDispatcher("AltaCuentaCliente.jsp");
+					rDispatcher.forward(request, response);
+					
 				}
+				
+				
 				
 			}
 		}

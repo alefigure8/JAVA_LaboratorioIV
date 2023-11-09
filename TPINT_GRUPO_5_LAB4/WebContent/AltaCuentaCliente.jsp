@@ -47,15 +47,26 @@
 					      	<label for="dni"></label>
 					      	<input type="text" id="dni" name="dni" required placeholder="Ingrese Dni de cliente">
 					      	<input type="submit" name="btnBuscarDni" value="Buscar" class="btn btn-primary btnEnviar">
+					      	 	<% if(request.getAttribute("existedni")!=null && (boolean)request.getAttribute("existedni")==false){
+						
+
+						
+					  %>
+				      		<label style="color: red" for="dni">Ingrese un Dni valido </label>
+				   <%} %>
 					      	<div class="text-center" style="margin-top:5%">
-						    		<a href="#" class="btn btn-success btnVolver" width="200px">Volver al listado</a>
+						    	  <a type="submit" class="btn btn-primary" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>
 						    </div>
 					      </form>   
 					  </div>
+					 
+					  
 					</div>
-				      
-				   <%} %>
-				   
+				
+				    <%} %>
+				    
+				    
+				    
 				   <%  if(request.getAttribute("cantidadCuentas")!=null){
 					   int cantidadCuentas=(int)request.getAttribute("cantidadCuentas");
 					  		 if (request.getAttribute("cliente")!=null && cantidadCuentas<3){ 
@@ -112,7 +123,7 @@
 						    	</div>
 						    	
 						    	 <div class="text-center" style="margin-top:1%">
-						    		<a href="#" class="btn btn-success btnVolver" width="200px">Volver al listado</a>
+						    	  <a type="submit" class="btn btn-primary" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>
 						    	</div>
 						</form>
 					</div>
@@ -128,7 +139,7 @@
 								
 								    <div class="mt-4">
 								        <a href="AltaCuentaCliente.jsp" class="btn btn-primary me-3">Atrás</a>
-								        <a href="#" class="btn btn-success">Volver al listado</a>
+								     
 								    </div>
 								</div>
 

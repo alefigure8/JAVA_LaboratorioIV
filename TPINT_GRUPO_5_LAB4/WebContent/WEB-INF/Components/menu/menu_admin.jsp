@@ -14,14 +14,19 @@
     <span class="fw-lighter"><%=request.getParameter("usuario")%></span>
   </div>
   <ul class="list-group border-0">
-    <li class="list-group-item border-0 bg-transparent">Inicio</li>
-    <li class="list-group-item border-0 bg-transparent"><a href="${pageContext.request.contextPath}/ListadoClientes.jsp">Clientes</a></li>
-    <li class="list-group-item border-0 bg-transparent">Cuenta</li>
+   <li class="list-group-item border-0 bg-transparent">
+   	<a type="submit" href="PerfilBanco.jsp">Inicio</a>
+   </li>
+    <li class="list-group-item border-0 bg-transparent">
+    	<a type="submit" href="ServletListarClientes?obtener=true">Lista</a>
+    </li>
+    <li class="list-group-item border-0 bg-transparent">
+     <a type="submit" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes">Cuentas</a></li>
     <li class="list-group-item border-0 bg-transparent">Transferencia</li>
     <!--  <li class="list-group-item border-0 bg-transparent">Prestamo</li> -->
     <!-- CERRAR SESSION -->
     <li class="list-group-item border-0 bg-transparent mt-4">
-      <a type="submit" href="/TPINT_GRUPO_5_LAB4/servletAutenticacion?sesion=cerrar">Cerrar Sesion</a>
+      <a type="submit" href="servletAutenticacion?sesion=cerrar">Cerrar Sesion</a>
     </li>
   </ul>
 </nav>

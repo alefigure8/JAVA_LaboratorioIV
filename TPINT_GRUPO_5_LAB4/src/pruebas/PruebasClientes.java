@@ -22,10 +22,10 @@ public class PruebasClientes {
 		Cliente cliente = new Cliente();
 
 		//  Usuario
-		cliente.setId(1);
-		cliente.setNombre("Prueba");
+		//cliente.setId(13);
+		cliente.setNombre("Prueba10");
 		cliente.setApellido("Pérez");
-		cliente.setUsuario("usuarioJuan");
+		cliente.setUsuario("usuarioPrueba");
 		cliente.setContrasenia("contrasenia123");
 		cliente.setTipoAcceso(TipoAcceso.Cliente);
 		cliente.setFechaAlta(LocalDate.now()); // Fecha de alta como hoy
@@ -53,7 +53,7 @@ public class PruebasClientes {
 		cliente.setDireccion(direccion);
 
 		//  adicional del cliente
-		cliente.setDni(123456789);
+		cliente.setDni(123456111);
 		cliente.setCuil(987654321);
 		cliente.setSexo("M");
 		cliente.setNacionalidad("Argentina");
