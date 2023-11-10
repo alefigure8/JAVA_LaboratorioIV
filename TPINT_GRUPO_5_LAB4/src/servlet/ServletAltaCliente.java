@@ -40,25 +40,35 @@ public class ServletAltaCliente extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		if(request.getParameter("btnAltaCliente")!=null) {
+
+		HttpSession session = request.getSession();
+		//OBTENER PROVINCIAS
+		if(request.getParameter("AltaCliente")!=null) {
 			ProvinciaNegocioDaoImp provinciaNegocio= new ProvinciaNegocioDaoImp();
         	try {
 				List<Provincia> provincias= (List<Provincia>)provinciaNegocio.obtenerTodas();
 				request.setAttribute("provincias", provincias);
+				session.setAttribute("provincias", provincias);
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
 		
-		LocalidadNegocioDaoImp localidadNegocio=new LocalidadNegocioDaoImp();
-		List<Localidad> localidades= new ArrayList<Localidad>();
-		try {
-			localidades=(List<Localidad>)localidadNegocio.obtenerTodas();
-			request.setAttribute("localidades", localidades);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		
+		//OBTENER LOCALIDADES 
+		if(request.getParameter("AltaCliente")!=null) {
+			LocalidadNegocioDaoImp localidadNegocio=new LocalidadNegocioDaoImp();
+			List<Localidad> localidades= new ArrayList<Localidad>();
+			try {
+				localidades=(List<Localidad>)localidadNegocio.obtenerTodas();
+				request.setAttribute("localidades", localidades);
+				session.setAttribute("localidades", localidades);
+				System.out.println("localidades: " + localidades);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		RequestDispatcher rDispatcher=request.getRequestDispatcher("AltaCliente.jsp");
@@ -91,6 +101,9 @@ public class ServletAltaCliente extends HttpServlet {
 							
 							if(clienteNegocioDao.insertar(cliente)) {
 								session.setAttribute("clienteAgregado", cliente);
+
+								
+								
 								System.out.println("Cliente insertado");
 							}
 							else {
@@ -186,6 +199,8 @@ public class ServletAltaCliente extends HttpServlet {
 		direccion.setProvincia(provincia);
 		direccion.setTipoDireccion(TipoDireccion.valueOf(request.getParameter("tipoDireccion")));
 		cliente.setDireccion(direccion);
+		
+		System.out.println("Direccion: " + cliente.getDireccion().toString());
 		
 		//USUARIO
 		cliente.setUsuario(request.getParameter("usuario"));

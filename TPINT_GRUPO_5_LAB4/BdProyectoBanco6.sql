@@ -147,6 +147,11 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Mar del Plata', 1),
 ('Quilmes', 1);
 
+INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
+('San Fernando del Valle de Catamarca', 2),
+('Santa María', 2),
+('Andalgalá', 2);
+
 
 /******** ADMIN ********/
 -- Insertar usuario Administrador

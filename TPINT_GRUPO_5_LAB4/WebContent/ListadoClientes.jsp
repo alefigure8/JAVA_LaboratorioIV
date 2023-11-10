@@ -77,7 +77,7 @@
 						</tbody>
 		    		</table>
 		    		<div>					
-						<a class="btn btn-primary btnEnviar" href="AltaCliente.jsp">Agregar cliente</a>
+						<a class="btn btn-primary btnEnviar" href="ServletAltaCliente?AltaCliente=true">Agregar cliente</a>
 					</div>	
 		    		
 				</div>

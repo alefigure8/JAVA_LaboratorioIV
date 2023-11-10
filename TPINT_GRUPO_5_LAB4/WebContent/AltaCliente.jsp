@@ -48,7 +48,8 @@
 	          <%if(session.getAttribute("clienteAmodificar")!=null && session.getAttribute("clienteAgregado")==null){
 	        	  Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAmodificar");
 	        	  if (clienteAmodificar != null) {
-	        	      System.out.println("Cliente: " + clienteAmodificar.getNombre()); // verificar cliente
+	        	      System.out.println("Cliente: " + clienteAmodificar.getDireccion().toString()); // verificar cliente
+	        	      
 	        	  }
 	        	  
 				%>
@@ -112,43 +113,55 @@
 				        
 				        <div class="col-md-3">
 				            
+				          
 				            
-				            <!-- Provincia  y localidad -->
-				            <div class="form-group">
+				          
+						
+						  <!-- Provincia  y localidad -->
+				           <div class="form-group">
 					            <label for="provincia">Provincia</label>
 					            <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
-							        <% 
-							        ProvinciaNegocioDaoImp provinciaNegocio = new ProvinciaNegocioDaoImp();
-							        List<Provincia> provincias = (List<Provincia>)provinciaNegocio.obtenerTodas(); 
-							        for (Provincia provincia : provincias) {
-							            String selected = "";
-							            if (clienteAmodificar.getDireccion().getProvincia().getIdProvincia() == provincia.getIdProvincia()) {
-							                selected = "selected";
-							            }
-							        %>
-							        <option value="<%= provincia.getIdProvincia() %>" <%= selected %>> <%= provincia.getNombre() %> </option>
-							        <% } %>
-							    </select>
+					                <option value="" disabled>Seleccione una provincia</option>
+					                <% 
+					                Provincia provinciaSeleccionada = clienteAmodificar.getDireccion().getProvincia();
+					                List<Provincia> provincias = (List<Provincia>)session.getAttribute("provincias");
+
+					                if (provincias != null) {
+					                    for (Provincia provincia : provincias) {
+					                        String selected = "";
+					                        if (provinciaSeleccionada != null && provinciaSeleccionada.getIdProvincia() == provincia.getIdProvincia()) {
+					                            selected = "selected";
+					                        }
+					                        %>
+					                        <option value="<%= provincia.getIdProvincia() %>" <%= selected %>> <%= provincia.getNombre() %> </option>
+					                    <% } 
+					                } %>
+					            </select>
 					        </div>
 					
 					        <div class="form-group">
 					            <label for="localidad">Localidad</label>
 					            <select class="form-control" id="localidad" name="localidad" required>
+					                <option value="" disabled>Seleccione una localidad</option>
 					                <% 
-									    LocalidadNegocioDaoImp localidadNegocio = new LocalidadNegocioDaoImp();
-									    List<Localidad> localidades = (List<Localidad>)localidadNegocio.obtenerTodas(); 
-									 	 for (Localidad localidad : localidades) {
-									       	  String selected = "";
-									      	 if (clienteAmodificar.getDireccion().getLocalidad().getIdLocalidad() == localidad.getIdLocalidad()) {
-									            selected = "selected";
-									            }
-									        %>
-									        <option value="<%= localidad.getIdLocalidad() %>" <%= selected %>> <%= localidad.getNombre() %> </option>
-									 <% } %>
-					           
+					                List<Localidad> localidades = (List<Localidad>) session.getAttribute("localidades");
+					                if (localidades != null) {
+					                    for (Localidad localidad : localidades) {
+					                        String selected = "";
+					                        if (clienteAmodificar.getDireccion().getLocalidad() != null && clienteAmodificar.getDireccion().getLocalidad().getIdLocalidad() == localidad.getIdLocalidad()) {
+					                            selected = "selected";
+					                        }
+					                        %>
+					                        <option value="<%= localidad.getIdLocalidad() %>" <%= selected %>> <%= localidad.getNombre() %> </option>
+					                    <% } 
+					                } %>
 					            </select>
 					        </div>
-						    
+
+
+							
+						
+
 						    <!-- Direccion -->
 						    <div class="form-group">
 						        <label for="codigoPostal">Código Postal</label>
@@ -209,6 +222,8 @@
 				            <div class="d-flex justify-content-end" style="margin-top:5%">
 						        <button type="submit" class="btn btn-primary btnEnviar " name="btnAltaCliente">Alta de Cliente</button>
 						    </div>
+						    
+						   
 						    
 						    <div class="d-flex justify-content-end" style="margin-top:5%">
 							    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
@@ -287,29 +302,29 @@
 				            
 				            
 				            <!-- Provincia  y localidad -->
-				            <div class="form-group">
-					            <label for="provincia">Provincia</label>
-					            <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
-					            <% ProvinciaNegocioDaoImp provinciaNegocio= new ProvinciaNegocioDaoImp();
-					            	List<Provincia> provincias= (List<Provincia>)provinciaNegocio.obtenerTodas(); 
-					            	for(Provincia provincia: provincias){
-					            %>
-					                <option value="<%= provincia.getIdProvincia() %>"> <%= provincia.getNombre() %>  </option>
-					           <%} %>
-					            </select>
-					        </div>
-					
-					        <div class="form-group">
-					            <label for="localidad">Localidad</label>
-					            <select class="form-control" id="localidad" name="localidad" required>
-					                <% LocalidadNegocioDaoImp localidadNegocio= new LocalidadNegocioDaoImp();
-					            	List<Localidad> localidades= (List<Localidad>)localidadNegocio.obtenerTodas(); 
-					            	for(Localidad localidad: localidades){
-					            %>
-					                <option value="<%= localidad.getIdLocalidad() %>"> <%= localidad.getNombre() %>  </option>
-					           <%} %>
-					            </select>
-					        </div>
+				          <div class="form-group">
+						    <label for="provincia">Provincia</label>
+						    <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
+						        <option value="" disabled selected>Seleccione una provincia</option>
+						        <% 
+						        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+						        if (provincias != null) {
+						            for (Provincia provincia : provincias) {
+						                %>
+						                <option value="<%= provincia.getIdProvincia() %>"> <%= provincia.getNombre() %> </option>
+						            <% } } %>
+						    </select>
+						</div>
+
+
+							
+							<div class="form-group">
+							    <label for="localidad">Localidad</label>
+							    <select class="form-control" id="localidad" name="localidad" required>
+							    	<option value="" disabled selected>Seleccione una localidad</option>
+							        
+							    </select>
+							</div>
 						    
 						    <!-- Direccion -->
 						    <div class="form-group">
@@ -360,9 +375,10 @@
 				            </div>
 				            
 				            <div class="d-flex justify-content-end" style="margin-top:5%">
-						        <button type="submit" class="btn btn-primary btnEnviar " name="btnAltaCliente">Alta de Cliente</button>
+						        <button type="submit" class="btn btn-primary btnEnviar " name="btnAltaCliente">Alta de cliente</button>
 						    </div>
 						    
+						   
 						    <div class="d-flex justify-content-end" style="margin-top:5%">
 							    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
 							</div>
@@ -380,6 +396,9 @@
 				
 				} if(session.getAttribute("clienteAgregado")!=null) {
 					 Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAgregado");
+					// eliminamos sessions
+					session.removeAttribute("clienteAmodificar");
+					session.removeAttribute("clienteAgregado");
 				%>
 					
 					<script>
@@ -558,6 +577,53 @@
 
     </script>
     
+    
+    
+   <script>
+    var provinciasArray = [];
+    var localidadesArray = [];
+
+    <% if (request.getAttribute("provincias") != null) {
+        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+        for (Provincia provincia : provincias) { %>
+            provinciasArray.push({ id: "<%= provincia.getIdProvincia() %>", nombre: "<%= provincia.getNombre() %>" });
+        <% }
+    } %>
+
+    <% if (request.getAttribute("localidades") != null) {
+        List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
+        for (Localidad localidad : localidades) { %>
+            localidadesArray.push({ id: "<%= localidad.getIdLocalidad() %>", nombre: "<%= localidad.getNombre() %>", idProvincia: "<%= localidad.getIdProvincia() %>" });
+        <% }
+    } %>
+
+    function seleccionarProvincia() {
+        var provinciaSelect = document.getElementById("provincia");
+        var localidadSelect = document.getElementById("localidad");
+        var selectedProvinciaId = provinciaSelect.value;
+	
+        //borramos select de localidades
+        localidadSelect.innerHTML = "";
+
+        //localidad default
+        var defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.text = "Selecciona una localidad";
+        localidadSelect.appendChild(defaultOption);
+
+        // localidad s/provincia
+        for (var i = 0; i < localidadesArray.length; i++) {
+            var localidad = localidadesArray[i];
+            if (localidad.idProvincia === selectedProvinciaId) {
+                var option = document.createElement("option");
+                option.value = localidad.id;
+                option.text = localidad.nombre;
+                localidadSelect.appendChild(option);
+            }
+        }
+    }
+	</script>
+
     
  </body>
 </html>
