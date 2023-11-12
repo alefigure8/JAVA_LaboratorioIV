@@ -1,9 +1,25 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="entidad.CuotaPrestamo"%>
+<%@page import="entidad.Cuenta"%>
+<%@page import="entidad.Prestamo"%>
+<%@page import="java.util.List"%>
+<%@page import="entidad.Cliente"%>
+<%@page import="entidad.Usuario"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
+<% 
+	//PUEDEN INGRESAR AMBOS
+	session = request.getSession();
+	Usuario usuario = new Usuario();
+	
+	if(session.getAttribute("usuario") != null){
+		usuario = (Usuario)session.getAttribute("usuario");
+	}
+%>
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
-	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
+	<jsp:param name="TipoUsuarioPagina" value="<%=usuario.getTipoAcceso()%>" />
 </jsp:include>
 <!-- FIN AUTENTICACION -->
 
@@ -35,16 +51,32 @@
         </div>
         <div class="flex-grow-1">
           <!-- CONTENIDO-->
+          <%
+      			Cliente cliente = new Cliente();
+          		Prestamo prestamo = new Prestamo();
+          		Cuenta cuenta = new Cuenta();
+          		List<CuotaPrestamo> listaCuota = new ArrayList<CuotaPrestamo>();
+          		
+          		if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador) == 0){
+          			
+   	          		cliente = (Cliente)request.getAttribute("cliente");
+   	          		prestamo = (Prestamo)request.getAttribute("prestamo");
+   	          		cuenta = (Cuenta)request.getAttribute("cuenta");
+   	          		listaCuota = (List<CuotaPrestamo>)request.getAttribute("cuotas");
+    	       		
+          		}
+          %>
        
 			<div class="text-center">
-			    <p>Nro. Prestamo: 002</p>
-			    <p>Fecha de prestamo: 01/01/2023</p>
-			    <p>Nro. Cuenta del Prestamo: XXXX-XXXX-XXXX-1234</p>
-			    <p>Estado: Aprobado</p>
-			    <p>Saldado: No</p>
-			    <p>Importe solicitado: $75.000</p>
-			    <p>Importe con intereses: $150.000 </p>
-			    <p>Cantidad de Cuotas: 6</p>
+			    <p>Nro. Prestamo: <%=prestamo.getId() %></p>
+			    <p>Fecha de prestamo: <%=prestamo.getFechaPrestamo()%></p>
+			    <p>Nro. Cuenta del Prestamo: <%=prestamo.getNumeroCuenta()%></p>
+			    <p>Estado: <%=prestamo.getEstado().getDescripcion()%></p>
+			    <p>Saldado: <%if(prestamo.isCancelado()){%> SI <%}else{%> NO <%}%></p>
+			    <p>Importe solicitado: <%=prestamo.getMontoPedido() %></p>
+			    <%Double importeConInteres = prestamo.getMontoPedido() * ((prestamo.getTipoTasa().getTasaInteres() / 100) + 1); %>
+			    <p>Importe con intereses: <%=importeConInteres%> </p>
+			    <p>Cantidad de Cuotas: <%=listaCuota.size() %></p>
 			</div>
 
 		<!-- Cuadro para detalles de cuotas -->
@@ -58,66 +90,30 @@
 		                <th>Estado</th>
 		                <th>Nro. Cuenta de pago</th>
 		                <th>Fecha de Pago</th>
-		                <th>Accion</th>
+		                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
+			                <th>Accion</th>	
+		                <%}%>
 		            </tr>
 		        </thead>
 		        <tbody>
-		            <tr>
-		                <td>1</td>
-		                <td>$25.000</td>
-		                <td>Pagado</td>
-		                <td>XXXX-XXXX-XXXX-1234</td>
-		                <td>01/02/2023</td>
-		                <td>-</td>
-		                
-		            </tr>
-		            <tr>
-		                <td>2</td>
-		                <td>$25.000</td>
-		                <td>Pagado</td>
-		                 <td>XXXX-XXXX-XXXX-1234</td>
-		                <td>01/03/2023</td>
-		                 <td>-</td>
-		                
-		            </tr>
-		            <tr>
-		                <td>3</td>
-		                <td>$25.000</td>
-		                <td>Pagado</td>
-		                <td>XXXX-XXXX-XXXX-1234</td>
-		                <td>01/04/2023</td>
-		                 <td>-</td>
-		               
-		            </tr>
-		             <tr>
-		                <td>4</td>
-		                <td>$25.000</td>
-		                <td>Pagado</td>
-		                <td>XXXX-XXXX-XXXX-1234</td>
-		                <td>01/05/2023</td>
-		                 <td>-</td>
-		                
-		            </tr>
-		             <tr>
-		                <td>5</td>
-		                <td>$25.000</td>
-		                <td>Pagado</td>
-		                <td>XXXX-XXXX-XXXX-1234</td>
-		                <td>01/06/2023</td>
-		                 <td>-</td>
-		                
-		            </tr>
-		             <tr>
-		                <td>6</td>
-		                <td>$25.000</td>
-		                <td>Impago</td>
-		                <td>-</td>
-		                 <td>-</td>
-		                <td>
-			               <input type="submit" class="btn btn-primary btnEnviar" name="btnPagarPrestamo" value="Pagar">
-			            </td>
-			            
-		            </tr>
+		        <%
+		        	for(CuotaPrestamo cuota : listaCuota){%>
+			            <tr>
+			                <td><%=cuota.getNumeroCuota()%></td>
+			                <td><%=cuota.getMontoCuota()%></td>
+			                <td><%=cuota.getEstado()%></td>
+			                <td><%=cuenta.getNumeroCuenta()%></td>
+			                 <%if(cuota.getFechaPago() != null){%>
+				                <td><%=cuota.getFechaPago()%></td>	
+			                <%} else {%>
+			                	<td>-</td>	
+			                <%}%>
+			                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
+				                <td>-</td>	
+			                <%}%>
+			            </tr>
+	           	 	<%}
+	           	 %>
 		        </tbody>
 		    </table>
 		</div>

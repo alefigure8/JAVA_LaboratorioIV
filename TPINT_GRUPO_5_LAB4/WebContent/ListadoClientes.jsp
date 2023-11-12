@@ -34,8 +34,15 @@
 		        </div>
 		        <div class="flex-grow-1">
 		          <!-- CONTENIDO-->
-       
-					<!-- Cuadro para detalles de cuotas -->
+   
+					<div class="d-flex gap-2 align-items-center w-100">
+						<p>Mostrar: </p>
+						<select class="form-select mb-3 col-2 w-auto" onchange="filtroActivos(this)" data-selected="<%=request.getParameter("filtro")%>" id="filtroActivo">
+							<option id="activos">Activos</option>
+							<option id="inactivos">Inactivos</option>
+						</select>
+					</div>
+
 					<div>
 					    <table id="table_id" class="table display text-center">
 					        <thead>
@@ -105,11 +112,21 @@
 		<!-- FIN POPUP -->
 	 </body>
 	 <script>
+	 
+	 	const filtroActivo = document.getElementById("filtroActivo");
+	 	const filtroSeleccionado = filtroActivo.getAttribute('data-selected');
+	 	filtroActivo.value=filtroSeleccionado;	
+	 
 	 	//Confirmar y borrar cliente
 	 	function confirmarBorrado(id) {
 		 if (confirm('¿Seguro que desea eliminar al cliente')) {
 			 	window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?borrar=true&ID=" + id;
 		 	}
 		 }
+	 	
+	 	function filtroActivos(select){
+	 		const option = select.value;
+	 		window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?obtener=true&filtro=" + option;
+	 	}
 	 </script>
 </html>

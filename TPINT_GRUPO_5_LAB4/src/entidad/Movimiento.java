@@ -20,11 +20,27 @@ public class Movimiento {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	//con id
 	public Movimiento(int id, TipoMovimiento tipoMovimiento, int numeroReferencia, String cbudestino, double monto,
 			Operacion operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
 		super();
 		this.id = id;
+		this.tipoMovimiento = tipoMovimiento;
+		this.numeroReferencia = numeroReferencia;
+		this.cbudestino = cbudestino;
+		this.monto = monto;
+		this.operacion = operacion;
+		this.fechaMovimiento = fechaMovimiento;
+		this.estado = estado;
+		this.concepto = concepto;
+	}
+	
+	//sin id
+	public Movimiento( TipoMovimiento tipoMovimiento, int numeroReferencia, String cbudestino, double monto,
+			Operacion operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
+		super();
+		
 		this.tipoMovimiento = tipoMovimiento;
 		this.numeroReferencia = numeroReferencia;
 		this.cbudestino = cbudestino;

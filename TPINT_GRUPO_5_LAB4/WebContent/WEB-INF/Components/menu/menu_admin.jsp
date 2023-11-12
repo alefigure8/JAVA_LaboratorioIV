@@ -18,11 +18,18 @@
    	<a type="submit" href="PerfilBanco.jsp">Inicio</a>
    </li>
     <li class="list-group-item border-0 bg-transparent">
-    	<a type="submit" href="ServletListarClientes?obtener=true">Lista</a>
+    	<a type="submit" href="ServletListarClientes?obtener=true&filtro=Activos">Lista</a>
     </li>
     <li class="list-group-item border-0 bg-transparent">
-     <a type="submit" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes">Cuentas</a></li>
-    <li class="list-group-item border-0 bg-transparent">Transferencia</li>
+     <a type="submit" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes">Cuentas</a>
+    </li>
+    
+     <li class="list-group-item border-0 bg-transparent">
+     <a type="submit" href="ServletPrestamos?Prestamos=true">Prestamos</a>
+    </li>
+    
+  
+    
     <!--  <li class="list-group-item border-0 bg-transparent">Prestamo</li> -->
     <!-- CERRAR SESSION -->
     <li class="list-group-item border-0 bg-transparent mt-4">

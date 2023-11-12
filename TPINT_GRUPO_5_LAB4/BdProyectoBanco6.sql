@@ -84,9 +84,7 @@ CREATE TABLE TipoTasa (
 CREATE TABLE Prestamos (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     MontoPedido DECIMAL(10, 2) NOT NULL,
-    MontoConIntereses DECIMAL(10, 2) NOT NULL,
     IdTasaxCuotas int not null,
-    MontoXmes DECIMAL(10, 2) NOT NULL,
     IdEstados INT NOT NULL,
     Cancelado bit default 0 not null, 
     FechaPrestamo date not null,
@@ -240,6 +238,8 @@ insert into TiposCuenta (descripcion) values ('Caja de ahorro');
 insert into TiposCuenta (descripcion) values ('Cuenta corriente');
 
 
+/********* INSERT TIPO TASA **********/
+INSERT INTO TipoTasa (CantCuotas, TasaInteres) VALUES (12, 150.0), (24, 300.0), (36, 450.0);
 
 
 /******************** MODIFICACIONES 1ERA ENTREGA *******************/
@@ -261,5 +261,45 @@ ADD COLUMN Apellido VARCHAR(50) NOT NULL;
 ALTER TABLE Cuentas
 DROP FOREIGN KEY cuentas_ibfk_1;
 
+
+
 ALTER TABLE Cuentas
 ADD FOREIGN KEY (IdCliente) REFERENCES Clientes(Id);
+
+/******************** INSERT PRESTAMOS *******************/
+/********************** Prestamos ***********************/
+
+/*CAMBIARLO SEGUN EL NRO. DE CUENTA E ID DE CLIENTE*/
+
+INSERT INTO Prestamos (MontoPedido, MontoConIntereses, IdTasaxCuotas, MontoXmes, IdEstados, Cancelado, FechaPrestamo, IdCliente)
+VALUES (
+    -- MontoPedido
+    1000.00,
+    
+    -- MontoConIntereses 
+    1000.00 * (SELECT TasaInteres FROM TipoTasa WHERE IdTipoInteres = 1) / 100 + 1000.00,
+    
+    -- IdTasaxCuotas
+    1,
+    
+    -- MontoXmes (MontoConIntereses / Cantidad de cuotas obtenida de TipoTasa)
+    (1000.00 * (SELECT TasaInteres FROM TipoTasa WHERE IdTipoInteres = 1) / 100 + 1000.00) /
+        (SELECT CantCuotas FROM TipoTasa WHERE IdTipoInteres = 1),
+    
+    -- IdEstados (2 para representar el estado correspondiente)
+    2,
+    
+    -- Cancelado (default en false, representado como 0)
+    DEFAULT,
+    
+    -- FechaPrestamo 
+    CURRENT_DATE,
+    
+    -- IdCliente
+    16
+);
+
+/* CAMBIARLO SEGUN EL NRO. DE CUENTA E ID DE CLIENTE */ 
+update prestamos set IdEstados=2 where id>1
+update prestamos set numeroCuenta='1000000036' where id=6
+update prestamos set numeroCuenta='1000000036' where id=5

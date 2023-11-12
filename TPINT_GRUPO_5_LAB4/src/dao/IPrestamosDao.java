@@ -22,5 +22,7 @@ public interface IPrestamosDao {
 	public boolean insertarprestamo (Prestamo prestamo);
 	public boolean setcancelado (int idprestamo);
 	public boolean setcuotapagada (int idprestamo, int idcuota);
+	public boolean rechazar(int idPrestamo);
+	public boolean aceptar(int idPrestamo);
 		
 }

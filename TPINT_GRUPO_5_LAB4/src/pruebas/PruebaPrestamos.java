@@ -22,12 +22,14 @@ public class PruebaPrestamos {
 			ArrayList<Prestamo> listado ;
 			ArrayList<CuotaPrestamo> listadocuotas ;
 			ArrayList<TipoTasa> tasas = new ArrayList<TipoTasa>(); 
-		/*
+		/*	
+		 * Prestamo prestamo = new Prestamo();
 			TipoTasa tasa = new TipoTasa();
 			Estado estado = new Estado();
 			
-			estado.setIdEstado(1);
-			estado.setDescripcion("Bien");
+			//Lo seteamos pendiente
+			estado.setIdEstado(2);
+			//estado.setDescripcion("Bien");
 			
 			tasa.setId(1);
 			tasa.setCantCuotas(12);

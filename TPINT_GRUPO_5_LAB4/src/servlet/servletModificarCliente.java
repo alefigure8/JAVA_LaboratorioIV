@@ -78,14 +78,32 @@ public class servletModificarCliente extends HttpServlet {
 				//Modificar Cliente
 				cliente = obtenerCliente(request, response);
 				
-				if(cliente != null) 
-					clienteNegocioDaoImp.editar(cliente);				
+				if(cliente != null && cliente.getActivo()) {
+					
+					boolean clienteEditado = clienteNegocioDaoImp.editar(cliente);
+					
+					if(clienteEditado) {
+						//Popup de exito
+						request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
+						
+						RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
+						rd.forward(request, response);
+					} else {
+						//Popup de error de modificación
+						request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no pudo ser modificado");
+						
+						RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
+						rd.forward(request, response);
+					}
+					
+				} else {
+					//Popup de error. Cliente no encontrado o no activo
+					request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no existe o no se encuentra activo");
+					
+					RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
+					rd.forward(request, response);
+				}
 				
-				//Popup de exito
-				request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
-
-				RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
-				rd.forward(request, response);
 			} catch (Exception e) {
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
@@ -145,14 +163,14 @@ public class servletModificarCliente extends HttpServlet {
 		cliente.setEmail(correo);
 				
 		//Cambiar Sexo si se seleccionó algo
-		if(sexo.compareTo("Seleccionar") != 0) {
+		if(sexo.equals("Seleccionar")) {
 			cliente.setSexo(sexo);	
 		}
 		
 		//Cambiar numero apartamento si se seleccion algo
-		if(tipoDireccion.compareTo("Seleccionar") != 0) {
+		if(tipoDireccion.equals("Seleccionar")) {
 			cliente.getDireccion().setTipoDireccion(TipoDireccion.valueOf(tipoDireccion));
-			if(tipoDireccion.compareTo("Departamento") == 0) {
+			if(tipoDireccion.equals("Departamento")) {
 				cliente.getDireccion().setNumeroDepartamento(apartamento);
 			} 
 		}

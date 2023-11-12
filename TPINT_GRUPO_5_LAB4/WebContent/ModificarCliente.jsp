@@ -92,7 +92,7 @@
 					            </div>
 					            <div class="form-group">
 					                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-					                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required>
+					                <input type="date" placeholder='DD-MM-AAAA' class="form-control" name="fechaNacimiento" id="fechaNacimiento" value="<%=cliente.getNacimiento() %>" required onblur="validarFecha(this);">
 					            </div>
    					            <div class="form-group">
 					                <label for="sexo">Sexo</label>
@@ -189,7 +189,7 @@
 						        <button type="submit" class="btn btn-primary" name="modificar" value="true">Modificar Usuario</button>
 						    </div>
 						    <div class="text-center mt-5">
-						        <a class="btn btn-danger" href="ServletListarClientes?obtener=true">Cancelar</a>
+						        <a class="btn btn-danger" href="ServletListarClientes?obtener=true&filtro=Activos">Cancelar</a>
 						    </div>
 					   </div>
 				</form>
@@ -251,6 +251,7 @@
 	 	const tipoCasaID = tipoCasa.getAttribute('data-TipoDireccionID');
 	 	tipoCasa.value=tipoCasaID;	
     
+	 	//VALIDAR DIMENSIONES
 	    function validateInput(input, minLength) {
 	    	 const trimmedValue = input.value.trim();
 	    	    if (trimmedValue.length < minLength || !trimmedValue) {
@@ -262,24 +263,42 @@
 	    	        input.classList.add("is-valid");
 	    	    }
 	    }
+	 	
+	 	//VALIDAR FECHA
+	 	function validarFecha(input){
+	 		const fecha = input.value;
+	 		const arrayFecha = fecha.split("-");
+	 		if(parseInt(arrayFecha[0]) > new Date().getFullYear() - 18){
+	 			input.setCustomValidity('');
+	 			input.setCustomValidity(`Debe ser mayor de edad`);
+	 			input.classList.add("is-invalid");
+	 		} else if (parseInt(arrayFecha[0]) < 1900){
+	 			input.setCustomValidity('');
+	 			input.setCustomValidity(`Fecha invalida`);
+	 			input.classList.add("is-invalid");
+	 		} else {
+	 			input.setCustomValidity('');
+    	        input.classList.remove("is-invalid");
+    	        input.classList.add("is-valid");
+	 		}
+	 	}
 	    
 	    var provinciasArray = [];
 	    var localidadesArray = [];
 
 	    <% if (request.getAttribute("provincias") != null) {
-	        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
-	        for (Provincia provincia : provincias) { %>
+	        for (Provincia provincia : listaProvincia) { %>
 	            provinciasArray.push({ id: "<%= provincia.getIdProvincia() %>", nombre: "<%= provincia.getNombre() %>" });
 	        <% }
-	    } %>
-
-	    <% if (request.getAttribute("localidades") != null) {
-	        List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
-	        for (Localidad localidad : localidades) { %>
+	    } 
+	    
+	    if (request.getAttribute("localidades") != null) {
+	        for (Localidad localidad : listaLocalidad) { %>
 	            localidadesArray.push({ id: "<%= localidad.getIdLocalidad() %>", nombre: "<%= localidad.getNombre() %>", idProvincia: "<%= localidad.getIdProvincia() %>" });
 	        <% }
 	    } %>
 	    
+	    //Validar locacion x provincia
 	    function seleccionarProvincia() {
 	        var provinciaSelect = document.getElementById("provinciaID");
 	        var localidadSelect = document.getElementById("localidadID");

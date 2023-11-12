@@ -514,7 +514,7 @@
 
 					
 					<div style="text-align: center;">
-					    <a href="ServletListarClientes?obtener=true" class="btn btn-primary btnEnviar">Ir a Listado</a>
+					    <a href="ServletListarClientes?obtener=true&filtro=Activos" class="btn btn-primary btnEnviar">Ir a Listado</a>
 					</div>
 					
 					<div class="mt-4" style="text-align: center;">

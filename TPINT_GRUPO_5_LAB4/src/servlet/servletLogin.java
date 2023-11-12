@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Helper.GUI;
 import entidad.Cliente;
 import entidad.TipoAcceso;
 import entidad.Usuario;
@@ -35,7 +36,7 @@ public class servletLogin extends HttpServlet {
 				existeCliente = clienteNegocio.existeUsuario(usuario, contrasena);
 			} catch (Exception e) {
 				//Mandamos mensaje de error
-				request.setAttribute("error", e.getMessage());
+				request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
 				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 				rd.forward(request, response);
 			}
@@ -44,37 +45,41 @@ public class servletLogin extends HttpServlet {
 				
 				try {
 					Usuario usuarioEncontrado = clienteNegocio.obtenerUsuarioPorUsuario(usuario);
-									
-					//Guardamos en Session
-					HttpSession session = request.getSession(true);
-					session.setAttribute("usuario", usuarioEncontrado);
 					
-					//Guardamos cliente
-					if(usuarioEncontrado.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) {
-						Cliente cliente = clienteNegocio.obtenerUno(usuarioEncontrado.getId());
-						session.setAttribute("cliente", cliente);
+					if(usuarioEncontrado.getActivo()) {
+						
+						//Guardamos en Session
+						HttpSession session = request.getSession(true);
+						session.setAttribute("usuario", usuarioEncontrado);
+						
+						//Guardamos cliente
+						if(usuarioEncontrado.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) {
+							Cliente cliente = clienteNegocio.obtenerUno(usuarioEncontrado.getId());
+							session.setAttribute("cliente", cliente);
+						}
+						
+						/** REDIRECCIONAMIENTO **/
+						if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Administrador) {
+							//Redirigimos a perfil banco
+							RequestDispatcher rd = request.getRequestDispatcher("PerfilBanco.jsp");
+							rd.forward(request, response);	
+						} else if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Cliente) {
+							//Redirigimos a Home Clinet
+							RequestDispatcher rd = request.getRequestDispatcher("HomeClientes.jsp");
+							rd.forward(request, response);	
+						}
+						
 					}
 					
-					/** REDIRECCIONAMIENTO **/
-					if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Administrador) {
-						//Redirigimos a perfil banco
-						RequestDispatcher rd = request.getRequestDispatcher("PerfilBanco.jsp");
-						rd.forward(request, response);	
-					} else if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Cliente) {
-						//Redirigimos a Home Clinet
-						RequestDispatcher rd = request.getRequestDispatcher("HomeClientes.jsp");
-						rd.forward(request, response);	
-					}
-					
-					//Redirigimos a página de Login en caso de que no tenga TipoAcceso
-					request.setAttribute("error", "Su usuario no tiene suficientes privilegios para acceder");
+					//Redirigimos a página de Login en caso de que no tenga TipoAcceso o este Inactivo
+					request = GUI.mensajes(request, "error", "Sin Privilegios", "Su usuario no tiene suficientes privilegios para acceder");
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
 					
 					
 				} catch (Exception e) {
 					//Mandamos mensaje de error
-					request.setAttribute("error", e.getMessage());
+					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
 				}

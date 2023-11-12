@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import Helper.GUI;
 import daoImp.CuentaDaoImp;
 import entidad.Cliente;
@@ -32,8 +34,17 @@ public class ServletListarClientes extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
+    	/** OPCION DE FILTRO DE LISTA**/
+    	boolean opcion = true;
+		
+		if(request.getParameter("filtro") != null) {
+			opcion = Boolean.TRUE == (request.getParameter("filtro").equals("Activos"));
+		}
+    	
     	/** OBTENER LISTADO DE CLIENTES **/
     	if(request.getParameter("obtener")!=null) {
+    		
+    		
     		try {
         	    // Llama al método para obtener la lista de clientes
         	    List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
@@ -44,7 +55,7 @@ public class ServletListarClientes extends HttpServlet {
     	   	        request.setAttribute("mensajeError", "No se encontraron clientes" );
     	   	    } else {
         	        // Configura un atributo de solicitud con la lista de clientes
-    	   	    	request.setAttribute("clientes", ListarClientesActivos(listaClientes));
+    	   	    	request.setAttribute("clientes", ListarClientesActivos(listaClientes, opcion));
     	   	    }
 
         	    // Envía la solicitud al archivo JSP para mostrar la tabla
@@ -77,7 +88,7 @@ public class ServletListarClientes extends HttpServlet {
 							List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
 					    	    
 							//Mandamos lista de clientes con request
-							request.setAttribute("clientes", ListarClientesActivos(listaClientes));
+							request.setAttribute("clientes", ListarClientesActivos(listaClientes, opcion));
 							
 							//Borramos cuentas					
 							boolean cuentasBorradas = BorrarCuentasClientes(Integer.parseInt(ID));
@@ -119,6 +130,23 @@ public class ServletListarClientes extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
 			dispatcher.forward(request, response);
 		}
+    	
+    	if(request.getParameter("opcionesTabla") != null) {
+    		
+    		// DESCOLGABLE ACTIVO/INACTIVO
+    		if(request.getParameter("filtroActivos") != null){
+    			try {
+    				
+    				
+    			} catch(Exception e) {
+    				
+    				
+    			}
+    			
+    			List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
+   
+    		}
+    	}
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -127,17 +155,17 @@ public class ServletListarClientes extends HttpServlet {
 	}
 	
 	/** LISTAR CLIENTES ACTIVOS **/
-	private List<Cliente> ListarClientesActivos(List<Cliente> listaClientes) {
+	private List<Cliente> ListarClientesActivos(List<Cliente> listaClientes, boolean opcion) {
 		listaClientes = clienteNegocioDao.obtenerTodos();
-		 List<Cliente> listaClientesActivos = new ArrayList<Cliente>();
+		 List<Cliente> listaClientesFiltrada = new ArrayList<Cliente>();
     	    
 		 for(Cliente cliente : listaClientes) {
-			if(cliente.getActivo()) {
-				listaClientesActivos.add(cliente);
-			}
+			 if(cliente.getActivo() == opcion) {
+				 listaClientesFiltrada.add(cliente);
+			 }
 		}
 		    
-		return listaClientesActivos;
+		return listaClientesFiltrada;
 	}
 	
 	/** BORRAR CUENTAS CLIENTES **/

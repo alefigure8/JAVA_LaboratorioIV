@@ -29,14 +29,17 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	private static final String obtenertipotasa = "select CantCuotas,TasaInteres from TipoTasa where IdTipoInteres=?";  // HACER UN JOIN EN OBTENERTODOS
 	private static final String obtenertodostipostasas = "select IdTipoInteres,CantCuotas,TasaInteres from TipoTasa";
 	private static final String obtenerestado = "select Descripcion from Estados where IdEstados = ?";
-	private static final String obtenerunoxidprestamo = "select MontoPedido,MontoConIntereses,IdTasaxCuotas,MontoXmes,IdEstados,Cancelado,FechaPrestamo,IdCliente,Numerocuenta from Prestamos where ID=?";;
+	private static final String obtenerunoxidprestamo = "select MontoPedido,IdTasaxCuotas,IdEstados,Cancelado,FechaPrestamo,IdCliente,Numerocuenta from Prestamos where ID=?";
 	private static final String obtenercuotasxprestamo = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where IdPrestamo = ?"; 
 	private static final String obtenerunacuota = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where ID = ? and IdPrestamo = ?"; // NO TESTEADO
 	private static final String insertarprestamo = "Insert into Prestamos (MontoPedido, MontoConIntereses,IdTasaxCuotas,MontoXmes,IdEstados,FechaPrestamo,IdCliente,NumeroCuenta) values (?,?, ?, ?, ?, ?, ?,?)";
 	private static final String insertarcuotas = "Insert into CuotasPrestamo (IDPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado) values (?, ?, ?, ?, ?)";
 	private static final String setcancelado = "Update Prestamos set Cancelado = 1 where ID = ? ";
 	private static final String setcuotapagada = "Update CuotasPrestamo set Estado = 'Pagado', FechaPagoCuota= ? where IdPrestamo = ? and ID = ?  ";	
-
+	private static final String setAceptado= "Update Prestamos set IdEstados=1 where id=?";
+	private static final String setRechazado= "Update Prestamos set IdEstados=3 where id=?";
+			
+	
 	public List<Prestamo> obtenerTodos() { 
 		
 		 PreparedStatement statement;
@@ -156,7 +159,6 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 
 
 	    try {
-	 
 	        statement = conexion.getSQLConexion().prepareStatement(obtenerunoxidprestamo);
 	        statement.setInt(1, idprestamo);
 
@@ -166,9 +168,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	        	
 	        	prestamoaux.setId(idprestamo);
 	           	prestamoaux.setMontoPedido(resultSet.getDouble("MontoPedido"));
-             	prestamoaux.setMontoConIntereses(resultSet.getDouble("MontoConIntereses"));
              	prestamoaux.setTipoTasa(obtenertipotasa(resultSet.getInt("IdTasaxCuotas"), conexion)); 
-             	prestamoaux.setMontoxMes(resultSet.getDouble("MontoXmes"));
              	prestamoaux.setEstado(obtenerestado(resultSet.getInt("IdEstados"),conexion));
              	prestamoaux.setCancelado(resultSet.getBoolean("Cancelado"));	
                	prestamoaux.setFechaPrestamo(resultSet.getDate("FechaPrestamo").toLocalDate());
@@ -178,6 +178,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	        return null;
 	    }
 
 	    return prestamoaux;
@@ -187,7 +188,6 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 		
 		 PreparedStatement statement;
 	      ResultSet resultSet; 
-	      CuotaPrestamo cuotaaux = new CuotaPrestamo();
 	      ArrayList<CuotaPrestamo> listadoCuotas = new ArrayList<CuotaPrestamo>();
 	      Conexion conexion = Conexion.getConexion();
 	      
@@ -198,7 +198,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	          resultSet = statement.executeQuery();
 	          while(resultSet.next())
 	          {
-	      
+	        	CuotaPrestamo cuotaaux = new CuotaPrestamo();
 	        	cuotaaux.setId(resultSet.getInt("ID"));
 	        	cuotaaux.setIdPrestamo(resultSet.getInt("IDPrestamo"));
 	        	cuotaaux.setNumeroCuota(resultSet.getInt("NumeroCuota"));
@@ -206,7 +206,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	        	cuotaaux.setFechaVencimiento(resultSet.getDate("FechaVencimiento").toLocalDate());
 	        	cuotaaux.setEstado(EstadoCuota.valueOf(resultSet.getString("Estado")))	        	;
 	        	if(resultSet.getDate("FechaPagoCuota")!=null) {
-	        	cuotaaux.setFechaPago(resultSet.getDate("FechaPagoCuota").toLocalDate());
+	        		cuotaaux.setFechaPago(resultSet.getDate("FechaPagoCuota").toLocalDate());
 	        	}
 	        	listadoCuotas.add(cuotaaux);
 	        	}
@@ -491,6 +491,67 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 			return isupdateExitoso;
 		
 		
+		
+	}
+
+	@Override
+	public boolean rechazar(int idPrestamo) {
+		PreparedStatement statement;
+		Connection connection = Conexion.getConexion().getSQLConexion();
+		boolean isupdateExitoso = false;
+	    try 
+	      {
+
+	          statement = connection.prepareStatement(setRechazado);
+	          statement.setInt(1, idPrestamo);
+	  
+	          
+	          if(statement.executeUpdate()>0) {
+					
+					connection.commit();
+					isupdateExitoso = true;
+				}
+				
+			}catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					connection.rollback();
+				}catch(SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			return isupdateExitoso;
+	}
+
+	@Override
+	public boolean aceptar(int idPrestamo) {
+		
+		
+		PreparedStatement statement;
+		Connection connection = Conexion.getConexion().getSQLConexion();
+		boolean isupdateExitoso = false;
+	    try 
+	      {
+
+	          statement = connection.prepareStatement(setAceptado);
+	          statement.setInt(1, idPrestamo);
+	  
+	          
+	          if(statement.executeUpdate()>0) {
+					
+					connection.commit();
+					isupdateExitoso = true;
+				}
+				
+			}catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					connection.rollback();
+				}catch(SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			return isupdateExitoso;
 		
 	}
 
