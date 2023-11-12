@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import daoImp.MovimientosDaoImpl;
+import entidad.Cuenta;
 import entidad.Estado;
 import entidad.Movimiento;
 import entidad.Operacion;
@@ -44,7 +45,10 @@ public class pruebaMovimientos {
 		System.out.println("INSERTAR");
 		
 		Movimiento movimiento = new Movimiento();
-		movimiento.setCbudestino("123456789");
+		//movimiento.setCbudestino("123456789");
+		Cuenta cuenta=new Cuenta();
+		cuenta.setCbu("123456789");
+		movimiento.setCuenta(cuenta);
 		movimiento.setConcepto("Transferencia");
 		
 		Estado estado = new Estado();

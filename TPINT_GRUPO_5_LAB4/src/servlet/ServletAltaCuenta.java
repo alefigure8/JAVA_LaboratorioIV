@@ -174,7 +174,13 @@ public class ServletAltaCuenta extends HttpServlet {
 				
 				e1.printStackTrace();
 			}
-			movimiento.setCbudestino(nuevoCbu);
+			
+			Cuenta cuentaMov= new Cuenta();
+			cuentaMov.setCbu(nuevoCbu);
+			
+			//movimiento.setCbudestino(nuevoCbu);
+			movimiento.setCuenta(cuentaMov);
+			
 			movimiento.setMonto(10000);
 			movimiento.setOperacion(Operacion.Entrada);
 			movimiento.setFechaMovimiento(LocalDate.now());

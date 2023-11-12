@@ -19,6 +19,7 @@ import com.sun.corba.se.impl.encoding.CodeSetComponentInfo.CodeSetComponent;
 
 import Helper.GUI;
 import entidad.Cliente;
+import entidad.Cuenta;
 import entidad.Estado;
 import entidad.Movimiento;
 import entidad.Operacion;
@@ -121,7 +122,12 @@ public class ServletPrestamos extends HttpServlet {
 					Double monto= Double.parseDouble(request.getParameter("montoPedido"));
 					Estado estado=new Estado();
 					estado.setIdEstado(1);
-					Movimiento movimiento=new Movimiento(tipoMovimiento, idPrestamo, cbudestino, monto, 
+					
+					Cuenta cuenta= new Cuenta();
+					cuenta.setCbu(cbudestino);
+					
+					
+					Movimiento movimiento=new Movimiento(tipoMovimiento, idPrestamo, /*cbudestino,*/ cuenta, monto, 
 							Operacion.Entrada, LocalDate.now(), estado, "Alta de prestamo");
 							
 					try {

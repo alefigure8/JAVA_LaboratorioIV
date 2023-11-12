@@ -3,7 +3,7 @@
     pageEncoding="ISO-8859-1"%>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html class="">
 	<!--HEAD-->
 	<% 
 		//TITULO DEL ARCHIVO COMO TITULO DE LA PAGINA
@@ -17,12 +17,12 @@
 	<!--FIN HEAD-->
 	
 	<!--BODY-->
-	<body> 
-		<div class="container d-flex flex-column justify-content-center align-items-center" style="margin-top: 10%;" >
+	<body class="d-flex flex-column bg-bank"> 
+		<div class=" d-flex flex-column justify-content-center align-items-center flex-grow-1">
 			<div class="card d-flex justify-content-center align-items-center" style="margin-top: 20px; background-color: var(--color-main); color: whitesmoke; min-width: 400px;">
 				<h1 style="font-size: 34px; height: 60px;" class="m-0 p-2"> Banco Cinco <i class="fa-solid fa-building-columns"></i></h1>
 			</div>
-			<div class="card" style="min-width: 400px; margin-top: 5px;">
+			<div class="card " style="min-width: 400px; margin-top: 5px;">
 				<div class="card-header btnEnviar" style="color:whitesmoke">
 					<h3 class="text-center m-0">Iniciar Sesion</h3>
 				</div>
@@ -57,7 +57,8 @@
 				</div>
 			</div>
 		</div>
-		
+		<!--FOOTER-->
+    	<jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 		
 		<!-- POPUP ERROR DE AUTENTICACION-->
 		<%if(request.getAttribute("tipo") != null){
@@ -71,10 +72,6 @@
 		<!-- FIN POPUP -->
 		
 	</body>
-	<!--FIN BODY-->
-	
-	<!--FOOTER-->
-    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
-    
+	<!--FIN BODY-->    
 
 </html>

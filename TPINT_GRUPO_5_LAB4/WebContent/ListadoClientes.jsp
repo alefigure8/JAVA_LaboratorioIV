@@ -28,16 +28,19 @@
 	      </jsp:include>
 
      		<!--MAIN-->
-		      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
+		      <div class="col-lg-10 col-md-12 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2">
-		          <h1>Listado Clientes</h1>
-		        </div>
+	            	<!--TIUTLO PAGINA-->
+	           		<h1 class="mt-2">LISTADO CLIENTES</h1>
+	          	</div>
 		        <div class="flex-grow-1">
 		          <!-- CONTENIDO-->
-   
-					<div class="d-flex gap-2 align-items-center w-100">
+					<div class="d-flex gap-2 align-items-center justify-content-between w-100">
+						<div class="col-md-7 text-md-start text-center">
+		                	<h4 class="opacity-75">Listado de Clientes Generales</h4>
+		             	</div>
 						<p>Mostrar: </p>
-						<select class="form-select mb-3 col-2 w-auto" onchange="filtroActivos(this)" data-selected="<%=request.getParameter("filtro")%>" id="filtroActivo">
+						<select class="form-select form-select-sm w-md-25 w-25 mb-3" onchange="filtroActivos(this)" data-selected="<%=request.getParameter("filtro")%>" id="filtroActivo">
 							<option id="activos">Activos</option>
 							<option id="inactivos">Inactivos</option>
 						</select>
@@ -89,13 +92,7 @@
 		    		
 				</div>
        		</div> 
-       		
-       		
-       		
-       		
-       		
-       		
-   		</div>
+    	</div>
 	</div>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

@@ -7,7 +7,8 @@ public class Movimiento {
     private int id;
     private TipoMovimiento tipoMovimiento;
     private int numeroReferencia;
-    private String cbudestino;
+    //private String cbudestino;//CAMBIO A CUENTA
+    private Cuenta cuenta;
     private double monto;
     private Operacion operacion;
     private LocalDate fechaMovimiento; 
@@ -22,13 +23,14 @@ public class Movimiento {
 	}
 	
 	//con id
-	public Movimiento(int id, TipoMovimiento tipoMovimiento, int numeroReferencia, String cbudestino, double monto,
+	public Movimiento(int id, TipoMovimiento tipoMovimiento, int numeroReferencia, /*String cbudestino,*/Cuenta cuenta, double monto,
 			Operacion operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
 		super();
 		this.id = id;
 		this.tipoMovimiento = tipoMovimiento;
 		this.numeroReferencia = numeroReferencia;
-		this.cbudestino = cbudestino;
+		/*this.cbudestino = cbudestino;*/
+		this.cuenta=cuenta;
 		this.monto = monto;
 		this.operacion = operacion;
 		this.fechaMovimiento = fechaMovimiento;
@@ -37,13 +39,14 @@ public class Movimiento {
 	}
 	
 	//sin id
-	public Movimiento( TipoMovimiento tipoMovimiento, int numeroReferencia, String cbudestino, double monto,
+	public Movimiento( TipoMovimiento tipoMovimiento, int numeroReferencia, /*String cbudestino,*/ Cuenta cuenta, double monto,
 			Operacion operacion, LocalDate fechaMovimiento, Estado estado, String concepto) {
 		super();
 		
 		this.tipoMovimiento = tipoMovimiento;
 		this.numeroReferencia = numeroReferencia;
-		this.cbudestino = cbudestino;
+		/*this.cbudestino = cbudestino;*/
+		this.cuenta=cuenta;
 		this.monto = monto;
 		this.operacion = operacion;
 		this.fechaMovimiento = fechaMovimiento;
@@ -77,14 +80,22 @@ public class Movimiento {
 		this.numeroReferencia = numeroReferencia;
 	}
 
-	public String getCbudestino() {
+	/*public String getCbudestino() {
 		return this.cbudestino;
 	}
 
 	public void setCbudestino(String cbudestino) {
 		this.cbudestino = cbudestino;
+	}*/
+	
+	public Cuenta getCuenta() {
+		return this.cuenta;
 	}
-
+	
+	public void setCuenta(Cuenta cuenta) {
+		this.cuenta=cuenta;
+	}
+	
 	public double getMonto() {
 		return this.monto;
 	}
@@ -130,7 +141,7 @@ public class Movimiento {
 	@Override
 	public String toString() {
 		return "Movimiento [id=" + id + ", tipoMovimiento=" + tipoMovimiento + ", numeroReferencia=" + numeroReferencia
-				+ ", cbudestino=" + cbudestino + ", monto=" + monto + ", operacion=" + operacion + ", fechaMovimiento="
+				+ /*", cbudestino=" + cbudestino*/", Cuenta= " + cuenta + ", monto=" + monto + ", operacion=" + operacion + ", fechaMovimiento="
 				+ fechaMovimiento + ", estado=" + estado + ", concepto=" + concepto + "]";
 	}  
 

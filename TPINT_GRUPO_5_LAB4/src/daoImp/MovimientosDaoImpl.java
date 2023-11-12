@@ -11,9 +11,11 @@ import java.util.List;
 
 import dao.Conexion;
 import dao.IMovimientosDao;
+import entidad.Cuenta;
 import entidad.Estado;
 import entidad.Movimiento;
 import entidad.Operacion;
+import entidad.TipoCuenta;
 import entidad.TipoMovimiento;
 
 public class MovimientosDaoImpl implements IMovimientosDao{
@@ -21,31 +23,47 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 	/**** MOVIMIENTOS ****/
 	
 	//QUERIES
-	private static final String selectAll = 	"select * from Movimientos M " +
-												"inner join Estados E " +
-												"on M.IdEstados=E.IdEstados " + 
-												"inner join TiposMovimiento TM " +
-												"on TM.IdTipoMovimiento=M.IdTipoMovimiento";
-	
-	private static final String selectOne = 	"select * from Movimientos M " +
+	private static final String selectAll = 	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
 												"inner join Estados E " +
 												"on M.IdEstados=E.IdEstados " + 
 												"inner join TiposMovimiento TM " +
 												"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+												"inner join Cuentas C " +
+												"on C.CBU=M.CBU "+ 
+												"inner join TiposCuenta TC " +
+												"on TC.IdTipoCuenta=C.IdTipoCuenta ";
+	
+	private static final String selectOne = 	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+												"inner join Estados E " +
+												"on M.IdEstados=E.IdEstados " + 
+												"inner join TiposMovimiento TM " +
+												"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+												"inner join Cuentas C " +
+												"on C.CBU=M.CBU " +
+												"inner join TiposCuenta TC " +
+												"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 												"where ID = ?";
 			
-	private static final String selectPorNumeroReferencia = "select * from Movimientos M " +
+	private static final String selectPorNumeroReferencia = "select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
 																"inner join Estados E " +
 																"on M.IdEstados=E.IdEstados " + 
 																"inner join TiposMovimiento TM " +
 																"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+																"inner join Cuentas C " +
+																"on C.CBU=M.CBU " +
+																"inner join TiposCuenta TC " +
+																"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 																"where NumeroReferencia = ?";
 			
-	private static final String selectPorNumeroCuenta = "select * from Movimientos M " +
+	private static final String selectPorNumeroCuenta = "select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
 															"inner join Estados E " +
 															"on M.IdEstados=E.IdEstados " + 
 															"inner join TiposMovimiento TM " +
 															"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+															"inner join Cuentas C " +
+															"on C.CBU=M.CBU " +
+															"inner join TiposCuenta TC " +
+															"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 															"where CBU = ?";
 	
 	private static final String insert = "INSERT INTO Movimientos (idTipoMovimiento, NumeroReferencia, CBU, " +
@@ -140,7 +158,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 			pStatement = connection.prepareStatement(insert);
 			pStatement.setInt(1, movimiento.getTipoMovimiento().getId());
 			pStatement.setInt(2, movimiento.getNumeroReferencia());
-			pStatement.setString(3, movimiento.getCbudestino());
+			pStatement.setString(3, movimiento.getCuenta().getCbu());//GET CUENTA GET CBU
 			pStatement.setDouble(4, movimiento.getMonto());
 			pStatement.setString(5, movimiento.getOperacion());
 			pStatement.setDate(6, Date.valueOf(movimiento.getFechaMovimiento()));
@@ -168,7 +186,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 			pStatement = connection.prepareStatement(update);
 			
 			pStatement.setInt(1, movimiento.getTipoMovimiento().getId());
-			pStatement.setString(3, movimiento.getCbudestino());
+			pStatement.setString(3, movimiento.getCuenta().getCbu());//GET CUENTA GET CBU
 			pStatement.setDouble(4, movimiento.getMonto());
 			pStatement.setString(5, movimiento.getOperacion());
 			pStatement.setDate(6, Date.valueOf(movimiento.getFechaMovimiento()));
@@ -215,7 +233,24 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		Movimiento movimiento = new Movimiento();
 		movimiento.setId(rSet.getInt("ID"));
 		movimiento.setNumeroReferencia(rSet.getInt("NumeroReferencia"));
-		movimiento.setCbudestino(rSet.getString("CBU"));
+		
+		//REFERENTE A CUENTA
+		int numeroCuenta=rSet.getInt("NumeroCuenta");
+		String cbu= rSet.getString("CBU");
+		double saldo=rSet.getDouble("Saldo");
+		TipoCuenta tipoCuenta=new TipoCuenta();
+		tipoCuenta.setId(rSet.getInt("IdTipoCuenta"));
+		tipoCuenta.setDescripcion(rSet.getString("tipoCuentaDescripcion"));
+		int idCliente=rSet.getInt("IdCliente");
+		LocalDate fechaCreacion=rSet.getDate("fechaCreacion").toLocalDate();
+		boolean activa=rSet.getBoolean("Activo");
+		
+		Cuenta cuenta=new Cuenta(numeroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, activa);
+		//
+		//movimiento.setCbudestino(rSet.getString("CBU"));
+		movimiento.setCuenta(cuenta);
+		
+		
 		movimiento.setMonto(rSet.getDouble("Monto"));
 		movimiento.setOperacion(Operacion.valueOf(rSet.getString("Operacion")));
 		movimiento.setFechaMovimiento(rSet.getDate("FechaMovimiento").toLocalDate());
@@ -224,13 +259,13 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		//ESTADO
 		Estado estado = new Estado();
 		estado.setIdEstado(rSet.getInt("IdEstados"));
-		estado.setDescripcion(rSet.getNString("Descripcion"));
+		estado.setDescripcion(rSet.getNString("estadoDescripcion"));
 		movimiento.setEstado(estado);
 				
 		//TIPOMOVIMIENTO
 		TipoMovimiento tipoMovimiento = new TipoMovimiento();
 		tipoMovimiento.setId(rSet.getInt("IdTipoMovimiento"));
-		tipoMovimiento.setDescripcion(rSet.getString("descripcion"));
+		tipoMovimiento.setDescripcion(rSet.getString("tipoMovimientoDescripcion"));
 		movimiento.setTipoMovimiento(tipoMovimiento);
 		
 		return movimiento;
