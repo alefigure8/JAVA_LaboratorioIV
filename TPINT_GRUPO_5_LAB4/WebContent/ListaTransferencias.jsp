@@ -1,9 +1,11 @@
 
+<%@page import="java.util.HashMap"%>
+<%@page import="entidad.Movimiento"%>
+<%@page import="entidad.Cliente"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-
 <%@page import="entidad.TipoAcceso"%>
 
 <!-- AUTENTICACION -->
@@ -11,6 +13,29 @@
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
 </jsp:include>
 <!-- FIN AUTENTICACION -->
+
+<!-- SCRIPTLE -->
+<%
+	Cliente cliente = new Cliente();
+
+	if(session.getAttribute("cliente")!=null){
+		cliente = (Cliente)session.getAttribute("cliente");
+	}
+	
+	List<Movimiento> listadoMovimientos = new ArrayList<Movimiento>();
+	
+	if(request.getAttribute("lista")!=null){
+		listadoMovimientos = (List<Movimiento>)request.getAttribute("lista");
+	}
+	
+	HashMap<Integer, String> destinatarios = new HashMap<Integer, String>();
+	
+	if(request.getAttribute("destinatarios")!=null){
+		destinatarios = (HashMap<Integer, String>)request.getAttribute("destinatarios");
+	}
+
+%>
+<!-- FIN SCRIPTLE -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -75,47 +100,25 @@
 	                <tr>
 	                  <th scope="col">Fecha</th>
 	                  <th scope="col">Destinatario</th>
+	                  <th scope="col">Cuenta</th>
 	                  <th scope="col">Monto</th>
 	                  <th scope="col">Estado</th>
-	                  <th scope="col"></th>
+	                  <th scope="col">Detalle</th>
 	                </tr>
 	              </thead>
 	              <tbody>
+	              <% for(Movimiento movimiento : listadoMovimientos) {%>
+	              
 	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2">28/10/2023</span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75">Cliente xxxxx</span></td>
-	                  <td><span class="black-75">$1.950,00</span></td>
-	                  <td><span class="badge bg-danger text-white">Rechazada</span></td>
+	                  <td class="d-flex align-items-center"><span class="black-75 me-2"><%= movimiento.getFechaMovimiento() %></span><i class="fa-solid fa-user opacity-75"></i></td>
+	                  <td><span class="black-75"><%= destinatarios.get(movimiento.getNumeroReferencia()) %></span></td>
+	                  <td><span class="black-75"><%= movimiento.getCuenta().getCbu() %></span></td>
+	                  <td><span class="black-75"><%= movimiento.getMonto() %></span></td>
+	                  <td><span class="badge bg-success text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
 	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
 	                </tr>
-	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2">28/10/2023</span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75">Cliente xxxxx</span></td>
-	                  <td><span class="black-75">$1.950,00</span></td>
-	                  <td><span class="badge bg-success text-white">Realizada</span></td>
-	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
-	                </tr>
-	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2">28/10/2023</span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75">Cliente xxxxx</span></td>
-	                  <td><span class="black-75">$1.950,00</span></td>
-	                  <td><span class="badge bg-success text-white">Realizada</span></td>
-	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
-	                </tr>
-	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2">28/10/2023</span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75">Cliente xxxxx</span></td>
-	                  <td><span class="black-75">$1.950,00</span></td>
-	                  <td><span class="badge bg-danger text-white">Rechazada</span></td>
-	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
-	                </tr>
-	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2">28/10/2023</span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75">Cliente xxxxx</span></td>
-	                  <td><span class="black-75">$1.950,00</span></td>
-	                  <td><span class="badge bg-success text-white">Realizada</span></td>
-	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
-	                </tr>
+	                
+					<%} %>
 	              </tbody>
 	            </table>
 	            <!--PAGINACION-->
@@ -136,7 +139,10 @@
 	              </ul>
 	            </nav>
 	          </div>
+	          
 	          <!--DETALLE-->
+	          <!-- 
+	          
 	          <div class="mt-4 border border-1 border-black border-opacity-25 rounded-1 p-2 mb-4" style="min-width: 300px;">
 	            <div class="col-7 d-flex justify-content-between w-100 align-items-center mb-2">
 	              <h4 class="opacity-75 m-0">Detalle</h4>
@@ -157,7 +163,9 @@
 	              <p class="fs-5">123456789123</p>
 	              <p class="mb-0">Concepto</p>
 	              <p class="fs-5">Varios</p>
-	
+	              
+				 -->
+				 
 	            </div>
 	          </div>
 	        </div>

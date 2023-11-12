@@ -38,6 +38,12 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	public List<Movimiento> obtenerPorCBU(String CBU) throws SQLException {
 		return (List<Movimiento>)movimientoNegocio.obtenerPorCBU(CBU);
 	}
+	
+	@Override
+	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException {
+		return (List<Movimiento>)movimientoNegocio.obtenerPorCliente(cliente);
+	}
+
 
 	@Override
 	public boolean insertar(Movimiento movimiento) throws SQLException {

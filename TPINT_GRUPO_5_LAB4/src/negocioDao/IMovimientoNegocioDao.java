@@ -16,4 +16,5 @@ public interface IMovimientoNegocioDao {
 	TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException;
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException;
 	public int obtenerUltimoIdMovimiento() throws SQLException;
+	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException;
 }

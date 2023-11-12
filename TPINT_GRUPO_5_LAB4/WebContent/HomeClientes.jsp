@@ -38,7 +38,7 @@
 					<div class="p-4 col-md-12 justify-content-center align-items-start">
 			    		<h4>Menú</h4>
 			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">MIS CUENTAS</a>
-			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">TRANSFERENCIAS</a>
+			    		<a href="/TPINT_GRUPO_5_LAB4/ServletListaTransferencias?listado=true&todos=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">TRANSFERENCIAS</a>
 			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">PRESTAMOS</a>
 			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">PERFIL</a>
 					</div>

@@ -66,6 +66,17 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 															"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 															"where CBU = ?";
 	
+	private static final String selectPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+																"inner join Estados E " +
+																"on M.IdEstados=E.IdEstados " + 
+																"inner join TiposMovimiento TM " +
+																"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+																"inner join Cuentas C " +
+																"on C.CBU=M.CBU " +
+																"inner join TiposCuenta TC " +
+																"on TC.IdTipoCuenta=C.IdTipoCuenta "+
+																"where C.IdCliente = ?";
+	
 	private static final String insert = "INSERT INTO Movimientos (idTipoMovimiento, NumeroReferencia, CBU, " +
             "Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
@@ -110,6 +121,29 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		try {
 			pStatement=conexion.getSQLConexion().prepareStatement(selectPorNumeroReferencia);
 			pStatement.setInt(1, numeroReferencia);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				movimientos.add(getMovimiento(rSet));
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+		}
+		
+		return movimientos;
+	}
+	
+	//OBTENER POR NUMERO DE REFERENCIA
+	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException {
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		List<Movimiento> movimientos = new ArrayList<Movimiento>();
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(selectPorNumeroCliente);
+			pStatement.setInt(1, cliente);
 			rSet=pStatement.executeQuery();
 			
 			while(rSet.next()) {
@@ -249,8 +283,6 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		//
 		//movimiento.setCbudestino(rSet.getString("CBU"));
 		movimiento.setCuenta(cuenta);
-		
-		
 		movimiento.setMonto(rSet.getDouble("Monto"));
 		movimiento.setOperacion(Operacion.valueOf(rSet.getString("Operacion")));
 		movimiento.setFechaMovimiento(rSet.getDate("FechaMovimiento").toLocalDate());

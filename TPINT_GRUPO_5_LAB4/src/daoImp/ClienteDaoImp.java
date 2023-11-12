@@ -48,6 +48,12 @@ public class ClienteDaoImp implements IClienteDao{
 			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
 			"where C.dni=?";
 	
+	private static final String obtenerClientePorCBU="select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
+			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
+			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
+			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
+			"where C.CBU=?";
+	
 	
 	/***************** INSERTAR ********************/
 	@Override
@@ -356,6 +362,29 @@ public class ClienteDaoImp implements IClienteDao{
 			try {
 				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorDni);
 				pStatement.setInt(1, dni);
+				rSet=pStatement.executeQuery();
+				
+				while(rSet.next()) {
+					cliente = getCliente(rSet);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return cliente;
+		}
+		
+		@Override
+		public Cliente obtenerClientePorCBU(int cbu) {
+			PreparedStatement pStatement;
+			ResultSet rSet;
+			Cliente cliente = new Cliente();
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorDni);
+				pStatement.setInt(1, cbu);
 				rSet=pStatement.executeQuery();
 				
 				while(rSet.next()) {

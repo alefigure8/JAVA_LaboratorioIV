@@ -53,6 +53,11 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 		return clienteDao.obtenerCliente(dni);
 	}
 	
+	@Override
+	public Cliente obtenerClientePorCBU(int cbu) {
+		return clienteDao.obtenerClientePorCBU(cbu);
+	}
+	
 	//CLIENTE DNI
 	public boolean existeDni(int dni) {
 		List<Cliente> clientes=(List<Cliente>)clienteDao.obtenerTodos();

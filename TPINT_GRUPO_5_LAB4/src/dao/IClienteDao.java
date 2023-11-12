@@ -15,6 +15,7 @@ public interface IClienteDao {
 	 public List<Cliente> obtenerTodos();
 	 public Cliente obtenerUno(int id);
 	 public Cliente obtenerCliente(int dni);
+	 public Cliente obtenerClientePorCBU(int cbu);
 	 public boolean existeUsuario(String usuario, String contrasena) throws SQLException;
 	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException;
 	 
