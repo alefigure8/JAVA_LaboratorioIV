@@ -1,6 +1,7 @@
 package negocioDao;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import entidad.Movimiento;
@@ -14,6 +15,8 @@ public interface IMovimientoNegocioDao {
 	public boolean editar(Movimiento movimiento) throws SQLException;
 	public boolean borrar(int id) throws SQLException;
 	TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException;
+	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException;
+	public HashMap<Integer, String> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException;
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException;
 	public int obtenerUltimoIdMovimiento() throws SQLException;
 	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException;

@@ -16,8 +16,10 @@ import javax.servlet.http.HttpSession;
 import com.mysql.cj.Session;
 import com.sun.javafx.collections.MappingChange.Map;
 
+import Helper.GUI;
 import entidad.Cliente;
 import entidad.Movimiento;
+import entidad.Operacion;
 import entidad.TipoMovimiento;
 import negocioDaoImp.ClienteNegocioDaoImp;
 import negocioDaoImp.MovimientoNegocioDaoImp;
@@ -34,58 +36,60 @@ public class ServletListaTransferencias extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("listado")!=null) {
 			
-			MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();
-			ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
+			MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();		
 			HttpSession session = request.getSession(true);
-			
 			Cliente cliente = (Cliente)session.getAttribute("cliente");
 			
+			/** TODOS LOS MOVIMIENTOS DE TRANSFERENCIA **/
 			if(request.getParameter("todos")!=null) {
 				try {
-					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerPorCliente(cliente.getId());
-					List<Movimiento> listadoTransferencia = new ArrayList<Movimiento>();
-					HashMap<Integer, String> destinatarios = new HashMap<Integer, String>();
+					//Obtener listado de movimientos por cliente
+					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
+					HashMap<Integer, String> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
 					
-					//Obtenemos solamente las transferencias -- TODO: hacerlo desde DAO
-					for(Movimiento movimiento : listadoMovimiento) {
-						
-						if(movimiento.getTipoMovimiento().getDescripcion().equals("Transferencia")) {
-							
-							//Buscamos cliente Destinatario
-							List<Movimiento> movimientosPorReferencias = movimientoNegocioDaoImp.obtenerPorNumeroDeReferencia(movimiento.getNumeroReferencia());
-							
-							int IDCliente = 0;
-							
-							for(Movimiento movimiento2 : movimientosPorReferencias) {
-								if(movimiento2.getCuenta().getIdCliente() != cliente.getId()) {
-									IDCliente = movimiento2.getCuenta().getIdCliente();
-								}
-							}
-							
-							Cliente destinatario = clienteNegocioDaoImp.obtenerUno(IDCliente);
-							
-							destinatarios.put(movimiento.getNumeroReferencia(), destinatario.getNombre() + " " + destinatario.getApellido());
-
-							listadoTransferencia.add(movimiento);
-						}
-					}
-					
-					
-					System.out.println(listadoMovimiento.size());
-
-					request.setAttribute("lista", listadoTransferencia);
+					request.setAttribute("lista", listadoMovimiento);
 					request.setAttribute("destinatarios", destinatarios);
 					
 					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
 					rd.forward(request, response);
 				} catch (Exception e) {
 					//ERROR
-					System.out.println(e.getMessage());
+					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					rd.forward(request, response);
 				}
-				
 			}
 			
-			if(request.getParameter("cbu")!=null) {
+			/** TRANSFERENCIA DE OPERACION :: ENTRADA Y SALIDA **/
+			if(request.getParameter("operacion")!=null) {
+				
+				String operacion = request.getParameter("operacion");
+				
+				try {
+					//Obtener listado de movimientos por cliente
+					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
+					HashMap<Integer, String> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+					
+					//Operacion filtrada					
+					List<Movimiento> listadoMovimientoFiltrado = obtenerListaPorOperacion(listadoMovimiento, operacion);
+					
+					//Set atributos
+					request.setAttribute("lista", listadoMovimientoFiltrado);
+					request.setAttribute("destinatarios", destinatarios);
+					
+					//Redirigir
+					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+					rd.forward(request, response);
+				} catch (Exception e) {
+					//Error Base de Datos
+					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					rd.forward(request, response);
+				}
+			}
+			
+			/** TRANSFERENCIA DE ESTADO :: APROBADA y RECHAZADA **/
+			if(request.getParameter("estado")!=null) {
 				
 				
 			}
@@ -97,6 +101,19 @@ public class ServletListaTransferencias extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	/** FILTRAR LISTADO POR OPERACION **/
+	protected List<Movimiento> obtenerListaPorOperacion(List<Movimiento> listado, String operacion){
+
+			List<Movimiento> listadoMovimiento = new ArrayList<Movimiento>();
+			
+			for(Movimiento movimiento : listado) {
+				if(movimiento.getOperacion().equals(operacion))
+					listadoMovimiento.add(movimiento);
+			}
+			
+			return listadoMovimiento;
 	}
 
 }

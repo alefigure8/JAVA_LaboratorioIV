@@ -1,4 +1,10 @@
 
+<%@page import="entidad.Operacion"%>
+<%@page import="entidad.EstadoCuota"%>
+<%@page import="entidad.Estado"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="entidad.Movimiento"%>
 <%@page import="entidad.Cliente"%>
@@ -61,24 +67,28 @@
 	    	<!--TITULO-->
 			<div class="w-100 pt-2">
 			  <!--TIUTLO PAGINA-->
-			  <h1 class="mt-2">Transferencia</h1>
+			  <h1 class="mt-2">TRANSFERENCIA</h1>
 			</div>
-	    	<div>
-	   			<input type="submit" class="btn btn_main mt-4" value="+ Nueva Ttransferencia">
+	    	<div class="row m-0">
+	   			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center col-2">+ Nueva Ttransferencia</a>
 	      	</div>
 	      <div class="flex-grow-1">
 	        <!--FILTRO-->
 	        <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
-	          <div class="col-md-7 text-md-start text-center">
+	          <div class="col-4 text-md-start text-center">
 	            <h4 class="opacity-75">Historial de transferencias realizadas</h4>
 	          </div>
-	          <div class="col-md-5">
+	          <div class="col-md-8">
 	            <form action="" class="d-flex justify-content-around align-items-center gap-2  flex-md-row flex-column">
 	              <select name="Estados" class="form-select form-select-sm w-md-50">
 	                <option value="Todos los Estados">Todos los Estados</option>
 	                <option value="Realiazada">Realiazada</option>
 	                <option value="Rechazada">Rechazada</option>
-	                <option value="Pendiente">Pendiente</option>
+	              </select>
+	              <select name="Operacion" class="form-select form-select-sm w-md-50" onChange="operacion(this)">
+	                <option value="Todos las operaciones">Todos las Operaciones</option>
+	                <option value="Entrada">Entrada</option>
+	                <option value="Salida">Salida</option>
 	              </select>
 	              <div class="d-flex gap-2">
 	                <span >Desde: </span>
@@ -95,14 +105,15 @@
 	        <!--TABLA-->
 	        <div class="d-flex flex-md-row flex-column">
 	          <div class="h-100 me-4 w-100">
-	            <table class="table table-striped">
+	            <table id="table_id" class="table display text-center">
 	              <thead>
 	                <tr>
 	                  <th scope="col">Fecha</th>
 	                  <th scope="col">Destinatario</th>
-	                  <th scope="col">Cuenta</th>
+	                  <th scope="col">Numero Referencia</th>
 	                  <th scope="col">Monto</th>
 	                  <th scope="col">Estado</th>
+	                  <th scope="col">Operación</th>
 	                  <th scope="col">Detalle</th>
 	                </tr>
 	              </thead>
@@ -110,34 +121,18 @@
 	              <% for(Movimiento movimiento : listadoMovimientos) {%>
 	              
 	                <tr>
-	                  <td class="d-flex align-items-center"><span class="black-75 me-2"><%= movimiento.getFechaMovimiento() %></span><i class="fa-solid fa-user opacity-75"></i></td>
-	                  <td><span class="black-75"><%= destinatarios.get(movimiento.getNumeroReferencia()) %></span></td>
-	                  <td><span class="black-75"><%= movimiento.getCuenta().getCbu() %></span></td>
-	                  <td><span class="black-75"><%= movimiento.getMonto() %></span></td>
-	                  <td><span class="badge bg-success text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
-	                  <td><i class="fa-solid fa-circle-info opacity-50"></i> Detalle</td>
+	                  <td><span class="black-75"><%= movimiento.getFechaMovimiento() %></span></td>
+	                  <td><span class="black-75"><%= destinatarios.get(movimiento.getNumeroReferencia())%> <i class="fa-solid fa-user opacity-75 ms-2"></i></span></td>
+	                  <td><span class="black-75"><%= movimiento.getNumeroReferencia() %></span></td>
+	                  <td><span class="black-75"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %></span></td>
+	                  <td><span class="badge <%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> bg-success <%} else {%> bg-danger <%}%> text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
+	                  <td><span class="black-75 me-2"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-sucess <%}%>  opacity-75"></i></span></td>
+	                  <td><a class="p-2 bg-secondary text-light rounded"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
 	                </tr>
 	                
 					<%} %>
 	              </tbody>
-	            </table>
-	            <!--PAGINACION-->
-	            <nav class="w-100 d-flex justify-content-center">
-	              <ul class="pagination">
-	                <li class="page-item">
-	                  <a class="page-link" href="#" aria-label="Previous">
-	                    <span aria-hidden="true">&laquo;</span>
-	                  </a>
-	                </li>
-	                <li class="page-item"><a class="page-link bg-primary text-light" href="#">1</a></li>
-	                <li class="page-item"><a class="page-link" href="#">2</a></li>
-	                <li class="page-item">
-	                  <a class="page-link" href="#" aria-label="Next">
-	                    <span aria-hidden="true">&raquo;</span>
-	                  </a>
-	                </li>
-	              </ul>
-	            </nav>
+	            </table>  
 	          </div>
 	          
 	          <!--DETALLE-->
@@ -164,17 +159,34 @@
 	              <p class="mb-0">Concepto</p>
 	              <p class="fs-5">Varios</p>
 	              
-				 -->
-				 
 	            </div>
+	            
 	          </div>
+			 -->
 	        </div>
-	      
 	      </div>
 	    </div>
-	    
 	 </div>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
+	    
+	    		<!-- POPUP ERROR DE AUTENTICACION-->
+		<%if(request.getAttribute("tipo") != null){
+			%>
+			<jsp:include page="/WEB-INF/Components/popup.jsp">
+				<jsp:param name="tipo" value="<%= request.getAttribute(\"tipo\") %>"/>
+				<jsp:param name="mensaje" value="<%= request.getAttribute(\"mensaje\") %>"/>
+				<jsp:param name="titulo" value="<%= request.getAttribute(\"titulo\") %>"/>
+			</jsp:include>
+		<% } %>
+		<!-- FIN POPUP -->
+		
+		<!-- SCRIPT -->
+		<script>
+			function operacion(select){
+				const opcion = select.value;
+				window.location.href ="${pageContext.request.contextPath}/ServletListaTransferencias?listado=true&operacion=" + opcion;
+			}
+		</script>
 	 </body>
 </html>

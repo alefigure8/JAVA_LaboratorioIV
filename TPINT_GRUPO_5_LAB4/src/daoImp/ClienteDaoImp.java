@@ -376,7 +376,7 @@ public class ClienteDaoImp implements IClienteDao{
 		}
 		
 		@Override
-		public Cliente obtenerClientePorCBU(int cbu) {
+		public Cliente obtenerClientePorCBU(String cbu) {
 			PreparedStatement pStatement;
 			ResultSet rSet;
 			Cliente cliente = new Cliente();
@@ -384,7 +384,7 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			try {
 				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorDni);
-				pStatement.setInt(1, cbu);
+				pStatement.setString(1, cbu);
 				rSet=pStatement.executeQuery();
 				
 				while(rSet.next()) {

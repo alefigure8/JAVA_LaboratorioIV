@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.sun.javafx.collections.MappingChange.Map;
 
 import dao.Conexion;
 import dao.IMovimientosDao;
@@ -77,8 +80,35 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 																"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 																"where C.IdCliente = ?";
 	
+	private static final String selectTransferenciaPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+															"inner join Estados E " +
+															"on M.IdEstados=E.IdEstados " + 
+															"inner join TiposMovimiento TM " +
+															"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+															"inner join Cuentas C " +
+															"on C.CBU=M.CBU " +
+															"inner join TiposCuenta TC " +
+															"on TC.IdTipoCuenta=C.IdTipoCuenta "+
+															"where TM.IdTipoMovimiento = 'Transferencia'";
+	
+	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = "SELECT MO.NumeroReferencia, CLI.Nombre, CLI.Apellido " +
+																							"FROM Movimientos MO " +
+																							"INNER JOIN Cuentas CU " +
+																							"ON MO.CBU = CU.CBU " +
+																							"INNER JOIN Clientes CLI " +
+																							"ON CLI.Id = CU.IdCliente " +
+																							"Where NumeroReferencia in " +
+																							"(SELECT MO.NumeroReferencia " +
+																							"FROM Movimientos MO " +
+																							"INNER JOIN Cuentas CU " +
+																							"ON MO.CBU = CU.CBU " +
+																							"INNER JOIN Clientes CLI " +
+																							"ON CLI.Id = CU.IdCliente " +
+																							"WHERE CLI.Id = ?) " +
+																							"AND CLI.ID <> ?; ";
+	
 	private static final String insert = "INSERT INTO Movimientos (idTipoMovimiento, NumeroReferencia, CBU, " +
-            "Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            								"Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String update = "UPDATE Movimientos " +
 								            "SET idTipoMovimiento = ?, NumeroReferencia = ?, CBU = ?, Monto = ?, " +
@@ -157,6 +187,29 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		return movimientos;
 	}
 	
+	//OBTENER TRANSFERENCIAS POR NUMERO DE CLIENTE
+	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException {
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		List<Movimiento> movimientos = new ArrayList<Movimiento>();
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(selectTransferenciaPorNumeroCliente);
+			pStatement.setInt(1, cliente);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				movimientos.add(getMovimiento(rSet));
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+		}
+		
+		return movimientos;
+	}
+	
 	//OBTENER POR CBU
 	public List<Movimiento> obtenerPorCBU(String CBU) throws SQLException {
 		PreparedStatement pStatement;
@@ -178,6 +231,33 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		}
 		
 		return movimientos;
+	}
+	
+	public HashMap<Integer, String> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException {
+		
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		HashMap<Integer, String> destinatarios = new HashMap<Integer, String>();
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(obtenerDestinatariosTransferenciasPorNumeroCliente);
+			pStatement.setInt(1, numeroCliente);
+			pStatement.setInt(2, numeroCliente);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				int numeroReferencia = rSet.getInt("NumeroReferencia");
+				String nombre = rSet.getString("Nombre");
+				String apellido = rSet.getString("Apellido");
+				destinatarios.put(numeroReferencia, nombre + " " + apellido);
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+		}
+		
+		return destinatarios;
 	}
 
 

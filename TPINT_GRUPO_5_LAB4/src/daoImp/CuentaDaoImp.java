@@ -31,6 +31,9 @@ public class CuentaDaoImp implements ICuentaDao{
 	private static final String readOnePorNroCuenta = "select * from Cuentas c \r\n" + 
 			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
 			"where c.NumeroCuenta = ?";
+	private static final String readOnePorCBU = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
+			"where c.CBU = ?";
 	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
 	private static final String countCuentasPorCliente = "select count(*) as 'Total' from Cuentas where IdCliente = ? and Activo=1";
 	private static final String readAllTiposCuenta = "select * from TiposCuenta";
@@ -192,6 +195,31 @@ public class CuentaDaoImp implements ICuentaDao{
 		
 		return cuenta;
 	}
+	
+	//OBTENER UNA CUENTA POR CBU
+	@Override
+	public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException{
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		Cuenta cuenta = new Cuenta();
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(readOnePorNroCuenta);
+			pStatement.setString(1, cbu);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				cuenta = getCuenta(rSet);
+			}
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return cuenta;
+	}
+	
 
 	// RSET PARA ARMAR LOS OBJETOS CUENTA
 	private Cuenta getCuenta(ResultSet rSet) throws SQLException{

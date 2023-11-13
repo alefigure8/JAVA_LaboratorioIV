@@ -54,7 +54,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 	
 	@Override
-	public Cliente obtenerClientePorCBU(int cbu) {
+	public Cliente obtenerClientePorCBU(String cbu) {
 		return clienteDao.obtenerClientePorCBU(cbu);
 	}
 	

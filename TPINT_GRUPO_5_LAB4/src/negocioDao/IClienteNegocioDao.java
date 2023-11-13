@@ -13,7 +13,7 @@ public interface IClienteNegocioDao {
 	 public List<Cliente> obtenerTodos();
 	 public Cliente obtenerUno(int id);
 	 public Cliente obtenerCliente(int dni);
-	 public Cliente obtenerClientePorCBU(int cbu);
+	 public Cliente obtenerClientePorCBU(String cbu);
 	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException;
 	 public boolean existeUsuario(String usuario, String contrasena) throws SQLException;
 }

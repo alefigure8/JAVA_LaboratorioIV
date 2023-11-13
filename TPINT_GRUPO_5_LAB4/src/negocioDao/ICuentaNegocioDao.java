@@ -13,6 +13,7 @@ public interface ICuentaNegocioDao {
 	 public List<Cuenta> obtenerTodas() throws SQLException;
 	 public List<Cuenta> obtenerCuentasCliente(int idCliente) throws SQLException;
 	 public Cuenta obtenerUna(int nroCuenta) throws SQLException;
+	 public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException;
 	 public int cantidadCuentas(int idCliente) throws SQLException; // devuelve la cantidad de cuentas existentes del cliente
 	 public List<TipoCuenta> listarTiposCuenta() throws SQLException;
 	 public boolean cbuExiste(String cbu) throws SQLException;

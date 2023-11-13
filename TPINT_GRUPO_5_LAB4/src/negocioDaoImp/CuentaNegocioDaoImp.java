@@ -57,6 +57,12 @@ public class CuentaNegocioDaoImp implements ICuentaNegocioDao {
 		
 		return cuentaDao.obtenerUna(nroCuenta);
 	}
+	
+	@Override
+	public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException {
+		
+		return cuentaDao.obtenerUnaPorCBU(cbu);
+	}
 
 	@Override
 	public int cantidadCuentas(int idCliente) throws SQLException {
