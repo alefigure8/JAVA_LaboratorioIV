@@ -21,70 +21,74 @@ import javafx.util.converter.LocalDateStringConverter;
 
 public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	
-	private IMovimientosDao movimientoNegocio= new MovimientosDaoImpl();
+	private IMovimientosDao movimientosDao= new MovimientosDaoImpl();
 	
 	public MovimientoNegocioDaoImp() {
 		
 	}
 	
 	public MovimientoNegocioDaoImp(IMovimientosDao movimientoNegocio) {
-		this.movimientoNegocio=movimientoNegocio;
+		this.movimientosDao=movimientoNegocio;
 	}
 	
 	
 	@Override
 	public List<Movimiento> obtenerTodos() throws SQLException {
-		return (List<Movimiento>)movimientoNegocio.obtenerTodos();
+		return (List<Movimiento>)movimientosDao.obtenerTodos();
 	}
 
 	@Override
 	public List<Movimiento> obtenerPorNumeroDeReferencia(int numeroReferencia) throws SQLException {
-		return (List<Movimiento>)movimientoNegocio.obtenerPorNumeroDeReferencia(numeroReferencia);
+		return (List<Movimiento>)movimientosDao.obtenerPorNumeroDeReferencia(numeroReferencia);
 	}
 
 	@Override
 	public List<Movimiento> obtenerPorCBU(String CBU) throws SQLException {
-		return (List<Movimiento>)movimientoNegocio.obtenerPorCBU(CBU);
+		return (List<Movimiento>)movimientosDao.obtenerPorCBU(CBU);
 	}
 
 	@Override
-	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException {
-		return (List<Movimiento>)movimientoNegocio.obtenerPorCliente(cliente);
+	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException, Exception {
+		
+	
+		//Validar errores
+		
+		return (List<Movimiento>)movimientosDao.obtenerTransferenciasPorCliente(cliente);
 	}
 
 	@Override
 	public HashMap<Integer, Destinatario> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException {
-		return movimientoNegocio.obtenerDestinatariosTransferenciasPorNumeroCliente(numeroCliente);
+		return movimientosDao.obtenerDestinatariosTransferenciasPorNumeroCliente(numeroCliente);
 	}
 
 	@Override
 	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException {
-		return (List<Movimiento>)movimientoNegocio.obtenerPorCliente(cliente);
+		return (List<Movimiento>)movimientosDao.obtenerPorCliente(cliente);
 	}
 
 	@Override
 	public boolean insertar(Movimiento movimiento) throws SQLException {
-		return movimientoNegocio.insertar(movimiento);
+		return movimientosDao.insertar(movimiento);
 	}
 
 	@Override
 	public boolean editar(Movimiento movimiento) throws SQLException {
-		return movimientoNegocio.editar(movimiento);
+		return movimientosDao.editar(movimiento);
 	}
 
 	@Override
 	public boolean borrar(int id) throws SQLException {
-		return movimientoNegocio.borrar(id);
+		return movimientosDao.borrar(id);
 	}
 
 	@Override
 	public TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException {
-		return (TipoMovimiento)movimientoNegocio.obtenerTipoMovimientoPorId(id);
+		return (TipoMovimiento)movimientosDao.obtenerTipoMovimientoPorId(id);
 	}
 
 	@Override
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException {
-		return (List<TipoMovimiento>)movimientoNegocio.obtenerTipoMovimientos();
+		return (List<TipoMovimiento>)movimientosDao.obtenerTipoMovimientos();
 	}
 	
 	//GENERAR NUMERO DE REFERENCIA ALEATORIO
@@ -113,7 +117,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	//OBTENER ULTIMO ID DE MOVIMIENTO PARA AGREGAR AL NUMERO DE REFERENCIA
 	@Override
 	public int obtenerUltimoIdMovimiento() throws SQLException {
-		return movimientoNegocio.obtenerUltimoIdMovimiento();
+		return movimientosDao.obtenerUltimoIdMovimiento();
 	}
 	
 	//TRANSFERENCIA
@@ -177,7 +181,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	@Override
 	public Movimiento obtenerUnoPorId(int id) throws SQLException {
 
-		return movimientoNegocio.obtenerUnoPorId(id);
+		return movimientosDao.obtenerUnoPorId(id);
 	}
 	
 }

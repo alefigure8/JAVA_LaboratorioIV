@@ -31,13 +31,11 @@ public class ServletHomeCliente extends HttpServlet {
   
 
 	ICuentaNegocioDao negocioCuenta = new CuentaNegocioDaoImp();
-	ArrayList<Cuenta> cuentasCliente = null;
+
 	IMovimientoNegocioDao negocioMovimiento = new MovimientoNegocioDaoImp();
-	ArrayList<Movimiento> movimientosCuenta = null;
-	ArrayList<Movimiento> tresmovimientosCuenta = new ArrayList<Movimiento>();
+
 	IClienteNegocioDao negocioCliente = new ClienteNegocioDaoImp();
-	Cliente cliente = null;
-	Cuenta cuentaVisible = null;
+
     public ServletHomeCliente() {
         super();
         // TODO Auto-generated constructor stub
@@ -46,9 +44,12 @@ public class ServletHomeCliente extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		
+		Cliente cliente = null;
+		Cuenta cuentaVisible = null;
+		ArrayList<Movimiento> movimientosCuenta = null;
+		ArrayList<Movimiento> tresmovimientosCuenta = new ArrayList<Movimiento>();
 		HttpSession session = request.getSession();
-
+		ArrayList<Cuenta> cuentasCliente = null;
 		if(request.getParameter("homecliente")!=null) {
 			
 			if(session.getAttribute("cliente")!=null) {
@@ -96,9 +97,6 @@ public class ServletHomeCliente extends HttpServlet {
 	        rd.forward(request, response);
 		
 		}
-		
-	
-		
 		
 		response.getWriter().append("Served at: homecliente ").append(request.getContextPath());
 	}

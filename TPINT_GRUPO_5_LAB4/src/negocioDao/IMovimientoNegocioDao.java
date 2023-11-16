@@ -16,7 +16,7 @@ public interface IMovimientoNegocioDao {
 	public boolean editar(Movimiento movimiento) throws SQLException;
 	public boolean borrar(int id) throws SQLException;
 	TipoMovimiento obtenerTipoMovimientoPorId(int id) throws SQLException;
-	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException;
+	public List<Movimiento> obtenerTransferenciasPorCliente(int cliente) throws SQLException, Exception;
 	public HashMap<Integer, Destinatario> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException;
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException;
 	public int obtenerUltimoIdMovimiento() throws SQLException;

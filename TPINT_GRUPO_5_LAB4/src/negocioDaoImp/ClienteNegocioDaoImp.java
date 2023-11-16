@@ -8,6 +8,7 @@ import daoImp.ClienteDaoImp;
 import entidad.Cliente;
 import entidad.Usuario;
 import excepciones.CorreoException;
+import excepciones.UsuarioNoEncontradoException;
 import negocioDao.IClienteNegocioDao;
 
 public class ClienteNegocioDaoImp implements IClienteNegocioDao {
@@ -44,7 +45,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 
 	@Override
-	public Cliente obtenerUno(int id) {
+	public Cliente obtenerUno(int id){
 		return clienteDao.obtenerUno(id);
 	}
 
@@ -72,7 +73,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 
 	/***************** USUARIO EXISTE ********************/
-	public boolean existeUsuario(String usuario, String contrasena) throws SQLException {
+	public boolean existeUsuario(String usuario, String contrasena) throws SQLException{
 
 		boolean existe = false;
 		
@@ -93,11 +94,8 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException{
 		
 		if(!usuario.trim().isEmpty()) {			
-			try {
-				return clienteDao.obtenerUsuarioPorUsuario(usuario);
-			} catch (Exception e) {
-				throw e;
-			}	
+		
+			return clienteDao.obtenerUsuarioPorUsuario(usuario);
 		}
 		
 		return null;

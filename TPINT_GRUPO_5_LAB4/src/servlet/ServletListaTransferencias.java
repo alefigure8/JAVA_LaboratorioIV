@@ -12,17 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-
-import com.sun.javafx.collections.MappingChange.Map;
-
 import Helper.GUI;
 import entidad.Cliente;
 import entidad.Destinatario;
 import entidad.Movimiento;
-import entidad.Operacion;
-import entidad.TipoMovimiento;
-import negocioDaoImp.ClienteNegocioDaoImp;
+
 import negocioDaoImp.MovimientoNegocioDaoImp;
 
 @WebServlet("/ServletListaTransferencias")
@@ -37,12 +31,13 @@ public class ServletListaTransferencias extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("listado")!=null) {
 			
-			MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();		
+			MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();
 			HttpSession session = request.getSession(true);
 			Cliente cliente = (Cliente)session.getAttribute("cliente");
 			
 			/** TODOS LOS MOVIMIENTOS DE TRANSFERENCIA **/
 			if(request.getParameter("todos")!=null) {
+				
 				try {
 					//Obtener listado de movimientos por cliente
 					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
@@ -56,14 +51,14 @@ public class ServletListaTransferencias extends HttpServlet {
 				} catch (Exception e) {
 					//ERROR
 					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
-					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
 					rd.forward(request, response);
 				}
 			}
 			
+			
 			/** TRANSFERENCIA DE OPERACION :: ENTRADA Y SALIDA **/
 			if(request.getParameter("operacion")!=null) {
-				
 				String operacion = request.getParameter("operacion");
 				
 				try {
@@ -84,18 +79,11 @@ public class ServletListaTransferencias extends HttpServlet {
 				} catch (Exception e) {
 					//Error Base de Datos
 					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
-					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
 					rd.forward(request, response);
 				}
 			}
-			
-			/** TRANSFERENCIA DE ESTADO :: APROBADA y RECHAZADA **/
-			if(request.getParameter("estado")!=null) {
-				
-				
-			}
-			
-
+					
 		}
 	}
 

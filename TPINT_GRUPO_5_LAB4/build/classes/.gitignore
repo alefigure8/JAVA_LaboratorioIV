@@ -1,7 +1,6 @@
 /dao/
 /servlet/
-/excepciones/
 /daoImp/
-/negocioDao/
 /negocioDaoImp/
-/pruebas/
+/negocioDao/
+/excepciones/

@@ -6,6 +6,7 @@ import java.util.List;
 import entidad.Cliente;
 import entidad.Usuario;
 import excepciones.CorreoException;
+import excepciones.UsuarioNoEncontradoException;
 
 public interface IClienteNegocioDao {
 	public boolean insertar(Cliente cliente);
@@ -15,7 +16,7 @@ public interface IClienteNegocioDao {
 	 public Cliente obtenerUno(int id);
 	 public Cliente obtenerCliente(int dni);
 	 public Cliente obtenerClientePorCBU(String cbu);
-	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException;
+	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException, UsuarioNoEncontradoException;
 	 public boolean existeUsuario(String usuario, String contrasena) throws SQLException;
 	 public boolean existeCorreo(String correo) throws CorreoException;
 }
