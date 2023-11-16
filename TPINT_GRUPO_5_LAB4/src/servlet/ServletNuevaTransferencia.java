@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -42,12 +43,23 @@ public class ServletNuevaTransferencia extends HttpServlet {
 		//Cliente del banco
 		HttpSession session = request.getSession(true);
 		Cliente cliente = (Cliente)session.getAttribute("cliente");
+		CuentaNegocioDaoImp cuentaNegocioDaoImp = new CuentaNegocioDaoImp();
+		List<Cuenta> cuentasCliente = new ArrayList<Cuenta>();
+
+		try {
+			cuentasCliente = cuentaNegocioDaoImp.obtenerCuentasCliente(cliente.getId());
+			request.setAttribute("cuentas", cuentasCliente);
+		} catch (Exception e) {
+			//Validacion cliente no entonctrado
+			request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado");
+			RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
+			rd.forward(request, response);
+		}
 		
 		//Formulario para cargar cbu
 		if(request.getParameter("cargacbu") != null) {
-			
-			RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
-			rd.forward(request, response);
+				RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
+				rd.forward(request, response);
 		}
 		
 		//Llega el CBU para buscar
@@ -59,22 +71,30 @@ public class ServletNuevaTransferencia extends HttpServlet {
 				//verificar si existe el usuario
 				ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
 				Cliente destinatario = clienteNegocioDaoImp.obtenerClientePorCBU(cbu);
-				
-				//Cuentas Cliente
-				CuentaNegocioDaoImp cuentaNegocioDaoImp = new CuentaNegocioDaoImp();
-				List<Cuenta> cuentasCliente = cuentaNegocioDaoImp.obtenerCuentasCliente(cliente.getId());
 
 				if(destinatario.getNombre() != null && cuentasCliente.size() != 0) {
 					if(destinatario.getId() != cliente.getId()) {
 						
 						request.setAttribute("destinatario", destinatario);
-						request.setAttribute("cuentas", cuentasCliente);
 						
 						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargamonto=true.jsp");
 						rd.forward(request, response);
+					} else if(destinatario.getId() == cliente.getId() & cuentasCliente.size() > 1){
+						List<Cuenta> cuentasATransferir =  new ArrayList<Cuenta>();
+						
+						for(Cuenta cuentaATransferir : cuentasCliente) {
+							if(cuentaATransferir.getCbu() != cbu) {
+								cuentasATransferir.add(cuentaATransferir);
+							}
+						}
+						
+						request.setAttribute("destinatario", destinatario);
+						request.removeAttribute("cuentas");
+						request.setAttribute("cuentas", cuentasATransferir);
+						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargamonto=true.jsp");
+						rd.forward(request, response);
 					} else {
-						//Validacion cliente transfiriendose a sí mismo
-						request = GUI.mensajes(request, "error", "Cliente Incorrecto", "No puede transferirse a sí mismo");
+						request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sí mismo");
 						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
 						rd.forward(request, response);
 					}
@@ -104,7 +124,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 				
 				if(movimientoCreado) {
 					request = GUI.mensajes(request, "exito", "Transferencia realizada", "La transferencia se realizó correctamente.");
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
 					rd.forward(request, response);
 				} else {
 					
@@ -119,7 +139,6 @@ public class ServletNuevaTransferencia extends HttpServlet {
 				rd.forward(request, response);
 			}
 		}
-
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

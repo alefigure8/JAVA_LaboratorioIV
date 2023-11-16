@@ -1,4 +1,8 @@
 <%@page import="entidad.TipoAcceso"%>
+<%@page import="entidad.Movimiento"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="entidad.Cuenta"%>
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
@@ -26,24 +30,69 @@
 	      	<jsp:param name="usuario" value="Ramón Ramirez" />
 	      </jsp:include>
 		      
+		      <% 
+
+
+	StringBuilder CuentaFormateada = new StringBuilder();
+	Cuenta cuenta=null;
+	if(request.getAttribute("cuenta")!=null){
+		
+		cuenta = (Cuenta)request.getAttribute("cuenta");	
+		String cuentastring = String.valueOf(cuenta.getNumeroCuenta());
+		CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+	};
+	ArrayList<Movimiento> listaMovimientos=null;
+	if(request.getAttribute("listaMovimientos")!=null){
+		
+		listaMovimientos = (ArrayList<Movimiento>)request.getAttribute("listaMovimientos");
+	};
+	
+	
+	 
+ 
+	%>
+		      
+		      
 		      <!--CONTENT-->
 		      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2">
-		          <h1>CUENTA SELECCIONADA: CAJA DE AHORRO</h1>
-		          <h4>NRO CUENTA: 204-87865/8</h4>
-		          <h4>CBU: 01702046600000087865</h4>
-		          <h4>SALDO DISPONIBLE: $150.000,00</h4>
+		          <h1>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
+		          <h4>NRO CUENTA: <%=CuentaFormateada.toString() %></h4>
+		          <h4>CBU: <%=cuenta.getCbu() %></h4>
+		          <h4>SALDO DISPONIBLE: $<%=cuenta.getSaldo()%></h4>
 		        </div>
 		        <div class="flex-grow-1">
 		          	<!-- CONTENIDO-->
-		      	 	<li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>
-		      	 
+		      	 	<li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		      	     	 
+
 			      	 <table class="table">
-			      	 	<tr> <th>FECHA</th> <th>DETALLE</th> <th>CONCEPTO</th> <th>IMPORTE</th> <th>TIPO DE MOV.</th> </tr>
-			      	 	<tr> <td>23/10/2023</td> <td>TRANS. 0039</td> <td>VARIOS</td> <td>$15.000,00</td> <td>TRANSFERENCIA</td> </tr>
-			      	 	<tr> <td>20/10/2023</td> <td>DEBITO AUT.</td> <td>CUOTA 03/06</td> <td>- $7.000,00</td> <td>PAGO PRESTAMO</td> </tr>
-			      	 	<tr> <td>20/10/2023</td> <td>TRANS. 0034</td> <td>VARIOS</td> <td>- $15.000,00</td> <td>TRANSFERENCIA</td> </tr>
+			      	 	<tr> <th>FECHA</th> <th>CONCEPTO</th><th>DESTINO</th><th>NUMERO</th><th>TIPO DE MOV.</th>  <th>IMPORTE</th>  </tr>
+			     <%for (Movimiento m :listaMovimientos){ %>
+			     		      	 <form action="ServletDetalleMovimiento" method="get">
+			      	 	<tr> <td><%=m.getFechaMovimiento() %></td>	      	 		      	 	
+			      	 	<td><%=m.getTipoMovimiento().getDescripcion() %></td>
+			      	 	<% if (m.getTipoMovimiento().getId()==1 || m.getTipoMovimiento().getId()==2) {%>
+			      	 	<td>CBU:<%=cuenta.getCbu() %></td>			      	 	
+			      	 	<%} else{ %>
+			      	 	<td>#<%=m.getNumeroReferencia() %></td>
+			      	 	<%} %>
+			      	 	
+			      	 	<td><%=m.getId() %></td>
+			      	 	<td><%=m.getOperacion() %></td>
+			      	 	<% if(m.getOperacion().equals("Entrada")) { %>
+	            				 <th style=color:#00a000;>$<%=m.getMonto() %></th>
+	            				 <% } else{ %>
+	            				 <th  style=color:#ff0000;>$<%=m.getMonto() %></th>
+	            				 <%} %>
+	            				
+	            		<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
+	            		    		<td><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></td>
+			      	 	</tr>	
+			      	 		 </form>	      	 	 
+			      	 	<%} %>
+			      	 	
 			      	 </table>
+			      
 		        </div>
 		      </div>
 	       </div>

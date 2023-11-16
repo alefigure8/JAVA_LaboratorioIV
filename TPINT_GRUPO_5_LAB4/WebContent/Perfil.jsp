@@ -27,23 +27,37 @@
 		      </jsp:include>
 
       <!--CONTENT-->
-      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
-        <div class="w-100 pt-2">
+      <div  class="col-lg-10 col-md-12 mx-2">
+        <div class="pt-2 d-flex gap-4 justify-content-center row">
           <h1>MI DATOS</h1>
         </div>
-        <div class="flex-grow-1">
+        <div class="d-flex flex-column gap-4 mt-4">
           <!-- CONTENIDO-->
-		  <ul class="list-group border-0">
-          <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>
-          <li class="list-group-item border-0 bg-transparent"><p>NOMBRE Y APELLIDO: JUAN PEREZ</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>DNI: 35.508.974</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>CUIL: 20-35508974-1</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>FECHA NAC: 25/04/1984</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>SEXO: X</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>DIRECCIÓN: MONTES DE OCA 345 - JUNIN  - BS. AS.</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>E-MAIL: JUANPEREZ@YAHOO.ES</p></li>
-		  <li class="list-group-item border-0 bg-transparent"><p>TELEFONO: 345-512-1455</p></li>
-        </ul>
+          <div class="d-flex gap-4 row">
+          	<div class="col-3 border border-1 rounded p-2">
+          		<h3>DATOS</h3>
+	          <p class="mb-0">Nombre y Apellido</p>
+	          <p class="fs-5">Juan Perez</p>
+	          <p class="mb-0">CUIL</p>
+	          <p class="fs-5">20-35508974-1</p>
+	          <p class="mb-0">Fecha de Nacimiento</p>
+	          <p class="fs-5">25/04/1984</p>
+	          <p class="mb-0">Sexo</p>
+	          <p class="fs-5">Masculino</p>
+          </div>
+          <div class="col-3 border border-1 rounded p-2">
+          	<h3>CONTACTO</h3>
+	          <p class="mb-0">Domicilio</p>
+	          <p class="fs-5">Montes de Oca 123 - Buenos Aires</p>
+	          <p class="mb-0">Correo</p>
+	          <p class="fs-5">juanperez@mail.com</p>
+	          <p class="mb-0">Telefono</p>
+	          <p class="fs-5">345-512-1455</p>
+          </div>
+          </div>
+          
+        
+         <a href="ServletHomeCliente?homecliente=homecliente" class="p-2 rounded bg-main text-white text-decoration-none col-4 col-md-1 mb-4"><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
         </div>
       </div>
 

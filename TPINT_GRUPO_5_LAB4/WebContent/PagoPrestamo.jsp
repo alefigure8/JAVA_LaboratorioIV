@@ -1,6 +1,9 @@
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
+<%@page import="java.util.List"%>
+<%@page import="entidad.Cuenta"%>
+<%@page import="entidad.Prestamo"%>
+<%@page import="entidad.CuotaPrestamo"%>
 <!-- AUTENTICACION -->
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
@@ -28,6 +31,18 @@
 		      </jsp:include>
 		      
       <!--CONTENIDO-->
+      
+     <% if(request.getAttribute("cuotaApagar")!=null){
+    	 CuotaPrestamo cuota= (CuotaPrestamo)request.getAttribute("cuotaApagar");
+    	 Prestamo prestamo=(Prestamo)request.getAttribute("prestamo");
+    	 List<Cuenta> cuentasCliente=(List<Cuenta>)request.getAttribute("cuentasCliente");
+    	 
+    	 Double monto=prestamo.getMontoPedido()/prestamo.getTipoTasa().getCantCuotas();
+    	 Double interes=monto*prestamo.getTipoTasa().getTasaInteres()/100;
+    	 System.out.println("RECIBO CON PARAMETER PRESTAMO A PAGAR"  + prestamo);
+			System.out.println("RECIBO CON PARAMETER CUOTA A PAGAR"  + cuota);
+    	 %>
+     
         <div class="col-10 d-flex flex-column justify-content-between">
           <div class="w-100 pt-2">
             <!--TIUTLO PAGINA-->
@@ -36,43 +51,53 @@
           <div class="flex-grow-1">
             <!--FILTRO-->
             <div class="d-flex flex-md-row flex-column w-100 gap-2 mt-4">
-                <h4 class="opacity-75">Prestamos #123456</h4>
+                <h4 class="opacity-75">Prestamo #<%= prestamo.getId()%></h4>
             </div>
 
             <!--TABLA-->
+            
+       <form action="ServletPrestamos" method="post">
             <div class="d-flex flex-md-row flex-column">
               <div class="mt-4 border border-1 border-black border-opacity-25 rounded-1 p-2 mb-4" style="min-width: 300px;">
                 <div class="col-7 d-flex justify-content-between w-100 align-items-center mb-2">
                   <h4 class="opacity-75 m-0">Detalle</h4>
                 </div>
                 <div>
+                  <input type="hidden" name="idCuotaApagar" value=<%= cuota.getId() %>>
+                  <input type="hidden" name="montoCuota" value=<%= cuota.getMontoCuota()%>>
+                  <input type="hidden" name="idPrestamo" value=<%= prestamo.getId()%>>
                   <p class="mb-0">Cuota</p>
-                  <p class="fs-5">3/12</p>
+                  <p class="fs-5"><%=cuota.getNumeroCuota()%>/<%=prestamo.getTipoTasa().getCantCuotas() %></p>
                   <p class="mb-0">Estado</p>
-                  <p class="fs-5">Pendiente</p>
+                  <p class="fs-5"><%= cuota.getEstado().Pendiente %></p>
                   <p class="mb-0">Fecha de Vencimiento</p>
-                  <p class="fs-5">28/10/2023</p>
+                  <p class="fs-5"><%= cuota.getFechaVencimiento() %></p>
                   <p class="mb-0">Monto</p>
-                  <p class="fs-5">$1.950,00</p>
+                  <p class="fs-5"><%=monto %></p>
                   <p class="mb-0">Interés</p>
-                  <p class="fs-5">$295,00</p>
+                  <p class="fs-5"><%=interes %></p>
                   <p class="mb-0">Total a pagar</p>
-                  <p class="fs-3 fw-bold text-secondary">$2.245,00</p>
+                  <p class="fs-3 fw-bold text-secondary"><%= cuota.getMontoCuota() %></p>
                   <p class="mb-0">Pagando desde</p>
-                  <select name="Estados" class="form-select form-select-sm w-md-50">
-                    <option value="Realiazada">CA N° 123456789 - $12.595,00</option>
-                    <option value="Rechazada">CC N° 987654321 - $9.785,07</option>
-                    <option value="Pendiente">CAC N° 987651234 - $152,15</option>
+                  <!-- LISTA DE CUENTAS ACTIVAS DE CLIENTE -->
+                  <select name="CuentasClientePago" class="form-select form-select-sm w-md-50">
+                  <% for(Cuenta cuentas:cuentasCliente)  {
+                	  if(cuentas.isActivo()){
+                  	%>
+                    <option value="<%= cuentas.getNumeroCuenta() %>">N° <%=cuentas.getNumeroCuenta() %> - $<%=cuentas.getSaldo() %></option>
+                  	
+                    <%} 
+                	  }%>
                   </select>
-                  <input type="button" class="btn d-inline w-100 mt-4" value="Pagar">
+                  <input type="submit" class="btn btn-success btnEnviar d-inline w-100 mt-4" name="btnPagarCuota" value="Pagar cuota" onclick="return confirm('¿Estás seguro que deseas abonar la cuota?')">
                 </div>
               </div>
               
             </div>
-          
+       </form>   
           </div>
         </div>
-
+<%} %>
 	       </div>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

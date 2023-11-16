@@ -3,6 +3,8 @@ package dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import entidad.Cuenta;
 import entidad.TipoCuenta;
 
@@ -19,4 +21,5 @@ public interface ICuentaDao {
 	 public boolean cbuExiste(String cbu) throws SQLException;
 	 public int obtenerUltimaInsertada(int idCliente)throws SQLException;
 	 public String obtenerDescripcion(int id)throws SQLException;
+	 public Cuenta obtenerPorMovimientoYreferencia(int tipoMovimiento, int numeroReferencia);
 }

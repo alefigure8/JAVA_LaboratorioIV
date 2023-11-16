@@ -1,6 +1,9 @@
+<%@page import="entidad.TipoCuenta"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
+<%@page import="entidad.TipoTasa"%>
+<%@page import="entidad.Cuenta"%>
+<%@page import="java.util.List"%>
 <!-- AUTENTICACION -->
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
@@ -26,7 +29,14 @@
 	      	<jsp:param name="usuario" value="Ramón Ramirez" />
 	      </jsp:include>
 		      
-		      
+		  <% if(session.getAttribute("cuentasCliente")!=null && session.getAttribute("tiposTasa")!=null) {
+		  		List<TipoTasa> tiposTasa=(List<TipoTasa>)session.getAttribute("tiposTasa");
+				List<Cuenta> cuentasCliente=(List<Cuenta>)session.getAttribute("cuentasCliente");
+		  %>
+		  
+		  <% if(session.getAttribute("tipoTasaSeleccionada")!=null){
+				Double tasaSeleccionada=Double.parseDouble(session.getAttribute("tipoTasaSeleccionada").toString()) ; 
+		  }%>
 	      <!--CONTENT-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 	        <div class="w-100 pt-2">
@@ -35,46 +45,89 @@
 	        <div class="flex-grow-1">
 	        
 	          <!-- MAIN--> 
+	      <form action="ServletPrestamos" method="get">
 			      <div class="row d-flex ">
 					    <div class="col-md-4 mx-auto">
 					        <div class="form-group mt-2">
 					            <label for="monto">Monto:</label>
-					            <input type="text" class="form-control" id="monto" name="monto">
+					            <!-- INGRESO DE MONTO  (NUMERO POSITIVO) -->
+					            <input type="text" class="form-control" id="monto" name="monto" value="<%= session.getAttribute("montoSeleccionado") != null ?  session.getAttribute("montoSeleccionado") : ""%>"required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
 					        </div>
 					        <div class="form-group mt-2">
 					            <label for="cuotas">Cantidad de Cuotas:</label>
 					            <select class="form-control" id="cuotas" name="cuotas">
-					                <option >3 cuotas</option>
-					                <option >6 cuotas</option>
-					                <option >12 cuotas</option>
-					                <option >24 cuotas</option>
-					                <option >48 cuotas</option>
+					            <!-- DESPLEGABLE DE TIPO TASA -->
+					               <%
+								    Double tasaSeleccionada = null;
+					               String tipoTasa="";
+					               	if(session.getAttribute("tipoTasaSeleccionada")!=null){
+								    tipoTasa = session.getAttribute("tipoTasaSeleccionada").toString();
+								    tasaSeleccionada=Double.parseDouble(tipoTasa);
+								    System.out.println("TASA SEELCCIONADA" + tasaSeleccionada);
+					               	}
+								    
+								
+								    for (TipoTasa tasas : tiposTasa) {
+								    	
+								    	 System.out.println("TASA del for" + tasas.getTasaInteres());
+								        String selected = (tasaSeleccionada != null && tasaSeleccionada == tasas.getTasaInteres()) ? "selected" : "";
+								%>
+								        <option value="<%= tasas.getTasaInteres() %>" <%= selected %>> <%= tasas.getCantCuotas() %> </option>
+								<%
+								    }
+								%>
+
 					            </select>
 					        </div>
 					        <div class="form-group mt-2">
+					        	<!-- MONTO * % INTERES DEL DESPLEGABLE SELECCIONADO -->
+					        	
 					            <label for="interesTotal">Total de Intereses:</label>
-					            <input type="text" class="form-control" id="interesTotal" name="interesTotal" disabled>
+					            <input type="text" class="form-control" id="interesTotal" value="<%= session.getAttribute("interesCalculado") != null ?  session.getAttribute("interesCalculado") : ""%>" name="interesTotal" disabled>
 					        </div>
 					        <div class="form-group mt-2">
+					        	<!-- MONTO + INTERESES -->
 					            <label for="totalMonto">Total (Monto + Intereses):</label>
-					            <input type="text" class="form-control" id="totalMonto" name="totalMonto" disabled>
+					            <input type="text" class="form-control" id="totalMonto" value="<%= session.getAttribute("totalCalculado") != null ?  session.getAttribute("totalCalculado") : "" %>"  name="totalMonto" disabled>
 					        </div>
 					        
 					        <div class="form-group mt-2">
+					         	<!-- DESPLEGABLE DE CUENTAS DEL CLIENTE (ACTIVAS) -->
 					            <label for="cuotas">Nro. de cuenta a depositar</label>
 					            <select class="form-control" id="cuentas" name="cuentas">
-					                <option >XXXX-XXXX-XXXX-1234</option>
-					                <option >XXXX-XXXX-XXXX-1235</option>
+					                <% for(Cuenta cuentas: cuentasCliente) {%>
+					                	<option value="<%= cuentas.getNumeroCuenta() %>"> <%= cuentas.getNumeroCuenta() %> </option>
+					                <%} %>
 					            </select>
 					        </div>
 					        
-					           <input type="submit" class="btn btn-success mt-4" name="btnSolicitarPrestamo" value="Solicitar Prestamo" >
+					            <input type="submit" class="btn btn-primary btnEnviar mt-4" name="btnCalcularIntereses" value="Calcular Intereses">
+   							    <input type="submit" class="btn btn-success mt-4" name="btnConfirmarSolicitarPrestamo" value="Solicitar Prestamo" onsubmit="return confirm('¿Está seguro que desea solicitar el prestamo?')">
 					    </div>
 					</div>
+					
+		</form>			
 		        </div>
 	      	</div>
        </div>
+	 <%} else{%>
+	 	<label for="cuotas">Nro. de cuenta a depositar</label>
+	 <%} %>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
+	 
+	  <script>
+    
+		    function validateInput(input, minLength) {
+		    	 const trimmedValue = input.value.trim();
+		    	    if (trimmedValue.length < minLength || !trimmedValue) {
+		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
+		    	    } else {
+		    	        input.setCustomValidity('');
+		    	    }
+		    }
+
+    </script>
+	 
 </html>

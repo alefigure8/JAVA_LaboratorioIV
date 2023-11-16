@@ -65,13 +65,16 @@ public class servletLogin extends HttpServlet {
 							rd.forward(request, response);	
 						} else if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Cliente) {
 							//Redirigimos a Home Clinet
-							RequestDispatcher rd = request.getRequestDispatcher("HomeClientes.jsp");
+							
+					
+							request.setAttribute("homecliente", "homecliente");
+							RequestDispatcher rd = request.getRequestDispatcher("/ServletHomeCliente?homecliente=homecliente");
 							rd.forward(request, response);	
 						}
 						
 					}
 					
-					//Redirigimos a página de Login en caso de que no tenga TipoAcceso o este Inactivo
+					//Redirigimos a pï¿½gina de Login en caso de que no tenga TipoAcceso o este Inactivo
 					request = GUI.mensajes(request, "error", "Sin Privilegios", "Su usuario no tiene suficientes privilegios para acceder");
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
@@ -79,7 +82,7 @@ public class servletLogin extends HttpServlet {
 					
 				} catch (Exception e) {
 					//Mandamos mensaje de error
-					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
+					request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
 				}

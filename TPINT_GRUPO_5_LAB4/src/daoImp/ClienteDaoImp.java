@@ -18,6 +18,7 @@ import entidad.Provincia;
 import entidad.TipoAcceso;
 import entidad.TipoDireccion;
 import entidad.Usuario;
+import excepciones.CorreoException;
 
 
 public class ClienteDaoImp implements IClienteDao{
@@ -47,7 +48,7 @@ public class ClienteDaoImp implements IClienteDao{
 			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
 			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
 			"where C.dni=?";
-	
+
 	private static final String obtenerClientePorCBU="select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
 			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
 			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
@@ -351,7 +352,7 @@ public class ClienteDaoImp implements IClienteDao{
 		}
 
 		
-
+/***************** OBTENER UNO POR DNI ********************/
 		@Override
 		public Cliente obtenerCliente(int dni) {
 			PreparedStatement pStatement;
@@ -374,7 +375,8 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			return cliente;
 		}
-		
+
+/***************** OBTENER UNO POR CBU ********************/
 		@Override
 		public Cliente obtenerClientePorCBU(String cbu) {
 			PreparedStatement pStatement;
@@ -459,5 +461,38 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			return null;
 		}
+		
+		/***************** CORREO EXISTE ********************/
+		String existeCorreo = "Select count(*) as existe from Clientes where Correo = ?";
+		@Override
+		public boolean existeCorreo(String correo) throws CorreoException, SQLException {
+			boolean existe = false;
+			
+			PreparedStatement pStatement;
+			ResultSet rSet;
+
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(existeCorreo);
+				pStatement.setString(1, correo);
+				
+				rSet=pStatement.executeQuery();
+				
+				rSet.next();
+				
+				existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				
+				if (existe) {
+		            throw new CorreoException("El correo ya se encuentra registrado");
+		        }
+				
+			} catch (Exception e) {
+				throw e;
+			}
+			
+			return existe;
+		}
+
 
 }

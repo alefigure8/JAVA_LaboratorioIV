@@ -29,16 +29,22 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	private static final String obtenertipotasa = "select CantCuotas,TasaInteres from TipoTasa where IdTipoInteres=?";  // HACER UN JOIN EN OBTENERTODOS
 	private static final String obtenertodostipostasas = "select IdTipoInteres,CantCuotas,TasaInteres from TipoTasa";
 	private static final String obtenerestado = "select Descripcion from Estados where IdEstados = ?";
-	private static final String obtenerunoxidprestamo = "select MontoPedido,IdTasaxCuotas,IdEstados,Cancelado,FechaPrestamo,IdCliente,Numerocuenta from Prestamos where ID=?";
+	private static final String obtenerunoxidprestamo = "select * from Prestamos where ID=?";
 	private static final String obtenercuotasxprestamo = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where IdPrestamo = ?"; 
-	private static final String obtenerunacuota = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where ID = ? and IdPrestamo = ?"; // NO TESTEADO
+	private static final String obtenerunacuota = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where ID = ? and IdPrestamo = ?"; 
+	private static final String obtenerunacuotaxidcuota = "select ID,IdPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado,FechaPagoCuota from CuotasPrestamo where ID = ?"; 
 	private static final String insertarprestamo = "Insert into Prestamos (MontoPedido, MontoConIntereses,IdTasaxCuotas,MontoXmes,IdEstados,FechaPrestamo,IdCliente,NumeroCuenta) values (?,?, ?, ?, ?, ?, ?,?)";
 	private static final String insertarcuotas = "Insert into CuotasPrestamo (IDPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado) values (?, ?, ?, ?, ?)";
 	private static final String setcancelado = "Update Prestamos set Cancelado = 1 where ID = ? ";
-	private static final String setcuotapagada = "Update CuotasPrestamo set Estado = 'Pagado', FechaPagoCuota= ? where IdPrestamo = ? and ID = ?  ";	
+	private static final String setcuotapagada = "Update CuotasPrestamo set Estado = 'Pagado', FechaPagoCuota = ? where IdPrestamo = ? and ID = ?  ";	
 	private static final String setAceptado= "Update Prestamos set IdEstados=1 where id=?";
 	private static final String setRechazado= "Update Prestamos set IdEstados=3 where id=?";
-			
+	private static final String obtenercuotasxanio = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C WHERE YEAR(C.FechaVencimiento) = ?;";
+	private static final String obtenertodascuotas = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C";
+	private static final String obtenerultimacuota = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C \r\n" + 
+			"join Prestamos P on C.IdPrestamo = P.ID \r\n" + 
+			"join TipoTasa TT on TT.IdTipoInteres = P.IdTasaxCuotas \r\n" + 
+			"where P.ID = ? and C.NumeroCuota = TT.CantCuotas"; 	
 	
 	public List<Prestamo> obtenerTodos() { 
 		
@@ -169,11 +175,15 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	        	prestamoaux.setId(idprestamo);
 	           	prestamoaux.setMontoPedido(resultSet.getDouble("MontoPedido"));
              	prestamoaux.setTipoTasa(obtenertipotasa(resultSet.getInt("IdTasaxCuotas"), conexion)); 
+             	
              	prestamoaux.setEstado(obtenerestado(resultSet.getInt("IdEstados"),conexion));
+             	
              	prestamoaux.setCancelado(resultSet.getBoolean("Cancelado"));	
                	prestamoaux.setFechaPrestamo(resultSet.getDate("FechaPrestamo").toLocalDate());
              	prestamoaux.setIdCliente(resultSet.getInt("IdCliente"));
              	prestamoaux.setNumeroCuenta(resultSet.getInt("Numerocuenta"));
+             	prestamoaux.setMontoxMes(resultSet.getDouble("MontoXmes"));	
+             	prestamoaux.setMontoConIntereses(resultSet.getDouble("MontoConIntereses"));
 	
 	        }
 	    } catch (SQLException e) {
@@ -338,6 +348,9 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	        	estado.setIdEstado(idestado);
 	        	estado.setDescripcion(resultSet.getString("Descripcion"));
 	        	}
+	          
+	          /*System.out.println("ID del Estado: " + estado.getIdEstado());
+	          System.out.println("Descripci�n del Estado: " + estado.getDescripcion());*/
 	      } 
 	      catch (SQLException e) 
 	      {
@@ -352,7 +365,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 		  PreparedStatement statement;
 	      ResultSet resultSet; 
 	      Conexion conexion = Conexion.getConexion();
-	      TipoTasa tipotasa = new TipoTasa();
+	      
 	      ArrayList<TipoTasa> listadotipostasas = new ArrayList<TipoTasa>();
 	      
 	      try 
@@ -363,7 +376,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	          resultSet = statement.executeQuery();
 	          while(resultSet.next())
 	          {
-	      
+	        	TipoTasa tipotasa = new TipoTasa();
 	        	tipotasa.setCantCuotas(resultSet.getInt("CantCuotas"));
 	        	tipotasa.setId(resultSet.getInt("IdTipoInteres"));
 	        	tipotasa.setTasaInteres(resultSet.getDouble("TasaInteres"));
@@ -382,7 +395,6 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	public boolean insertarcuotas(Prestamo prestamo) {
 		
 		
-		
 	    boolean insertExitoso = false;
 	    PreparedStatement statement;
 	    Connection connection = Conexion.getConexion().getSQLConexion();
@@ -396,6 +408,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	            statement.setInt(1, prestamo.getId());
 	            statement.setInt(2, i + 1);
 	            statement.setDouble(3, prestamo.getMontoxMes());
+	            System.out.println("MONTO X MES" + prestamo.getMontoxMes());
 	            statement.setDate(4, java.sql.Date.valueOf(fechadevencimiento));
 	            statement.setString(5, EstadoCuota.Pendiente.toString());
 	            if (statement.executeUpdate() > 0) {
@@ -539,9 +552,21 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	          
 	          if(statement.executeUpdate()>0) {
 					
-					connection.commit();
-					isupdateExitoso = true;
+	        	  Prestamo prestamo = obteneruno(idPrestamo);
+	                if (prestamo != null) {
+	                	System.out.println("PRESTAMO MONTO X MES"+prestamo.getMontoxMes());
+	                	System.out.println("PRESTAMO aver"+prestamo);
+	                    isupdateExitoso = insertarcuotas(prestamo);
+	                }
+	        	  
 				}
+	          
+	          if (isupdateExitoso) {
+	                connection.commit();
+	                isupdateExitoso = true;
+	            } else {
+	                connection.rollback();
+	            }
 				
 			}catch(SQLException e) {
 				e.printStackTrace();
@@ -555,6 +580,109 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 		
 	}
 
+	@Override
+	public List<CuotaPrestamo> obtenertodas() {
+		 PreparedStatement statement;
+	      ResultSet resultSet; 
+	   
+	      ArrayList<CuotaPrestamo> listadoCuotas = new ArrayList<CuotaPrestamo>();
+	      Conexion conexion = Conexion.getConexion();
+	      
+	      try 
+	      {
+	          statement = conexion.getSQLConexion().prepareStatement(obtenertodascuotas);
+	       	          resultSet = statement.executeQuery();
+	          while(resultSet.next())
+	          {
+	        	   CuotaPrestamo cuotaaux = new CuotaPrestamo();
+	        	cuotaaux.setId(resultSet.getInt("ID"));
+	        	cuotaaux.setIdPrestamo(resultSet.getInt("IDPrestamo"));
+	        	cuotaaux.setNumeroCuota(resultSet.getInt("NumeroCuota"));
+	        	cuotaaux.setMontoCuota(resultSet.getDouble("MontoCuota"));
+	        	cuotaaux.setFechaVencimiento(resultSet.getDate("FechaVencimiento").toLocalDate());
+	        	cuotaaux.setEstado(EstadoCuota.valueOf(resultSet.getString("Estado")))	        	;
+	        	if(resultSet.getDate("FechaPagoCuota")!=null) {
+	        	cuotaaux.setFechaPago(resultSet.getDate("FechaPagoCuota").toLocalDate());
+	        	}
+	        	listadoCuotas.add(cuotaaux);
+	        	}
+	      } 
+	      catch (SQLException e) 
+	      {
+	          e.printStackTrace();
+	      }
+	      
+	      return listadoCuotas;	
+	}
+
+	@Override
+	public CuotaPrestamo obtenerUltimaCuota(Prestamo prestamo) {
+		 PreparedStatement statement;
+	      ResultSet resultSet; 
+	      CuotaPrestamo cuotaaux = new CuotaPrestamo();
+	      Conexion conexion = Conexion.getConexion();
+
+	      try 
+	      {
+	          statement = conexion.getSQLConexion().prepareStatement(obtenerultimacuota);
+	          statement.setInt(1, prestamo.getId());
+	          
+	          resultSet = statement.executeQuery();
+	          while(resultSet.next())
+	          {
+	      
+	        	cuotaaux.setId(resultSet.getInt("ID"));
+	        	cuotaaux.setIdPrestamo(resultSet.getInt("IDPrestamo"));
+	        	cuotaaux.setNumeroCuota(resultSet.getInt("NumeroCuota"));
+	        	cuotaaux.setMontoCuota(resultSet.getDouble("MontoCuota"));
+	           	cuotaaux.setEstado(EstadoCuota.valueOf(resultSet.getString("Estado")));
+	        	cuotaaux.setFechaVencimiento(resultSet.getDate("FechaVencimiento").toLocalDate());	   
+	        	if(resultSet.getDate("FechaPagoCuota")!=null) {
+		        cuotaaux.setFechaPago(resultSet.getDate("FechaPagoCuota").toLocalDate());
+		        
+	        	}
+	          }
+	      }
+	      catch (SQLException e) 
+	      {
+	          e.printStackTrace();
+	      }
+	      
+	      return cuotaaux;			
+	}
+
+	@Override
+	public CuotaPrestamo obtenerUnaCuotaxIdCuota(int idCuota) {
+		
+		 PreparedStatement statement;
+	      ResultSet resultSet; 
+	      CuotaPrestamo cuotaaux = new CuotaPrestamo();
+	      Conexion conexion = Conexion.getConexion();
+
+	      try 
+	      {
+	          statement = conexion.getSQLConexion().prepareStatement(obtenerunacuotaxidcuota);
+	          statement.setInt(1, idCuota);
+	  
+	          resultSet = statement.executeQuery();
+	          while(resultSet.next())
+	          {
+	      
+	        	cuotaaux.setId(resultSet.getInt("ID"));
+	        	cuotaaux.setIdPrestamo(resultSet.getInt("IDPrestamo"));
+	        	cuotaaux.setNumeroCuota(resultSet.getInt("NumeroCuota"));
+	        	cuotaaux.setMontoCuota(resultSet.getDouble("MontoCuota"));
+	        	cuotaaux.setFechaVencimiento(resultSet.getDate("FechaVencimiento").toLocalDate());	   
+	     
+	        	}
+	      } 
+	      catch (SQLException e) 
+	      {
+	          e.printStackTrace();
+	      }
+	      
+	      return cuotaaux;			
+	}
 	
 	
 }

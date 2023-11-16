@@ -17,7 +17,12 @@
     <li class="list-group-item border-0 bg-transparent">Inicio</li>
     <li class="list-group-item border-0 bg-transparent">Cuenta</li>
     <li class="list-group-item border-0 bg-transparent">Transferencia</li>
-    <li class="list-group-item border-0 bg-transparent">Prestamo</li>
+    
+    
+   <li class="list-group-item border-0 bg-transparent">
+     <a type="submit" href="ServletPrestamos?PrestamosCliente=true">Prestamos</a>
+    </li>
+    
     <!-- CERRAR SESSION -->
     <li class="list-group-item border-0 bg-transparent mt-4">
       <a type="submit" href="/TPINT_GRUPO_5_LAB4/servletAutenticacion?sesion=cerrar">Cerrar Sesion</a>

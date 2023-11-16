@@ -18,6 +18,13 @@
 		usuario = (Usuario)session.getAttribute("usuario");
 	}
 %>
+
+<% 
+session.removeAttribute("montoSeleccionado");
+session.removeAttribute("tipoTasaSeleccionada");
+session.removeAttribute("interesCalculado");
+session.removeAttribute("totalCalculado"); %>
+
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=usuario.getTipoAcceso()%>" />
 </jsp:include>
@@ -56,18 +63,39 @@
           		Prestamo prestamo = new Prestamo();
           		Cuenta cuenta = new Cuenta();
           		List<CuotaPrestamo> listaCuota = new ArrayList<CuotaPrestamo>();
+          		List<Cuenta> cuentasPago= new ArrayList<Cuenta>();
+          		int indice = 0;
+          		String cantCuotas="";
+          		
+          		if(request.getAttribute("prestamo")!=null ){
+          			prestamo = (Prestamo)request.getAttribute("prestamo");
+          			cuenta = (Cuenta)request.getAttribute("cuenta");
+          			if(request.getAttribute("cuotas")!=null){
+          				listaCuota = (List<CuotaPrestamo>)request.getAttribute("cuotas");
+          				
+          			}
+          			
+          			if(request.getAttribute("cantCuotas")!=null){
+          				cantCuotas =request.getAttribute("cantCuotas").toString();
+          			}
+          			
+          			
+          		}
+          		
+          		if(request.getAttribute("cuentasPagoCuota")!=null){
+          			cuentasPago=(List<Cuenta>)request.getAttribute("cuentasPagoCuota");
+          			
+          		}
           		
           		if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador) == 0){
           			
    	          		cliente = (Cliente)request.getAttribute("cliente");
-   	          		prestamo = (Prestamo)request.getAttribute("prestamo");
-   	          		cuenta = (Cuenta)request.getAttribute("cuenta");
-   	          		listaCuota = (List<CuotaPrestamo>)request.getAttribute("cuotas");
     	       		
           		}
           %>
        
 			<div class="text-center">
+				
 			    <p>Nro. Prestamo: <%=prestamo.getId() %></p>
 			    <p>Fecha de prestamo: <%=prestamo.getFechaPrestamo()%></p>
 			    <p>Nro. Cuenta del Prestamo: <%=prestamo.getNumeroCuenta()%></p>
@@ -76,7 +104,7 @@
 			    <p>Importe solicitado: <%=prestamo.getMontoPedido() %></p>
 			    <%Double importeConInteres = prestamo.getMontoPedido() * ((prestamo.getTipoTasa().getTasaInteres() / 100) + 1); %>
 			    <p>Importe con intereses: <%=importeConInteres%> </p>
-			    <p>Cantidad de Cuotas: <%=listaCuota.size() %></p>
+			    <p>Cantidad de Cuotas: <%=prestamo.getTipoTasa().getCantCuotas() %></p>
 			</div>
 
 		<!-- Cuadro para detalles de cuotas -->
@@ -85,12 +113,14 @@
 		    <table id="table_id" class="table display text-center">
 		        <thead>
 		            <tr>
+		            	
 		                <th>Número de Cuota</th>
 		                <th>Importe</th>
 		                <th>Estado</th>
-		                <th>Nro. Cuenta de pago</th>
 		                <th>Fecha de Pago</th>
+		                <th>Nro. Cuenta de pago</th>
 		                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
+		                <!-- PAGAR SOLO CLIENTE -->
 			                <th>Accion</th>	
 		                <%}%>
 		            </tr>
@@ -99,19 +129,32 @@
 		        <%
 		        	for(CuotaPrestamo cuota : listaCuota){%>
 			            <tr>
+			        <form action="ServletPrestamos" method="post">
+			        		 <input type="hidden"  name="idCuota" value="<%=cuota.getId() %>">
+			        		<input type="hidden"  name="idPrestamo" value="<%=prestamo.getId() %>">
 			                <td><%=cuota.getNumeroCuota()%></td>
 			                <td><%=cuota.getMontoCuota()%></td>
 			                <td><%=cuota.getEstado()%></td>
-			                <td><%=cuenta.getNumeroCuenta()%></td>
-			                 <%if(cuota.getFechaPago() != null){%>
+			                <!-- CUENTA DE PAGO NO DE DEPOSITO DEL PRESTAMO -->
+			               
+			                 <%if(cuota.getFechaPago() != null && cuentasPago != null && indice < cuentasPago.size()){%>
 				                <td><%=cuota.getFechaPago()%></td>	
+				                <td><%=cuentasPago.get(indice).getNumeroCuenta()%></td>
 			                <%} else {%>
-			                	<td>-</td>	
+				                <td>No abonado</td>
+				                <td>No abonado</td>
 			                <%}%>
 			                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
-				                <td>-</td>	
+			                <!-- PAGAR SOLO CLIENTE -->
+			                <%if(cuota.getFechaPago() == null){%>
+				                <td>
+				                	<input type="submit" class="btn btn-primary btnEnviar" value="Pagar" name="btnPagarPrestamo" >
+				                </td>	
+				                <%} %>
 			                <%}%>
+			         </form>
 			            </tr>
+			            <%indice++; %>
 	           	 	<%}
 	           	 %>
 		        </tbody>

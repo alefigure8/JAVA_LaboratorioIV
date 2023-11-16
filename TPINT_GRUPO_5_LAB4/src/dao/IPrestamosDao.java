@@ -17,6 +17,7 @@ public interface IPrestamosDao {
 	public TipoTasa obtenertipotasa(int idtipotasa, Conexion conexion); // HACER UN JOIN EN OBTENERTODOS
 	public Estado obtenerestado(int idestado, Conexion conexion);
 	public CuotaPrestamo obtenerUnaCuota(int idCuota, int idprestamo);
+	public CuotaPrestamo obtenerUnaCuotaxIdCuota(int idCuota);
 	public Prestamo obteneruno(int idprestamo);
 	public boolean insertarcuotas(Prestamo prestamo);
 	public boolean insertarprestamo (Prestamo prestamo);
@@ -24,5 +25,6 @@ public interface IPrestamosDao {
 	public boolean setcuotapagada (int idprestamo, int idcuota);
 	public boolean rechazar(int idPrestamo);
 	public boolean aceptar(int idPrestamo);
-		
+	public CuotaPrestamo obtenerUltimaCuota(Prestamo prestamo);
+	public List<CuotaPrestamo> obtenertodas();
 }

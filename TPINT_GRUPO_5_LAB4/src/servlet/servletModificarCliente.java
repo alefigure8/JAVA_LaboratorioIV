@@ -20,6 +20,7 @@ import entidad.Cliente;
 import entidad.Localidad;
 import entidad.Provincia;
 import entidad.TipoDireccion;
+import excepciones.CorreoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 import sun.security.util.math.intpoly.P256OrderField;
 
@@ -77,24 +78,36 @@ public class servletModificarCliente extends HttpServlet {
 				
 				//Modificar Cliente
 				cliente = obtenerCliente(request, response);
+				String correo=request.getParameter("correo");
 				
 				if(cliente != null && cliente.getActivo()) {
 					
-					boolean clienteEditado = clienteNegocioDaoImp.editar(cliente);
-					
-					if(clienteEditado) {
-						//Popup de exito
-						request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
+					if(!clienteNegocioDaoImp.existeCorreo(correo)) {
 						
-						RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
-						rd.forward(request, response);
-					} else {
-						//Popup de error de modificación
+						boolean clienteEditado = clienteNegocioDaoImp.editar(cliente);
+						
+						if(clienteEditado) {
+							//Popup de exito
+							request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
+							
+							RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
+							rd.forward(request, response);
+						} else {
+							//Popup de error de modificación
+							request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no pudo ser modificado");
+							
+							RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
+							rd.forward(request, response);
+						}
+						
+					}
+					else {
 						request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no pudo ser modificado");
 						
 						RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 						rd.forward(request, response);
 					}
+					
 					
 				} else {
 					//Popup de error. Cliente no encontrado o no activo
@@ -104,12 +117,21 @@ public class servletModificarCliente extends HttpServlet {
 					rd.forward(request, response);
 				}
 				
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
 				
 				//Popup de error
 				request = GUI.mensajes(request, "error", "Error Base de Datoso", e.getMessage());
+				
+				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
+				rd.forward(request, response);
+			}
+			catch(CorreoException e) {
+				//Retornamos cliente modificado para que corrija datos
+				request.setAttribute("cliente", cliente); 
+				//Popup de error
+				request = GUI.mensajes(request, "error", "Error correo", e.getMessage());
 				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);

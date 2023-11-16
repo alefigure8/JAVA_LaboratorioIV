@@ -12,6 +12,8 @@ public class CuotaPrestamo {
     private EstadoCuota estado;
     private LocalDate fechaVencimiento;
     private LocalDate fechaPago;
+    
+    //Agregamos nro.Cuenta
  
     
     // CONSTRUCTORES

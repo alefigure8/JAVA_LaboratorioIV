@@ -15,7 +15,7 @@ public class pruebaMovimientos {
 	public static void main(String[] args) {
 		//listarTipoMovimientos(new MovimientosDaoImpl()); -- OK
 		//obtenerTipoMovimientoPorId(new MovimientosDaoImpl()); -- OK
-		//insertar(new MovimientosDaoImpl()); -- OK
+		insertar(new MovimientosDaoImpl());
 		//obtenerPorCBU(new MovimientosDaoImpl()); -- OK
 		//obtenerPorNumeroDeReferencia(new MovimientosDaoImpl()); --OK
 		//listarMovimientos(new MovimientosDaoImpl()); -- OK
@@ -47,9 +47,9 @@ public class pruebaMovimientos {
 		Movimiento movimiento = new Movimiento();
 		//movimiento.setCbudestino("123456789");
 		Cuenta cuenta=new Cuenta();
-		cuenta.setCbu("123456789");
+		cuenta.setCbu("4969975451108597159766");
 		movimiento.setCuenta(cuenta);
-		movimiento.setConcepto("Transferencia");
+		movimiento.setConcepto("Pago de Cuota");
 		
 		Estado estado = new Estado();
 		estado.setDescripcion("Aprobado");
@@ -58,13 +58,13 @@ public class pruebaMovimientos {
 		movimiento.setEstado(estado);
 		movimiento.setFechaMovimiento(LocalDate.now());
 		movimiento.setMonto(102.00);
-		movimiento.setNumeroReferencia(123456);
+		movimiento.setNumeroReferencia(1777);
 			
 		movimiento.setOperacion(Operacion.Entrada);
 		
 		TipoMovimiento tipoMovimiento = new TipoMovimiento();
-		tipoMovimiento.setDescripcion("Transferencia");
-		tipoMovimiento.setId(1);
+		tipoMovimiento.setDescripcion("Pago de Cuota");
+		tipoMovimiento.setId(3);
 		movimiento.setTipoMovimiento(tipoMovimiento);
 		
 		try {

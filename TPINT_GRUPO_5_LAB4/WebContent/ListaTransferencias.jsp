@@ -1,4 +1,5 @@
 
+<%@page import="entidad.Destinatario"%>
 <%@page import="entidad.Operacion"%>
 <%@page import="entidad.EstadoCuota"%>
 <%@page import="entidad.Estado"%>
@@ -34,10 +35,10 @@
 		listadoMovimientos = (List<Movimiento>)request.getAttribute("lista");
 	}
 	
-	HashMap<Integer, String> destinatarios = new HashMap<Integer, String>();
+	HashMap<Integer, Destinatario> destinatarios = new HashMap<Integer, Destinatario>();
 	
 	if(request.getAttribute("destinatarios")!=null){
-		destinatarios = (HashMap<Integer, String>)request.getAttribute("destinatarios");
+		destinatarios = (HashMap<Integer, Destinatario>)request.getAttribute("destinatarios");
 	}
 
 %>
@@ -69,13 +70,17 @@
 			  <!--TIUTLO PAGINA-->
 			  <h1 class="mt-2">TRANSFERENCIA</h1>
 			</div>
-	    	<div class="row m-0">
-	   			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center col-2">+ Nueva Ttransferencia</a>
+			<div class="text-md-start">
+	            <h4 class="opacity-75">Nueva Transferencia</h4>
+          	</div>
+	    	<div class="m-0 d-flex col-12 col-md-4">
+   				<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&otraCuenta=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center p-4 m-1">Otra Cuenta</a>
+      			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&cuentaPropia=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center p-4 m-1">Cuenta Propia</a>
 	      	</div>
 	      <div class="flex-grow-1">
 	        <!--FILTRO-->
 	        <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
-	          <div class="col-4 text-md-start text-center">
+	          <div class="col-4 text-md-start">
 	            <h4 class="opacity-75">Historial de transferencias realizadas</h4>
 	          </div>
 	          <div class="col-md-8">
@@ -110,7 +115,6 @@
 	                <tr>
 	                  <th scope="col">Fecha</th>
 	                  <th scope="col">Destinatario</th>
-	                  <th scope="col">Numero Referencia</th>
 	                  <th scope="col">Monto</th>
 	                  <th scope="col">Estado</th>
 	                  <th scope="col">Operación</th>
@@ -118,52 +122,25 @@
 	                </tr>
 	              </thead>
 	              <tbody>
-	              <% for(Movimiento movimiento : listadoMovimientos) {%>
+	              <% for(Movimiento movimiento : listadoMovimientos) {
+	            	  Destinatario destinatario = destinatarios.get(movimiento.getNumeroReferencia());
+	              %>
 	              
 	                <tr>
 	                  <td><span class="black-75"><%= movimiento.getFechaMovimiento() %></span></td>
-	                  <td><span class="black-75"><%= destinatarios.get(movimiento.getNumeroReferencia())%> <i class="fa-solid fa-user opacity-75 ms-2"></i></span></td>
-	                  <td><span class="black-75"><%= movimiento.getNumeroReferencia() %></span></td>
+	                  <td><span class="black-75"><%= destinatario.getNombre() + " " + destinatario.getApellido()%> <i class="fa-solid fa-user opacity-75 ms-2"></i></span></td>
 	                  <td><span class="black-75"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %></span></td>
 	                  <td><span class="badge <%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> bg-success <%} else {%> bg-danger <%}%> text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
-	                  <td><span class="black-75 me-2"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-sucess <%}%>  opacity-75"></i></span></td>
-	                  <td><a class="p-2 bg-secondary text-light rounded"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
+	                  <td><span class="black-75 me-4"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-success <%}%>  opacity-75"></i></span></td>
+	                  <td><a class="p-2 bg-secondary text-light rounded" href="ServletDetalleTransferencia?numeroReferencia=<%= movimiento.getNumeroReferencia()%>"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
 	                </tr>
 	                
 					<%} %>
 	              </tbody>
 	            </table>  
 	          </div>
-	          
-	          <!--DETALLE-->
-	          <!-- 
-	          
-	          <div class="mt-4 border border-1 border-black border-opacity-25 rounded-1 p-2 mb-4" style="min-width: 300px;">
-	            <div class="col-7 d-flex justify-content-between w-100 align-items-center mb-2">
-	              <h4 class="opacity-75 m-0">Detalle</h4>
-	              <span class="text-danger fw-bolder fs-6">X</span>
-	            </div>
-	            <div>
-	              <p class="mb-0">Estado</p>
-	              <p class="fs-5">Realizada</p>
-	              <p class="mb-0">Cuenta débito</p>
-	              <p class="fs-5">123456789</p>
-	              <p class="mb-0">Fecha de Transferencia</p>
-	              <p class="fs-5">28/10/2023</p>
-	              <p class="mb-0">Monto</p>
-	              <p class="fs-5">$1.950,00</p>
-	              <p class="mb-0">Transferencia a</p>
-	              <p class="fs-5">Cliente 2 xxxxx </p>
-	              <p class="mb-0">CBU</p>
-	              <p class="fs-5">123456789123</p>
-	              <p class="mb-0">Concepto</p>
-	              <p class="fs-5">Varios</p>
-	              
-	            </div>
-	            
-	          </div>
-			 -->
 	        </div>
+	          <a href="ServletHomeCliente?homecliente=homecliente" class="p-2 rounded bg-main text-white text-decoration-none col-4 col-md-1 mb-4"><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
 	      </div>
 	    </div>
 	 </div>

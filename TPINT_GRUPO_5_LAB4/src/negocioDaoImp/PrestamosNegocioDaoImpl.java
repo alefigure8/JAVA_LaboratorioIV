@@ -6,6 +6,7 @@ import java.util.List;
 import daoImp.PrestamosImpl;
 import entidad.CuotaPrestamo;
 import entidad.Prestamo;
+import entidad.TipoTasa;
 import negocioDao.IPrestamosNegocioDao;
 
 public class PrestamosNegocioDaoImpl implements IPrestamosNegocioDao{
@@ -78,5 +79,78 @@ public class PrestamosNegocioDaoImpl implements IPrestamosNegocioDao{
 	public boolean insertarcuotas(Prestamo prestamo) {
 		return prestamosImpl.insertarcuotas(prestamo);
 	}
+
+	@Override
+	public List<TipoTasa> obtenerTodosTiposTasas() {
+		return prestamosImpl.obtenerTodosTiposTasas();
+	}
+
+	@Override
+	public boolean insertarprestamo(Prestamo prestamo) {
+		return prestamosImpl.insertarprestamo(prestamo);
+	}
+
+	@Override
+	public CuotaPrestamo obtenerUnaCuota(int idCuota, int idprestamo) {
+		return prestamosImpl.obtenerUnaCuota(idCuota, idprestamo);
+	}
+
+	@Override
+	public boolean setcuotapagada(int idprestamo, int idcuota) {
+		return prestamosImpl.setcuotapagada(idprestamo, idcuota);
+	}
+
+	@Override
+	public CuotaPrestamo obtenerUltimaCuota(Prestamo prestamo) {
+		return prestamosImpl.obtenerUltimaCuota(prestamo);
+	}
+
+	@Override
+	public List<CuotaPrestamo> obtenertodas() {
+		return prestamosImpl.obtenertodas();
+	}
+	
+	@Override
+	public boolean prestamoSaldado(int idprestamo) {
+		Boolean cancelado=false;
+		Prestamo prestamo=prestamosImpl.obteneruno(idprestamo);
+		List<CuotaPrestamo> cuotas=prestamosImpl.obtenerCuotasxprestamo(idprestamo);
+		int cuotasPagas=0;
+		for(int x=0;x<cuotas.size();x++) {
+			if(cuotas.get(x).getFechaPago()!=null) {
+				cuotasPagas++;				
+			}
+		}
+		if(prestamo.getTipoTasa().getCantCuotas()==cuotasPagas) {
+			if(prestamosImpl.setcancelado(idprestamo)) {
+				cancelado=true;
+			}
+		}
+		return cancelado;
+	}
+
+	@Override
+	public boolean setcancelado(int idprestamo) {
+		return prestamosImpl.setcancelado(idprestamo);
+	}
+
+	@Override
+	public CuotaPrestamo obtenerUnaCuotaxidcuota(int idCuota) {
+		
+		return prestamosImpl.obtenerUnaCuotaxIdCuota(idCuota);
+	}
+
+	/*@Override
+	public TipoTasa obtenerTipoTasa(int idPrestamo) {
+		TipoTasa tipoTasaAenviar=new TipoTasa();
+		Prestamo prestamo=prestamosImpl.obteneruno(idPrestamo);
+		List<TipoTasa>tiposTasa=(List<TipoTasa>)prestamosImpl.obtenerTodosTiposTasas();
+		for(TipoTasa tipoTasa:tiposTasa) {
+			if(prestamo.getTipoTasa().getId()==tipoTasa.getId()){
+				tipoTasaAenviar=tipoTasa;
+			}
+		}
+		return tipoTasaAenviar;
+	}*/
 
 }

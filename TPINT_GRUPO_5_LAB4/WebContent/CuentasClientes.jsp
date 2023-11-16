@@ -1,5 +1,6 @@
 <%@page import="entidad.TipoAcceso"%>
 <%@page import="entidad.Cuenta"%>
+<%@page import="entidad.TipoCuenta"%>
 <%@page import="negocioDao.ICuentaNegocioDao"%>
 <%@page import="negocioDaoImp.CuentaNegocioDaoImp"%>
 <%@page import="java.util.ArrayList"%>
@@ -21,15 +22,40 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	<body class="d-flex flex-column">
-	
-	
-	    <div class="row flex-grow-1 m-0">
-	      <!--SIDEBAR-->
+ <% 
+	                  ArrayList<Cuenta> listadoCuentas = null;
+               		  String [] listadoNombres = null;
+      				ArrayList<TipoCuenta> tiposCuenta = null;
+	                  if (request.getAttribute("listadoCuentas")!=null){
+	                	  
+               				listadoCuentas = (ArrayList<Cuenta>)request.getAttribute("listadoCuentas");
+	                            			 
+	                  }
+	                  if (request.getAttribute("listadoNombres")!=null){
+	  	             	    listadoNombres= new String[listadoCuentas.size()];
+	  	                	listadoNombres = (String [])request.getAttribute("listadoNombres");
+	                  }
+	                  if (request.getAttribute("tiposCuenta")!=null){
+	      				tiposCuenta= (ArrayList<TipoCuenta>)  request.getAttribute("tiposCuenta");
+	                  }
+	                  
+	                  
+	                  
+	                  
+               	  %>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- SIDEBAR -->
+            <div class="col-2">
+	  
+	      
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
 	      	<jsp:param name="usuario" value="Ramón Ramirez" />
 	      </jsp:include>
-
-      		<!--MAIN-->
+</div>
+     		<!--MAIN-->
+      		 
 	        <div class="col-10 d-flex flex-column justify-content-between">
 	          <div class="w-100 pt-2">
 	            <!--TIUTLO PAGINA-->
@@ -37,28 +63,42 @@
 	          </div>
 	          <div class="flex-grow-1">
 	            <!--FILTRO-->
-	            <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4 mb-4">
-		               <div class="col">
-					    <h4 class="opacity-75">Historial de las cuentas de clientes</h4>
-					  </div>
-					  <div class="col">
-					    <a type="submit" class="btn btn-primary btn-lg" href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
-					  </div>
-             	</div>
-	           <% 
-	                  ArrayList<Cuenta> listadoCuentas = null;
-               		  String [] listadoNombres = null;
-               		  
-	                  if (request.getAttribute("listadoCuentas")!=null){
-	                	  
-               				listadoCuentas = (ArrayList<Cuenta>)request.getAttribute("listadoCuentas");
-	             
-	                	  if (request.getAttribute("listadoNombres")!=null){
-		  	             	    listadoNombres= new String[listadoCuentas.size()];
-		  	                	listadoNombres = (String [])request.getAttribute("listadoNombres");
-	  	                  }
-	                  }
-               	  %>
+	          <div class="d-flex flex-md-row flex-column justify-content-start align-items-center w-100 gap-2 mt-2 mb-2">
+   
+
+        <form action="ServletCuentasClientes" method="post">
+            <% if (request.getAttribute("mostrandoInactivos") == null) { %>
+                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
+            <% } else if ((boolean)request.getAttribute("mostrandoInactivos")) { %>
+                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar solo Activas">
+            <% } else { %>
+                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
+            <% } %>
+        </form>
+  
+       
+     <form style="margin-left:400px;" action="ServletCuentasClientes" method="get" class="d-flex gap-2">
+        <div class="d-flex">
+            <select Name="TipoCuenta" class="form-select">
+                <option value="0">Todas</option>
+                <% for (TipoCuenta tc : tiposCuenta) { %>
+                    <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
+                <% } %>
+            </select>
+          
+              </div>
+              <div>
+            <input class="btn btn-outline-primary" type="submit" name="btnfiltrar" value="Filtrar">
+      </div>
+        
+        </form>
+    
+
+ 
+        <a type="submit" class="btn btn-primary"  href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
+
+</div>
+
 	                	  
 	    
 	            <!--TABLA-->
@@ -83,7 +123,7 @@
 	                	  <% 
 	                	
 	                	  if (listadoCuentas !=null){
-	                		int index = 0;
+	           
 	                	  for(Cuenta c : listadoCuentas ){
 	                	
 	                		  
@@ -113,7 +153,7 @@
 	                      <%}else{%>
 	                      <td><span class="btn btn-secondary btn-sm disabled">Inactiva</span></td>
 	                              		<th>
-						<input type="submit" class="btn btn-primary btn-sm" name="btnModificarCuenta" value="Modificar">
+						<input type="submit" class="btn btn-primary btn-sm disabled" name="btnModificarCuenta" value="Modificar">
 				             
 				         </th>
 				         	      
@@ -142,12 +182,12 @@
 	            
 	        
 	            
-	          </div>
-	            
+	         
+	             </div>
 	            	    
 	           
 			</div>
-				 
+			</div>
 	    <!-- FIN MAIN -->
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

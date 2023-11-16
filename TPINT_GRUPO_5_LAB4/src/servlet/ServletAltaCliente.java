@@ -20,6 +20,7 @@ import entidad.Localidad;
 import entidad.Provincia;
 import entidad.TipoAcceso;
 import entidad.TipoDireccion;
+import excepciones.CorreoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 import negocioDaoImp.LocalidadNegocioDaoImp;
 import negocioDaoImp.ProvinciaNegocioDaoImp;
@@ -82,6 +83,9 @@ public class ServletAltaCliente extends HttpServlet {
 		if(request.getParameter("btnAltaCliente")!=null) {
 			HttpSession session = request.getSession();
 			String dni=request.getParameter("dni");
+			String correo=request.getParameter("correo");
+			
+			
 			
 			if(!dni.trim().isEmpty()) {
 				if(!clienteNegocioDao.existeDni(Integer.parseInt(dni))) {
@@ -94,49 +98,54 @@ public class ServletAltaCliente extends HttpServlet {
 						e.printStackTrace();
 					}
 					
-					//Validamos usuario
+					//Validamos usuario y correo
 					
 					try {
-						if(clienteNegocioDao.obtenerUsuarioPorUsuario(request.getParameter("usuario"))==null) {
-							
-							if(clienteNegocioDao.insertar(cliente)) {
-								session.setAttribute("clienteAgregado", cliente);
+						
+						//Validamos correo
+						
+						if (!clienteNegocioDao.existeCorreo(correo)) {
+			                response.getWriter().println("El correo no está registrado.");
+			                
+			              //Validamos usuario
+							if(clienteNegocioDao.obtenerUsuarioPorUsuario(request.getParameter("usuario"))==null) {
+								if(clienteNegocioDao.insertar(cliente)) {
+									session.setAttribute("clienteAgregado", cliente);
 
-								
-								
-								System.out.println("Cliente insertado");
+									System.out.println("Cliente insertado");
+								}
+								else {
+									System.out.println("No se pudo insertar");
+								}
 							}
 							else {
-								System.out.println("No se pudo insertar");
+				                
+								cliente = new Cliente();
+								try {
+									cargarCliente(request, cliente);
+								} catch (SQLException e) {
+									
+									e.printStackTrace();
+								}
+								
+								session.setAttribute("clienteAmodificar", cliente);
+								request.setAttribute("errorUsuario", "El Usuario ya existe. Introduce un Usuario diferente.");
+				              
 							}
-							
-							
-						}
+			                
+			            } 
+						
 						else {
 			                
-							cliente = new Cliente();
-							try {
-								cargarCliente(request, cliente);
-							} catch (SQLException e) {
-								
-								e.printStackTrace();
-							}
-							
 							session.setAttribute("clienteAmodificar", cliente);
-							request.setAttribute("errorUsuario", "El Usuario ya existe. Introduce un Usuario diferente.");
-			                
-			                
-
-						}
-					} catch (SQLException e) {
+			            }
 						
+					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					
-						
-					
-					
-					
+					catch (CorreoException e) {
+						request.setAttribute("errorCorreo", e.getMessage()); 
+			        }
 					
 				}
 				else {
@@ -152,7 +161,7 @@ public class ServletAltaCliente extends HttpServlet {
 					session.setAttribute("clienteAmodificar", cliente);
 										
 	                request.setAttribute("error", "El DNI ya existe. Introduce un DNI diferente.");
-	                System.out.println("Cliente guardado para formulario" + cliente.getNombre());
+	                
 				}
 			}
 		}

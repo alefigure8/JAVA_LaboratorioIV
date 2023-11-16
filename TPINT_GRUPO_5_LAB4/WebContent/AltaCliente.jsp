@@ -93,6 +93,9 @@
 				             <div class="form-group">
 				                <label for="correo" >Correo</label>
 				                <input type="email" class="form-control" id="correo" placeholder="Ingrese el correo" name="correo"  value="<%= clienteAmodificar.getEmail() %>" required oninput="this.value =  this.value = this.value.substring(0, 30);validateInput(this, 1);">
+				            		 <small id="correoError" class="text-danger" style="<% if ((String)request.getAttribute("errorCorreo") != null && !((String)request.getAttribute("errorCorreo")).isEmpty()) { %> display: block; <% } else { %> display: none; <% } %>"></small>
+				            	
+				            
 				            </div>
 				            <div class="form-group">
 				                <label for="telefono">Teléfono</label>
@@ -104,7 +107,7 @@
 				                <% LocalDate fechaNacimiento = clienteAmodificar.getNacimiento();
 
 				                String fechaNacimientoStr = (fechaNacimiento != null) ? fechaNacimiento.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : ""; %>
-				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" value="<%= fechaNacimientoStr %>" required>
+				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" value="<%= fechaNacimientoStr %>" required onblur="validarFecha(this);">
 				            </div>
 				           
 				        </div>
@@ -178,7 +181,7 @@
 						    
 						    <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required>
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required onchange="habilitarInput()">
 							        <% 
 							        for (TipoDireccion tipo : TipoDireccion.values()) {
 							            String selected = "";
@@ -194,7 +197,7 @@
 						    
 						    <div class="form-group">
 						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);" disabled >
 						    </div>
 				            
 				            
@@ -291,7 +294,7 @@
 				            
 				            <div class="form-group">
 				                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" required>
+				                <input type="date" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento" required onblur="validarFecha(this);">
 				            </div>
 				           
 				        </div>
@@ -342,8 +345,10 @@
 						    
 						    <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required>
-							        <% for (TipoDireccion tipo : TipoDireccion.values()) { %>
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  onchange="habilitarInput()">
+							    
+							        <% 
+							        for (TipoDireccion tipo : TipoDireccion.values()) { %>
 							            <option value="<%= tipo.name() %>"><%= tipo.name() %></option>
 							        <% } %>
 							    </select>
@@ -352,7 +357,7 @@
 						    
 						    <div class="form-group">
 						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);">
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);" disabled >
 						    </div>
 				            
 				            
@@ -532,6 +537,7 @@
     <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
     
 	 <script>
+	 //VALIDAR CONTRASEÑA
 		function validarContraseñas() {
 		    var password = document.getElementById("contraseña").value;
 		    var confirmPassword = document.getElementById("confirmarContraseña").value;
@@ -542,44 +548,49 @@
 		    }
 		    return true; // envia del formulario
 		}
-	</script>
-
 	
-	<script>
-	    var error = "<%= (String) request.getAttribute("error") %>";
+	///ERRORES
+	    var errorDni = "<%= (String) request.getAttribute("error") %>";
 	    var dniError = document.getElementById("dniError");
 	
-	    if (error) {
-	        dniError.innerText = error;
+	    if (errorDni) {
+	        dniError.innerText = errorDni;
 	    }
-	</script>
-    
-    
-    <script>
-	    var error = "<%= (String) request.getAttribute("errorUsuario") %>";
+	
+	    
+	    var errorUsuario = "<%= (String) request.getAttribute("errorUsuario") %>";
 	    var usuarioError = document.getElementById("usuarioError");
 	
-	    if (error) {
-	        usuarioError.innerText = error;
+	    if (errorUsuario) {
+	        usuarioError.innerText = errorUsuario;
 	    }
-	</script>
-    
-    <script>
-    
-		    function validateInput(input, minLength) {
-		    	 const trimmedValue = input.value.trim();
-		    	    if (trimmedValue.length < minLength || !trimmedValue) {
-		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
-		    	    } else {
-		    	        input.setCustomValidity('');
-		    	    }
-		    }
+	    
+	    
+	    var errorCorreo= "<%= (String)request.getAttribute("errorCorreo")%>";
+	    var correoError= document.getElementById("correoError");
+	    if (errorCorreo){
+	    	correoError.innerText=errorCorreo;
+	    }
+	    
+	    
+	   
+    //VALIDACIONES CARACTERES
+	function validateInput(input, minLength) {
+			 const trimmedValue = input.value.trim();
+		       if (trimmedValue.length < minLength || !trimmedValue) {
+		         input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
+		         input.classList.add("is-invalid");
 
-    </script>
+		      } else {
+		    	        input.setCustomValidity('');
+		    	        input.classList.remove("is-invalid");
+		    	        input.classList.add("is-valid");
+
+		      }
+		 }
+
+    //PROVINCIAS Y LOCALIDADES
     
-    
-    
-   <script>
     var provinciasArray = [];
     var localidadesArray = [];
 
@@ -622,8 +633,49 @@
             }
         }
     }
-	</script>
+    
+    
+    
+  //VALIDAR FECHA					
 
+	 	function validarFecha(input) {
+	 	    const fecha = input.value;
+	 	    const arrayFecha = fecha.split("-");
+	 	    const añoNacimiento = parseInt(arrayFecha[0]);
+	 	    const añoActual = new Date().getFullYear();
+
+	 	    if (añoNacimiento > añoActual - 18) {
+	 	        input.setCustomValidity('Debe ser mayor de edad');
+	 	        input.classList.add("is-invalid");
+	 	    } else if (añoNacimiento < 1900) {
+	 	        input.setCustomValidity('Fecha invalida');
+	 	        input.classList.add("is-invalid");
+	 	    } else {
+	 	        input.setCustomValidity('');
+	 	        input.classList.remove("is-invalid");
+	 	        input.classList.add("is-valid");
+	 	    }
+	 	}
+
+	 
+	</script>
+	
+    
+    <script>
+	    function habilitarInput() {
+	        var tipoDireccion = document.getElementById("tipoDireccion");
+	        var numeroDepartamentoInput = document.getElementById("numeroDepartamento");
+	
+	        if (tipoDireccion.value === "Departamento") {
+	            numeroDepartamentoInput.disabled = false;
+	            numeroDepartamentoInput.value = ""; // Puedes descomentar esta línea si quieres vaciar el campo al habilitarlo
+	        } else {
+	            numeroDepartamentoInput.disabled = true;
+	            numeroDepartamentoInput.value = "";
+	        }
+	    }
+	</script>
+    
     
  </body>
 </html>

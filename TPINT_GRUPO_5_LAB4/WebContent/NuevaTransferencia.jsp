@@ -1,3 +1,5 @@
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="entidad.Cuenta"%>
 <%@page import="java.util.List"%>
@@ -32,7 +34,7 @@
 	      </jsp:include>
 		      
 	      <!--CONTENIDO-->
-	        <div class="col-10 d-flex flex-column justify-content-between">
+	        <div class="col-9 d-flex flex-column justify-content-between">
 	          <div class="w-100 pt-2">
 	            <!--TIUTLO PAGINA-->
 	            <h1 class="mt-2">NUEVA TRANSFERENCIA</h1>
@@ -40,10 +42,23 @@
 	          <div class="flex-grow-1">
 	            <!--FORMULARIO BUSCAR CLIENTE-->
 	            <%
-	            	if(request.getParameter("cargacbu")!=null){%>
+        			List<Cuenta> cuentas = new ArrayList<Cuenta>();
+        		
+	        		if(request.getAttribute("cuentas") != null){
+	        			cuentas = (List<Cuenta>)request.getAttribute("cuentas");
+	        		}
+	            %>
+	            <%
+	            	if(request.getParameter("cargacbu")!=null){
+	            	
+	            		if(request.getParameter("otraCuenta") != null){
+	            	
+	            	%>
+	            	
+	            	
 			            <form action="" class="col-6 mt-4">
 			              <div class="mb-3">
-			                <label class="form-label" for="cbu">¿Cuál es el CBU?</label>
+			                <label class="form-label" for="cbu">A otro cliente. ¿Cuál es el CBU?</label>
 			                <div class="d-flex align-content-center gap-4">
 			                  <input type="text" name="cbu" placeholder="11 números" class="form-control w-50" id="cbu" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 11); validateInput(this, 9);">
 			                  <span class="form-text text-danger d-none">Debe tener 11 números.</span>
@@ -52,10 +67,34 @@
 			              <div class="w-50 d-flex justify-content-center">
 			                <input type="submit" class="btn btn_main" value="Siguiente">
 			              </div>
-			            </form>     
-	               	<%}
-	            	
-	            %>
+			            </form>
+			            
+			            <%} 
+			            
+			            	if(request.getParameter("cuentaPropia") != null){%>
+			            
+			            <form action="" class="col-6 mt-4">
+			               <div class="mb-3">
+		                	<label class="form-label" for="concepto">Elija cuenta propia a la cual transferir.</label>
+			                <div class="d-flex align-content-center gap-4">
+	                			<select class="form-select w-50" name="cbu">
+			                	<%
+			                		for(Cuenta cuenta : cuentas){%>
+					                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getCbu() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
+		                			<%} 
+	                			%>
+			                	</select>
+			                </div>
+			              </div>
+			              <div class="w-50 d-flex justify-content-center">
+			                <input type="submit" class="btn btn_main" value="Siguiente">
+			              </div>
+			           </form>    
+			           <%}%>
+			               
+               	<%}
+            	
+            	%>
 
             <!--FORMULARIO CARGA DE MONTO-->
             <%
@@ -66,16 +105,8 @@
             		if(request.getAttribute("destinatario") != null){
             			destinatario = (Cliente)request.getAttribute("destinatario");
             		} 	
-            		
-            		List<Cuenta> cuentas = new ArrayList<Cuenta>();
-            		
-            		if(request.getAttribute("cuentas") != null){
-            			cuentas = (List<Cuenta>)request.getAttribute("cuentas");
-            		}
             	%>
             	
-            		
-            		
             		<form action="ServletNuevaTransferencia" class="col-6 mt-5">
             			<input type="hidden" name="cbuDestintario" value="<%=request.getParameter("cbu")%>"/>
 		              <div class="text-center w-50 mb-4 d-flex flex-column justify-content-center">
@@ -103,7 +134,7 @@
                 			<select class="form-select w-50" name="cbuOrigen" oninput="validateInputCuenta(this)">
 		                	<%
 		                		for(Cuenta cuenta : cuentas){%>
-				                		<option value="<%=cuenta.getCbu()%>">CBU: <%=cuenta.getCbu()%></option>
+				                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getCbu() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
 	                			<%} 
                 			%>
 		                	</select>

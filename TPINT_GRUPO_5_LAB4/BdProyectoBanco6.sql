@@ -42,7 +42,7 @@ CREATE TABLE Clientes(
 	Sexo char(1) not null,
 	Nacionalidad varchar(50) not null,
     FechaNacimiento DATE not null,
-    Correo varchar(50) not null,
+    Correo varchar(50) not null UNIQUE,
 	Telefono int not null,
     IDDomicilio int null,
     PRIMARY KEY (Id),
@@ -246,6 +246,9 @@ INSERT INTO TipoTasa (CantCuotas, TasaInteres) VALUES (12, 150.0), (24, 300.0), 
 /********************** Modificar dni unique *************************/
 ALTER TABLE Clientes
 ADD CONSTRAINT UNIQUE (Dni);
+
+ALTER TABLE Clientes
+ADD CONSTRAINT UNIQUE (Correo);
 
 
 /********************** Modificar usuario y cliente ***********************/

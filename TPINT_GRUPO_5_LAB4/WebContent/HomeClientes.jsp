@@ -1,4 +1,6 @@
 <%@page import="entidad.TipoAcceso"%>
+<%@page import="entidad.Movimiento"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
@@ -6,6 +8,12 @@
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
 </jsp:include>
 <!-- FIN AUTENTICACION -->
+
+<% 
+session.removeAttribute("montoSeleccionado");
+session.removeAttribute("tipoTasaSeleccionada");
+session.removeAttribute("interesCalculado");
+session.removeAttribute("totalCalculado"); %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -20,10 +28,27 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	<body class="d-flex flex-column">
+	
+	<%
+	
+	ArrayList<Movimiento> movimientosCuenta = null;
+	String tipoCuenta = null;
+	String numerocuenta= null;
+	if(request.getAttribute("tipoCuenta")!=null){
+		
+		tipoCuenta = request.getAttribute("tipoCuenta").toString();
+	}
+	if(request.getAttribute("listaMovimientos")!=null){
+		movimientosCuenta = (ArrayList<Movimiento>) request.getAttribute("listaMovimientos");
+	}
+	
+			
+ %>
+	
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
-	      	<jsp:param name="usuario" value="Ramón Ramirez" />
+	      	<jsp:param name="usuario" value="Ramï¿½n Ramirez" />
 	      </jsp:include>
 		      
          <!--CONTENT-->
@@ -36,29 +61,37 @@
 		            <!-- CONTENIDO -->
 		            <!-- MENU -->
 					<div class="p-4 col-md-12 justify-content-center align-items-start">
-			    		<h4>Menú</h4>
-			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">MIS CUENTAS</a>
-			    		<a href="/TPINT_GRUPO_5_LAB4/ServletListaTransferencias?listado=true&todos=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">TRANSFERENCIAS</a>
-			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">PRESTAMOS</a>
-			    		<a href="#" class="btn btn-primary btnEnviar col-5 p-4 m-1">PERFIL</a>
+			    		<h4>Menu</h4>
+			    		<a href="ServletCuentas?Cuentas=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">MIS CUENTAS</a>
+			    		<a href="ServletListaTransferencias?listado=true&todos=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">TRANSFERENCIAS</a>
+			    		<a href="ServletPrestamos?PrestamosCliente=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">PRESTAMOS</a>
+			    		<a href="Perfil.jsp" class="btn btn-primary btnEnviar col-5 p-4 m-1">PERFIL</a>
 					</div>
-					<!-- ÚLTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
-	                <form class="container mt-4 d-flex justify-content-left align-items-start" action="#" method="post">
+					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
+	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
-	                        <h5>Últimos movimientos | Caja Ahorro</h5>
+	                        <h5>Ultimos movimientos | <%=tipoCuenta%></h5>
 	                        <table class="table table-bordered mt-2">
+	                        <% for (Movimiento m : movimientosCuenta) { %>
 					        <tr>
-	            				<th>TRANSF. N0001</th> <th>25/09/2023</th> <th>$5500.00</th> <th><button class="btn btn-primary">Ver más</button></th>
-	        				</tr>
-	        				<tr>
-	            				<th>TRANSF. N0002</th> <th>19/09/2023</th> <th>$10000.00</th> <th><button class="btn btn-primary">Ver más</button></th>
-	        				</tr>
-	        				<tr>
-	            				<th>TRANSF. N0003</th> <th>07/09/2023</th> <th>$2.00</th> <th><button class="btn btn-primary">Ver más</button></th>
-	        				</tr>
+					              <form action="ServletDetalleMovimiento" method="get">
+	            				<th><%=m.getTipoMovimiento().getDescripcion() %></th>
+	            				 <th><%=m.getFechaMovimiento() %></th>
+	            				<% if(m.getOperacion().equals("Entrada")) { %>
+	            				 <th style=color:#00a000;>$<%=m.getMonto() %></th>
+	            				 <% } else{ %>
+	            				 <th  style=color:#ff0000;>$<%=m.getMonto() %></th>
+	            				 <%} %>
+	            				
+	            				  	<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
+	            				   	 <th><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></th>	        				
+	        						
+	            	</tr>
+	        				</form>
+	        				<%} %>
 						  </table>
 	   					</div>
-					</form>
+					</div>
 		    	</div>
 	       </div>   
 		</div>

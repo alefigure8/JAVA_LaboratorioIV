@@ -1,15 +1,35 @@
 <%@page import="entidad.Estado"%>
+<%@page import="entidad.Usuario"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="java.util.List"%>
 <%@page import="entidad.Cliente" %>
 <%@page import="entidad.Prestamo" %>
 <%@page import="entidad.Estado" %>
+<%@page import="java.util.ArrayList"%>
+
 
 <!-- AUTENTICACION -->
+<% 
+	//PUEDEN INGRESAR AMBOS
+	session = request.getSession();
+	Usuario usuario = new Usuario();
+	
+	if(session.getAttribute("usuario") != null){
+		usuario = (Usuario)session.getAttribute("usuario");
+	}
+%>
+
+<% 
+session.removeAttribute("montoSeleccionado");
+session.removeAttribute("tipoTasaSeleccionada");
+session.removeAttribute("interesCalculado");
+session.removeAttribute("totalCalculado"); %>
+
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
-	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Administrador%>" />
+	<jsp:param name="TipoUsuarioPagina" value="<%=usuario.getTipoAcceso()%>" />
 </jsp:include>
+
 <!-- FIN AUTENTICACION -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,6 +45,10 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	<body class="d-flex flex-column">
+	
+	
+	
+	<!-- COMIENZA ADMIN -->
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
@@ -36,13 +60,29 @@
         <div class="col-10 d-flex flex-column justify-content-between">
           <div class="w-100 pt-2">
             <!--TIUTLO PAGINA-->
+            <% 
+            if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0){
+            %>
             <h1 class="mt-2">PRESTAMOS CLIENTES</h1>
+            <%} %>
+            
+            <%
+            if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente)==0){
+            %>
+            <h1 class="mt-2">MIS PRESTAMOS</h1>
+            <%} %>
+            
           </div>
           <div class="flex-grow-1">
             <!--FILTRO-->
             <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
               <div class="col-md-7 text-md-start text-center">
+              <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0){ %>
                 <h4 class="opacity-75">Historial de los prestamos de clientes</h4>
+              <%} %>
+               <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente)==0){ %>
+                <h4 class="opacity-75">Historial de mis prestamos </h4>
+              <%} %>
               </div>
               <div class="col-md-5">
                 <form action="ServletPrestamos" method="get" class="d-flex justify-content-around align-items-center gap-2  flex-md-row flex-column">
@@ -86,9 +126,12 @@
             </div>
 
 		<!--  LISTADO DE PRESTAMOS Y CLIENTES -->
-		<% if(session.getAttribute("prestamos")!=null && session.getAttribute("clientes")!=null){
+		<% if(session.getAttribute("prestamos")!=null ){
 			List<Prestamo> prestamos= (List<Prestamo>)session.getAttribute("prestamos");
-			List<Cliente> clientes= (List<Cliente>)session.getAttribute("clientes");
+			List<Cliente> clientes=new ArrayList();
+			if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0 && session.getAttribute("clientes")!=null){
+				clientes= (List<Cliente>)session.getAttribute("clientes");
+			}
 		
 		%>
             <div class="d-flex flex-md-row flex-column mt-4">
@@ -100,16 +143,39 @@
                     <th ></th>
                     <th ></th>
                       <th scope="col"># Prestamo</th>
+                      
+                      <!-- N° CLIENTE SOLO ADMIN -->
+                      <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {%>
                       <th scope="col">Cliente</th>
+                      <%} %>
+                      <!--  -->
+                      
                       <th scope="col">Cuenta</th>
                       <th scope="col">Monto solicitado</th>
                       <th scope="col">Intereses</th>
+                      
+                      <!-- AGREGAR IMPORTE CON INTERESES O NO? -->
+                      <!--  -->
+                      
                       <th scope="col">Cuotas</th>
-                      <th scope="col">Fecha de Alta</th>
+                      <th scope="col">Fecha de solicitud</th>
                       <th scope="col">Estado</th>
+                      
+                      <!-- AGREGAR SALDADO -->
+                       <th scope="col">Saldado</th>
+                      <!--  -->
+                      
+                       <!-- DETALLE PARA CLIENTE Y ADMIN -->
                       <th scope="col">Detalle</th>
+                       <!--  -->
+                       <!-- BOTONES SOLO PARA ADMIN -->
+                       <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {%>
                       <th scope="col">Acción</th>
                       <th scope="col">Acción</th>
+                      <%} %>
+                       <!--  -->
+                     
+                      
                     </tr>
                   </thead>
                   <tbody>
@@ -127,10 +193,18 @@
 	                      
 	                      
                       <td><span class="black-75 me-2"  ><%= prestamos.get(x).getId() %></span><i class="fa-solid fa-chart-line opacity-50"></i></td>
+                      
+                      <!-- N° CLIENTE SOLO ADMIN -->
+                      <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {%>
                       <td><i class="fa-solid fa-user opacity-50 me-2"></i><%= clientes.get(x).getApellido() +" "+ clientes.get(x).getNombre() %></td>
+                       <%} %>
+                       <!--  -->
+                      
                        <td><span class="black-75"><%=prestamos.get(x).getNumeroCuenta() %></span></td>
                       <td><span class="black-75">$<%=prestamos.get(x).getMontoPedido() %></span></td>
-                      <td><span class="black-75"><%=prestamos.get(x).getTipoTasa().getTasaInteres()/100*100 %>%</span></td>
+                      <td><span class="black-75">
+                              $<%= Math.abs(prestamos.get(x).getMontoPedido() - prestamos.get(x).getMontoConIntereses())  %>
+                      </span></td>
                       <td><span class="black-75"><%=prestamos.get(x).getTipoTasa().getCantCuotas() %></span></td>
                       <td><span class="black-75"><%=prestamos.get(x).getFechaPrestamo() %></span></td>
                       
@@ -139,7 +213,21 @@
                       		<%= estadoDescripcion %>
                       </span></td>
                       
-                      <td><i class="fa-solid fa-circle-info opacity-50 fs-5"></i></td>
+                      <!-- AGREGAR SALDADO -->
+                      <td><span class="black-75"><%=prestamos.get(x).isCancelado() ?"Si":"No" %></span></td>
+                      
+                       <!--DETALLE PARA CLIENTE Y ADMIN -->
+                      <td>
+					    <a  href="ServletPrestamosDetalle?PrestamoDetalle=<%=prestamos.get(x).getId() %>">
+					        <i class="fa-solid fa-circle-info opacity-50 fs-5"></i>
+					    </a>
+					  </td>
+
+                      
+                       <!--  -->
+                      
+                       <!-- BOTONES SOLO PARA ADMIN -->
+                  <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {%>
                       <% if(prestamos.get(x).getEstado().getDescripcion().equals("Pendiente")) {%>
 	                      <td><div class="bg-warning p-2 w-100 rounded-2 text-center badge">
 	                      		<input type="submit" class="btn btn-alert" value="Aprobar" name="btnAprobarPrestamo" onclick="return confirm('¿Estás seguro que deseas confirmar el prestamo?')">
@@ -149,6 +237,10 @@
 	                      		<input type="submit" class="btn btn-alert" value="Rechazar" name="btnRechazarPrestamo" onclick="return confirm('¿Estás seguro que deseas rechazar el prestamo?')">
 	                      </div></td>
                   	  <%} else{%>
+                  	  
+                  	   <!--  -->
+                  	   
+                  	   
                   	  	 <td><div class="">
 	                      		
 	                      </div></td>
@@ -156,23 +248,40 @@
 	                      		
 	                      </div></td>
                   	  <%} %>
+                  <%} %> 
+                  	  
+                  	  
 	                 </form>
                   </tr>
                  
                  <% }%>
                   </tbody>
                 </table>
+                
+                
                
               </div>
              
             </div>
            <%} %> 
-            
-            
+           
+            <form action="ServletPrestamos" method="get">
+			    
+			    <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) { %>
+			        <input type="submit" class="btn btn-primary btnEnviar" name="btnSolicitarPrestamo" value="Solicitar Préstamo">
+			    <% } %>
+			</form>
+
+			
+
+           
           </div>
          </div>
 
 	 </div>
+	 
+	<!-- TERMINA ADMIN -->
+	 
 	 
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

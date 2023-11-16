@@ -43,7 +43,10 @@ public class Prestamo {
 			this.fechaPrestamo = fechaPrestamo;
 			this.cancelado = cancelado;
 		}
-
+		
+		
+		
+		
 		// GETTERS & SETTERS
 
 		public int getId() {

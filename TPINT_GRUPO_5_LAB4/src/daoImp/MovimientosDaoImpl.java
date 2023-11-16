@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.sun.javafx.collections.MappingChange.Map;
-
 import dao.Conexion;
 import dao.IMovimientosDao;
 import entidad.Cuenta;
+import entidad.Destinatario;
 import entidad.Estado;
 import entidad.Movimiento;
 import entidad.Operacion;
@@ -58,29 +57,18 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 																"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 																"where NumeroReferencia = ?";
 			
-	private static final String selectPorNumeroCuenta = "select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
-															"inner join Estados E " +
-															"on M.IdEstados=E.IdEstados " + 
-															"inner join TiposMovimiento TM " +
-															"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
-															"inner join Cuentas C " +
-															"on C.CBU=M.CBU " +
-															"inner join TiposCuenta TC " +
-															"on TC.IdTipoCuenta=C.IdTipoCuenta "+
-															"where CBU = ?";
-	
+	private static final String selectPorNumeroCuenta =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+														"inner join Estados E " +
+														"on M.IdEstados=E.IdEstados " + 
+														"inner join TiposMovimiento TM " +
+														"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+														"inner join Cuentas C " +
+														"on C.CBU=M.CBU " +
+														"inner join TiposCuenta TC " +
+														"on TC.IdTipoCuenta=C.IdTipoCuenta "+
+														"where C.CBU = ?";
+
 	private static final String selectPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
-																"inner join Estados E " +
-																"on M.IdEstados=E.IdEstados " + 
-																"inner join TiposMovimiento TM " +
-																"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
-																"inner join Cuentas C " +
-																"on C.CBU=M.CBU " +
-																"inner join TiposCuenta TC " +
-																"on TC.IdTipoCuenta=C.IdTipoCuenta "+
-																"where C.IdCliente = ?";
-	
-	private static final String selectTransferenciaPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
 															"inner join Estados E " +
 															"on M.IdEstados=E.IdEstados " + 
 															"inner join TiposMovimiento TM " +
@@ -89,26 +77,37 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 															"on C.CBU=M.CBU " +
 															"inner join TiposCuenta TC " +
 															"on TC.IdTipoCuenta=C.IdTipoCuenta "+
-															"where TM.IdTipoMovimiento = 'Transferencia'";
+															"where C.IdCliente = ?";
+
+	private static final String selectTransferenciaPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+																		"inner join Estados E " +
+																		"on M.IdEstados=E.IdEstados " + 
+																		"inner join TiposMovimiento TM " +
+																		"on TM.IdTipoMovimiento=M.IdTipoMovimiento " +
+																		"inner join Cuentas C " +
+																		"on C.CBU=M.CBU " +
+																		"inner join TiposCuenta TC " +
+																		"on TC.IdTipoCuenta=C.IdTipoCuenta "+
+																		"where TM.IdTipoMovimiento = 'Transferencia'";
 	
-	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = "SELECT MO.NumeroReferencia, CLI.Nombre, CLI.Apellido " +
-																							"FROM Movimientos MO " +
-																							"INNER JOIN Cuentas CU " +
-																							"ON MO.CBU = CU.CBU " +
-																							"INNER JOIN Clientes CLI " +
-																							"ON CLI.Id = CU.IdCliente " +
-																							"Where NumeroReferencia in " +
-																							"(SELECT MO.NumeroReferencia " +
-																							"FROM Movimientos MO " +
-																							"INNER JOIN Cuentas CU " +
-																							"ON MO.CBU = CU.CBU " +
-																							"INNER JOIN Clientes CLI " +
-																							"ON CLI.Id = CU.IdCliente " +
-																							"WHERE CLI.Id = ?) " +
-																							"AND CLI.ID <> ?; ";
-	
+	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = 	"SELECT MO.NumeroReferencia, CU.CBU, CLI.Nombre, CLI.Apellido " +
+																						"FROM Movimientos MO " +
+																						"INNER JOIN Cuentas CU " +
+																						"ON MO.CBU = CU.CBU " +
+																						"INNER JOIN Clientes CLI " +
+																						"ON CLI.Id = CU.IdCliente " +
+																						"Where NumeroReferencia in " +
+																						"(SELECT MO.NumeroReferencia " +
+																						"FROM Movimientos MO " +
+																						"INNER JOIN Cuentas CU " +
+																						"ON MO.CBU = CU.CBU " +
+																						"INNER JOIN Clientes CLI " +
+																						"ON CLI.Id = CU.IdCliente " +
+																						"WHERE CLI.Id = ?) " +
+																						"AND CLI.ID <> ?; ";
+
 	private static final String insert = "INSERT INTO Movimientos (idTipoMovimiento, NumeroReferencia, CBU, " +
-            								"Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "Monto, Operacion, FechaMovimiento, IdEstados, Concepto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String update = "UPDATE Movimientos " +
 								            "SET idTipoMovimiento = ?, NumeroReferencia = ?, CBU = ?, Monto = ?, " +
@@ -163,8 +162,8 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return movimientos;
 	}
-	
-	//OBTENER POR NUMERO DE REFERENCIA
+
+	//OBTENER POR ID CLIENTE
 	public List<Movimiento> obtenerPorCliente(int cliente) throws SQLException {
 		PreparedStatement pStatement;
 		ResultSet rSet;
@@ -209,7 +208,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return movimientos;
 	}
-	
+
 	//OBTENER POR CBU
 	public List<Movimiento> obtenerPorCBU(String CBU) throws SQLException {
 		PreparedStatement pStatement;
@@ -232,12 +231,13 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return movimientos;
 	}
-	
-	public HashMap<Integer, String> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException {
-		
+
+	//OBTENER NUMERO REFERENCIA Y NOMBRE DE DESTINATARIO POR ID CLIENTE ORIGEN
+	public HashMap<Integer, Destinatario> obtenerDestinatariosTransferenciasPorNumeroCliente(int numeroCliente) throws SQLException {
+			
 		PreparedStatement pStatement;
 		ResultSet rSet;
-		HashMap<Integer, String> destinatarios = new HashMap<Integer, String>();
+		HashMap<Integer, Destinatario> destinatarios = new HashMap<Integer, Destinatario>();
 		Conexion conexion = Conexion.getConexion();
 		
 		try {
@@ -250,7 +250,9 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 				int numeroReferencia = rSet.getInt("NumeroReferencia");
 				String nombre = rSet.getString("Nombre");
 				String apellido = rSet.getString("Apellido");
-				destinatarios.put(numeroReferencia, nombre + " " + apellido);
+				String cbu = rSet.getString("CBU");
+				Destinatario destinatario = new Destinatario(nombre, apellido, cbu);
+				destinatarios.put(numeroReferencia, destinatario);
 			}
 			
 		} catch (SQLException e) {
@@ -259,7 +261,6 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return destinatarios;
 	}
-
 
 
 	//INSERTAR
@@ -363,6 +364,8 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		//
 		//movimiento.setCbudestino(rSet.getString("CBU"));
 		movimiento.setCuenta(cuenta);
+		
+		
 		movimiento.setMonto(rSet.getDouble("Monto"));
 		movimiento.setOperacion(Operacion.valueOf(rSet.getString("Operacion")));
 		movimiento.setFechaMovimiento(rSet.getDate("FechaMovimiento").toLocalDate());
@@ -412,6 +415,32 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		return tipoMovimiento;
 	}
 	
+	@Override
+	public Movimiento obtenerUnoPorId(int id) throws SQLException {
+		
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		Movimiento movimiento=new Movimiento();
+		Conexion conexion = Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(selectOne);
+			pStatement.setInt(1, id);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				
+				movimiento= getMovimiento(rSet);
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+		}
+		
+		return movimiento;
+		
+		
+	}
 	
 	// OBTENER LISTA DE TIPOS DE MOVIMIENTOS
 	public List<TipoMovimiento> obtenerTipoMovimientos() throws SQLException {
@@ -467,5 +496,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		
 		return ultimoId;
 	}
+
+
 
 }

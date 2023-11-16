@@ -57,7 +57,7 @@ public class CuentaNegocioDaoImp implements ICuentaNegocioDao {
 		
 		return cuentaDao.obtenerUna(nroCuenta);
 	}
-	
+
 	@Override
 	public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException {
 		
@@ -117,6 +117,23 @@ public class CuentaNegocioDaoImp implements ICuentaNegocioDao {
 	public String obtenerDescripcion(int id) throws SQLException {
 		
 		return cuentaDao.obtenerDescripcion(id);
+	}
+
+	@Override
+	public Cuenta obtenerPorMovimientoYreferencia(int tipoMovimiento, int numeroReferencia) {
+		return cuentaDao.obtenerPorMovimientoYreferencia(tipoMovimiento, numeroReferencia);
+	}
+
+	//ACTUALIZAR SALDO DE LA CUENTA
+	public boolean actualizarSaldo(String cbu, Double monto) throws Exception {
+		
+		Cuenta cuenta = this.obtenerUnaPorCBU(cbu);
+		
+		cuenta.setSaldo(cuenta.getSaldo() + monto);
+		
+		boolean seActualizo = this.editar(cuenta);
+		
+		return seActualizo;
 	}
 	
 

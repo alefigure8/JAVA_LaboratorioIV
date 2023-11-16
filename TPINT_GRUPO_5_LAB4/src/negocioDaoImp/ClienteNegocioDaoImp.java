@@ -7,6 +7,7 @@ import dao.IClienteDao;
 import daoImp.ClienteDaoImp;
 import entidad.Cliente;
 import entidad.Usuario;
+import excepciones.CorreoException;
 import negocioDao.IClienteNegocioDao;
 
 public class ClienteNegocioDaoImp implements IClienteNegocioDao {
@@ -52,7 +53,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	public Cliente obtenerCliente(int dni) {
 		return clienteDao.obtenerCliente(dni);
 	}
-	
+
 	@Override
 	public Cliente obtenerClientePorCBU(String cbu) {
 		return clienteDao.obtenerClientePorCBU(cbu);
@@ -101,6 +102,26 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 		
 		return null;
 	}
+	
+	@Override
+	public boolean existeCorreo(String correo)throws CorreoException{
+		boolean existe = false;
 
+	    if (!correo.trim().isEmpty()) {
+
+	    	try {
+	    	    existe = clienteDao.existeCorreo(correo);
+	    	} catch (CorreoException e) {
+	    	    throw e;
+	    	} catch (Exception e) {
+	    	    throw new CorreoException("Error al verificar el correo");
+	    	}
+
+	    }
+
+	    return existe;
+	}
+
+	
 
 }

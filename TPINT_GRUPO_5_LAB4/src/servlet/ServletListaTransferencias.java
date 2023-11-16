@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.mysql.cj.Session;
+
 import com.sun.javafx.collections.MappingChange.Map;
 
 import Helper.GUI;
 import entidad.Cliente;
+import entidad.Destinatario;
 import entidad.Movimiento;
 import entidad.Operacion;
 import entidad.TipoMovimiento;
@@ -45,7 +46,7 @@ public class ServletListaTransferencias extends HttpServlet {
 				try {
 					//Obtener listado de movimientos por cliente
 					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
-					HashMap<Integer, String> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+					HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
 					
 					request.setAttribute("lista", listadoMovimiento);
 					request.setAttribute("destinatarios", destinatarios);
@@ -55,7 +56,7 @@ public class ServletListaTransferencias extends HttpServlet {
 				} catch (Exception e) {
 					//ERROR
 					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
 					rd.forward(request, response);
 				}
 			}
@@ -68,7 +69,7 @@ public class ServletListaTransferencias extends HttpServlet {
 				try {
 					//Obtener listado de movimientos por cliente
 					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
-					HashMap<Integer, String> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+					HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
 					
 					//Operacion filtrada					
 					List<Movimiento> listadoMovimientoFiltrado = obtenerListaPorOperacion(listadoMovimiento, operacion);
@@ -78,12 +79,12 @@ public class ServletListaTransferencias extends HttpServlet {
 					request.setAttribute("destinatarios", destinatarios);
 					
 					//Redirigir
-					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
 					rd.forward(request, response);
 				} catch (Exception e) {
 					//Error Base de Datos
 					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
 					rd.forward(request, response);
 				}
 			}
@@ -109,8 +110,9 @@ public class ServletListaTransferencias extends HttpServlet {
 			List<Movimiento> listadoMovimiento = new ArrayList<Movimiento>();
 			
 			for(Movimiento movimiento : listado) {
-				if(movimiento.getOperacion().equals(operacion))
+				if(movimiento.getOperacion().equals(operacion)) {
 					listadoMovimiento.add(movimiento);
+				}
 			}
 			
 			return listadoMovimiento;

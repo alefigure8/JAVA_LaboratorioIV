@@ -40,7 +40,11 @@ public class CuentaDaoImp implements ICuentaDao{
 	private static final String countCbu="select count(*) as Count from Cuentas where Cbu = ?";
 	private static final String ultimaCuentaInsertada="select max(NumeroCuenta) as NumeroCuenta from Cuentas c inner join Clientes ct on ct.Id=c.IdCliente where c.IdCliente = ? ";
 	private static final String obtenerDescripcion="select descripcion from TiposCuenta where IdTipoCuenta = ?";
-
+	private static final String obtenerPorMovimientoYreferencia="select * from Cuentas C "+
+			" inner join Movimientos M on M.CBU=C.CBU "+
+			" inner join tiposMovimiento TM on TM.IdTipoMovimiento=M.IdTipoMovimiento "+
+			" where M.IdTipoMovimiento=? and M.NumeroReferencia=? ";
+	
 	// INSERTAR CUENTA
 	@Override
 	public boolean insertar(Cuenta cuenta) throws SQLException{
@@ -195,7 +199,7 @@ public class CuentaDaoImp implements ICuentaDao{
 		
 		return cuenta;
 	}
-	
+
 	//OBTENER UNA CUENTA POR CBU
 	@Override
 	public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException{
@@ -205,7 +209,7 @@ public class CuentaDaoImp implements ICuentaDao{
 		Conexion conexion= Conexion.getConexion();
 		
 		try {
-			pStatement=conexion.getSQLConexion().prepareStatement(readOnePorNroCuenta);
+			pStatement=conexion.getSQLConexion().prepareStatement(readOnePorCBU);
 			pStatement.setString(1, cbu);
 			rSet=pStatement.executeQuery();
 			
@@ -218,8 +222,7 @@ public class CuentaDaoImp implements ICuentaDao{
 		}
 		
 		return cuenta;
-	}
-	
+		}
 
 	// RSET PARA ARMAR LOS OBJETOS CUENTA
 	private Cuenta getCuenta(ResultSet rSet) throws SQLException{
@@ -375,6 +378,30 @@ public class CuentaDaoImp implements ICuentaDao{
 			
 		return descripcion;
 		
+	}
+
+	@Override
+	public Cuenta obtenerPorMovimientoYreferencia(int tipoMovimiento, int numeroReferencia) {
+		PreparedStatement pStatement;
+	    ResultSet rSet;
+	    Cuenta cuenta = null;  
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(obtenerPorMovimientoYreferencia);
+	        pStatement.setInt(1, tipoMovimiento);//1=ALTA DE CUENTA, 2=ALTA DE PRESTAMO, 3=PAGO PRESTAMO, 4=TRANSFERENCIA
+	        pStatement.setInt(2, numeroReferencia);//TIPO 2=IDPRESTAMO, 3=IDCUOTA, 4=NRO.TRANSFERENCIA DEL MOVIMIENTO
+	        rSet = pStatement.executeQuery();
+
+	        while (rSet.next()) {
+	            cuenta = getCuenta(rSet);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();  
+	    }
+
+	    return cuenta;
 	}
 	
 

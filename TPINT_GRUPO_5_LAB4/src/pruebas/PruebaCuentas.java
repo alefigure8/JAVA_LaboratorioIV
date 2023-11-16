@@ -13,12 +13,26 @@ import entidad.TipoCuenta;
 
 public class PruebaCuentas {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		CuentaDaoImp ctaDao = new CuentaDaoImp();
 		
 		List<Cuenta> listaCuentas = new ArrayList<Cuenta>();
 		
+		listaCuentas =  ctaDao.obtenerCuentasCliente(17);
+	
+		Cuenta cuenta = listaCuentas.get(0);
+		
+		long numero = cuenta.getNumeroCuenta(); // Reemplaza esto con tu número de 10 cifras
+		String stringnumero = String.valueOf(numero);
 
+        StringBuilder nuevoFormato = new StringBuilder();
+        nuevoFormato.append(stringnumero, 0, 2).append("-").append(stringnumero, 2, 9).append("/").append(stringnumero.charAt(9));
+        // Imprime el resultado
+        System.out.println(nuevoFormato.toString());
+
+
+		
+/*
 		System.out.println("PRUEBA LISTAR TODAS LAS CUENTAS DE UN CLIENTE");
 		try {
 			listaCuentas = ctaDao.obtenerCuentasCliente(1) ;
@@ -41,9 +55,10 @@ public class PruebaCuentas {
 		int idCliente = 2;
 		LocalDate fechaCreacion = LocalDate.now();
 	   /* Estado estado = new Estado(1, "Pendiente");*/
-	    boolean activo = true;
 		
-		Cuenta cuenta1 = new Cuenta(numeroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, /*estado, */activo);
+	    //boolean activo = true;
+		
+	//	Cuenta cuenta1 = new Cuenta(numeroCuenta, cbu, saldo, tipoCuenta, idCliente, fechaCreacion, /*estado, */activo);
 		/*
 		try {
 			ctaDao.insertar(cuenta1);
@@ -52,7 +67,7 @@ public class PruebaCuentas {
 			e1.printStackTrace();
 		}
 		*/
-		
+	/*	
 		System.out.println("PRUEBA LISTAR TODAS LAS CUENTAS");
 		
 		try {
@@ -117,7 +132,7 @@ public class PruebaCuentas {
 		for(TipoCuenta tipo : listaTiposCuenta) {
 			System.out.println(tipo.toString());
 		}
-
+*/
 	}
 	
 }
