@@ -65,6 +65,8 @@ public class servletLogin extends HttpServlet {
 							rd.forward(request, response);	
 						} else if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Cliente) {
 							//Redirigimos a Home Clinet
+							
+							
 							request.setAttribute("homecliente", "homecliente");
 							RequestDispatcher rd = request.getRequestDispatcher("/ServletHomeCliente?homecliente=homecliente");
 							rd.forward(request, response);	

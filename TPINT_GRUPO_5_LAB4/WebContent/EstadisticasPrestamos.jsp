@@ -78,17 +78,27 @@
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
 	      	<jsp:param name="usuario" value="Ramón Ramirez" />
 	      </jsp:include>
+	      
+	     <!--MAIN-->
+	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-center" >
+	        <div class="w-100 pt-2" >
+	          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS</h1>
+	        </div>
+	        <div class="flex-grow-1" >
+	      
+	       
+	            
 	        
 	        	        
       		<!--CONTENT-->
-	        <div class="col-lg-9 col-md-12 d-flex flex-column">
+	        <div class="col-lg-9 col-md-12 d-flex flex-column" style="width:100%;">
 	
 
-	            <div class="card" style="padding-bottom:0px;padding-top:0px; margin-bottom: 5px; margin-top: 0px;">
-	                <div class="card-body" style="padding-bottom:0px;padding-top:0px; margin-bottom: 0px; margin-top: 0px;">
+	            <div class="card" style="padding-bottom:0px;padding-top:0px; margin-bottom: 5px; margin-top: 0px;"  >
+	                <div class="card-body" style="padding-bottom:0px;padding-top:0px; margin-bottom: 0px; margin-top: 0px; ">
 	         <form action="ServletEstadisticasPrestamos" method="get">
            	
-<div class="row mt-0 mb-0 d-flex align-items-center">
+	<div class="row mt-0 mb-0 d-flex align-items-center" >
 
 	                    <div class="col-md-2"> <!-- Dividimos el formulario en 4 columnas para los 4 elementos -->
 	              
@@ -157,9 +167,8 @@
 	                   <div class="col-md-2 d-flex flex-column align-items-center position-relative"> 
     <button type="submit" name="btnFiltrar" class="btn btn-primary btnEnviar" style="width: 100%; margin-top: 2px;">Filtrar</button>
     
-   
 </div>
-
+</div>
 	                     </form>     
 		            </div>
 		         
@@ -254,9 +263,17 @@
 			          </tbody>
 		    		</table>
 					</div>
+					<div class= "mt-2">
+						<a href="PerfilBanco.jsp" class="btn btn-primary btnEnviar "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+					</div>
+					
 				</div>
+				
+				
 			</div>
-		
+		</div>
+      </div>
+     
 		<!-- FIN MAIN -->
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

@@ -1,5 +1,6 @@
 <%@page import="entidad.TipoAcceso"%>
 <%@page import="entidad.Movimiento"%>
+<%@page import="entidad.Cuenta"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
@@ -30,48 +31,81 @@ session.removeAttribute("totalCalculado"); %>
 	<body class="d-flex flex-column">
 	
 	<%
-	
 	ArrayList<Movimiento> movimientosCuenta = null;
 	String tipoCuenta = null;
 	String numerocuenta= null;
+	Cuenta cuenta=new Cuenta();
 	if(request.getAttribute("tipoCuenta")!=null){
-		
 		tipoCuenta = request.getAttribute("tipoCuenta").toString();
 	}
 	if(request.getAttribute("listaMovimientos")!=null){
 		movimientosCuenta = (ArrayList<Movimiento>) request.getAttribute("listaMovimientos");
+	}	
+	if(request.getAttribute("cuentaVisible")!=null){
+		cuenta=(Cuenta)request.getAttribute("cuentaVisible");
 	}
-	
-			
- %>
-	
+ 	%>
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
 	      	<jsp:param name="usuario" value="Ramï¿½n Ramirez" />
 	      </jsp:include>
-		      
          <!--CONTENT-->
 	        <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 	            <div class="w-100 pt-2">
-	                <h1>HOME / BIENVENIDO</h1>
+	                <h1>BIENVENIDO</h1>
 	            </div>
 	
 	            <div class="flex-grow-1">
 		            <!-- CONTENIDO -->
 		            <!-- MENU -->
-					<div class="p-4 col-md-12 justify-content-center align-items-start">
-			    		<h4>Menu</h4>
-			    		<a href="ServletCuentas?Cuentas=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">MIS CUENTAS</a>
-			    		<a href="ServletListaTransferencias?listado=true&todos=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">TRANSFERENCIAS</a>
-			    		<a href="ServletPrestamos?PrestamosCliente=true" class="btn btn-primary btnEnviar col-5 p-4 m-1">PRESTAMOS</a>
-			    		<a href="Perfil.jsp" class="btn btn-primary btnEnviar col-5 p-4 m-1">PERFIL</a>
+		            
+					<div class="p-4 col-md-12 text-center">
+					    <div class="row justify-content-center">
+					        <div class="col-md-4">
+					            <div class="row">
+					                <div class="col-md-12">
+					                    <a href="ServletCuentas?Cuentas=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-wallet fa-2x me-2"></i>MIS CUENTAS
+					                    </a>
+					                </div>
+					                <div class="col-md-12">
+					                    <a href="ServletListaTransferencias?listado=true&todos=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-exchange-alt fa-2x me-2"></i>TRANSFERENCIAS
+					                    </a>
+					                </div>
+					            </div>
+					        </div>
+					        <div class="col-md-4">
+					            <div class="row">
+					                <div class="col-md-12">
+					                    <a href="ServletPrestamos?PrestamosCliente=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-hand-holding-usd fa-2x me-2"></i>PRESTAMOS
+					                    </a>
+					                </div>
+					                <div class="col-md-12">
+					                    <a href="Perfil.jsp" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-user-circle fa-2x me-2"></i>PERFIL
+					                    </a>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
 					</div>
+
+
 					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
-	                        <h5>Ultimos movimientos | <%=tipoCuenta%></h5>
+	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo:$ <%=cuenta.getSaldo() %></h5>
 	                        <table class="table table-bordered mt-2">
+	                       <tr>
+				                <th>Tipo de Operación</th>
+				                <th>Fecha</th>
+				                <th>Monto</th>
+				                <th>Acción</th>
+				            </tr>
+	                        
 	                        <% for (Movimiento m : movimientosCuenta) { %>
 					        <tr>
 					              <form action="ServletDetalleMovimiento" method="get">
@@ -82,11 +116,10 @@ session.removeAttribute("totalCalculado"); %>
 	            				 <% } else{ %>
 	            				 <th  style=color:#ff0000;>$<%=m.getMonto() %></th>
 	            				 <%} %>
-	            				
 	            				  	<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
 	            				   	 <th><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></th>	        				
 	        						
-	            	</tr>
+	            			</tr>
 	        				</form>
 	        				<%} %>
 						  </table>

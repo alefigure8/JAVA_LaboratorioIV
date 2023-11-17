@@ -40,7 +40,7 @@
 	      <!--MAIN-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 	        <div class="w-100 pt-2">
-	          <h1 id="tituloCliente" style="margin-bottom:5%">ALTA DE CLIENTE</h1>
+	          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-user-plus me-2"></i>ALTA DE CLIENTE</h1>
 	        </div>
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
@@ -523,7 +523,7 @@
 					</div>
 					
 					<div class="mt-4" style="text-align: center;">
-					    <a href="PerfilBanco.jsp" class="btn btn-success ">Inicio</a>
+					    <a href="PerfilBanco.jsp" class="btn btn-success  ">Inicio</a>
 					</div>
 					
 					

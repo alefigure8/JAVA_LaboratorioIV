@@ -63,13 +63,13 @@ session.removeAttribute("totalCalculado"); %>
             <% 
             if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0){
             %>
-            <h1 class="mt-2">PRESTAMOS CLIENTES</h1>
+            <h1 class="mt-4"><i class="fas fa-hand-holding-usd me-2"></i>PRESTAMOS CLIENTES</h1>
             <%} %>
             
             <%
             if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente)==0){
             %>
-            <h1 class="mt-2">MIS PRESTAMOS</h1>
+            <h1 class="mt-4"><i class="fas fa-hand-holding-usd me-2"></i>MIS PRESTAMOS </h1>
             <%} %>
             
           </div>
@@ -268,11 +268,17 @@ session.removeAttribute("totalCalculado"); %>
             <form action="ServletPrestamos" method="get">
 			    
 			    <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) { %>
-			        <input type="submit" class="btn btn-primary btnEnviar" name="btnSolicitarPrestamo" value="Solicitar Préstamo">
+			        <input type="submit" class="btn btn-success" name="btnSolicitarPrestamo" value="Solicitar Préstamo">
+			        
+			        <a href="ServletHomeCliente?homecliente=homecliente" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+			        
 			    <% } %>
 			</form>
-
 			
+			<%if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {%>
+					 <a href="PerfilBanco.jsp" class="btn btn-primary btnEnviar "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+				
+			<%} %>
 
            
           </div>

@@ -31,7 +31,7 @@
 		      <div class="col-lg-10 col-md-12 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2">
 	            	<!--TIUTLO PAGINA-->
-	           		<h1 class="mt-2">LISTADO CLIENTES</h1>
+	           		<h1 class="mt-2"> <i class="fas fa-users me-2"></i>LISTADO CLIENTES</h1>
 	          	</div>
 		        <div class="flex-grow-1">
 		          <!-- CONTENIDO-->
@@ -87,7 +87,8 @@
 						</tbody>
 		    		</table>
 		    		<div>					
-						<a class="btn btn-primary btnEnviar" href="ServletAltaCliente?AltaCliente=true">Agregar cliente</a>
+						<a class="btn btn-success " href="ServletAltaCliente?AltaCliente=true">Agregar cliente</a>
+						<a href="PerfilBanco.jsp" class="btn btn-primary btnEnviar "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
 					</div>	
 		    		
 				</div>

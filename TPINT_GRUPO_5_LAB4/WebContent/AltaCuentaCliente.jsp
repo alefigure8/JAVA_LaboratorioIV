@@ -35,7 +35,7 @@
 		 <!--MAIN-->
 			<div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 			     <div class="w-100 pt-2">
-			        <h1 style="margin-bottom:10%">ALTA DE CUENTA DE CLIENTE</h1>
+			        <h1 style="margin-bottom:10%"> <i class="fas fa-money-check me-2"></i>ALTA DE CUENTA DE CLIENTE</h1>
 			     </div>
 			   <div class="flex-grow-1">
 	          <!-- CONTENIDO-->     
@@ -55,7 +55,7 @@
 				      		<label style="color: red" for="dni">Ingrese un Dni valido </label>
 				   <%} %>
 					      	<div class="text-center" style="margin-top:5%">
-						    	  <a type="submit" class="btn btn-primary" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>
+						    	  <a type="submit" class="btn btn-primary btnEnviar" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" width="200px">Volver a Listado</a>
 						    </div>
 					      </form>   
 					  </div>
@@ -138,7 +138,7 @@
 								    </div>
 								
 								    <div class="mt-4">
-								        <a href="AltaCuentaCliente.jsp" class="btn btn-primary me-3">Atrás</a>
+								        <a href="AltaCuentaCliente.jsp" class="btn btn-primary btnEnviar me-3">Atrás</a>
 								     
 								    </div>
 								</div>

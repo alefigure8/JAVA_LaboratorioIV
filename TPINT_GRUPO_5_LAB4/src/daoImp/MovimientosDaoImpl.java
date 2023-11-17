@@ -89,7 +89,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 																		"inner join TiposCuenta TC " +
 																		"on TC.IdTipoCuenta=C.IdTipoCuenta "+
 																		"where TM.IdTipoMovimiento = 4 " + 
-																		"and C.IdCliente = ?";																		;
+																		"and C.IdCliente = ?";
 	
 	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = 	"SELECT MO.NumeroReferencia, CU.CBU, CLI.Nombre, CLI.Apellido " +
 																						"FROM Movimientos MO " +

@@ -160,6 +160,10 @@ session.removeAttribute("totalCalculado"); %>
 		        </tbody>
 		    </table>
 		</div>
+		
+		<a href="ServletPrestamos?Prestamos=true" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+		
+		
         </div>
       	</div>
        </div>

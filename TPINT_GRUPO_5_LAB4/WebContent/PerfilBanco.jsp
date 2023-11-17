@@ -33,12 +33,42 @@
 	        </div>
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
-			    <ul class="list-group" style="margin-top:10%">
-			        <li class="list-group-item"><a href="ServletListarClientes?obtener=true&filtro=Activos">Listado de Clientes</a></li>
-			        <li class="list-group-item"><a href="ServletAltaCliente?AltaCliente=true">Alta de Cliente</a></li>
-			        <li class="list-group-item"><a href="AltaCuentaCliente.jsp">Alta de Cuenta de Cliente</a></li>
-			        <li class="list-group-item"><a href="ServletPrestamos?Prestamos=true">Prestamos</a></li>
-			    </ul>
+	          
+	          <div class="p-4 col-md-12 text-center">
+					    <div class="row justify-content-center">
+					        <div class="col-md-4">
+					            <div class="row">
+					                <div class="col-md-12">
+					                    <a href="ServletListarClientes?obtener=true&filtro=Activos" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-users fa-2x me-2"></i>LISTADO DE CLIENTES
+					                    </a>
+					                </div>
+					                 <div class="col-md-12">
+					                    <a href="ServletPrestamos?Prestamos=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-hand-holding-usd fa-2x me-2"></i>PRESTAMOS
+					                    </a>
+					                </div>
+					               
+					            </div>
+					        </div>
+					        <div class="col-md-4">
+					            <div class="row">
+					             <div class="col-md-12">
+					                    <a href="ServletAltaCliente?AltaCliente=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                       <i class="fas fa-user-plus fa-2x me-2"></i>ALTA DE CLIENTE
+					                    </a>
+					                </div>
+					                <div class="col-md-12">
+					                    <a href="AltaCuentaCliente.jsp" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                       <i class="fas fa-money-check fa-2x me-2"></i>ALTA DE CUENTA
+					                    </a>
+					                </div>
+					               
+					            </div>
+					        </div>
+					    </div>
+					</div>
+	          
 	        </div>
 	      </div>
        </div>

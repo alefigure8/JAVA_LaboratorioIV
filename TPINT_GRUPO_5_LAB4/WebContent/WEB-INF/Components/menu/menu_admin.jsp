@@ -18,7 +18,7 @@
    	<a type="submit" href="PerfilBanco.jsp">Inicio</a>
    </li>
     <li class="list-group-item border-0 bg-transparent">
-    	<a type="submit" href="ServletListarClientes?obtener=true&filtro=Activos">Lista</a>
+    	<a type="submit" href="ServletListarClientes?obtener=true&filtro=Activos">Listado</a>
     </li>
     <li class="list-group-item border-0 bg-transparent">
      <a type="submit" href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes">Cuentas</a>

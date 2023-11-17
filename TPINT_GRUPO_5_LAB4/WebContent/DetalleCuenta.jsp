@@ -11,6 +11,9 @@
 </jsp:include>
 <!-- FIN AUTENTICACION -->
 
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 	<!-- HEAD -->
@@ -24,6 +27,7 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	<body class="d-flex flex-column">
+	
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
@@ -65,7 +69,7 @@
 		          	<!-- CONTENIDO-->
 		      	 	<li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		      	     	 
 
-			      	 <table class="table">
+			      	 <table class="table" id="table_id">
 			      	 	<tr> <th>FECHA</th> <th>CONCEPTO</th><th>DESTINO</th><th>NUMERO</th><th>TIPO DE MOV.</th>  <th>IMPORTE</th>  </tr>
 			     <%for (Movimiento m :listaMovimientos){ %>
 			     		      	 <form action="ServletDetalleMovimiento" method="get">
@@ -100,4 +104,6 @@
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
+	 
+	
 </html>

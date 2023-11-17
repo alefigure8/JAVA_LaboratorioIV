@@ -46,7 +46,7 @@ session.removeAttribute("totalCalculado"); %>
      	<!--CONTENT-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
 	        <div class="w-100 pt-2">
-	          <h1>MIS CUENTAS</h1>
+	          <h1><i class="fas fa-wallet me-2"></i>MIS CUENTAS</h1>
 	        </div>
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
@@ -66,9 +66,10 @@ session.removeAttribute("totalCalculado"); %>
 				  </li>
 				 <%} %>
 				 </form>
-				  <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>
-				  <a href="#" class="btn btn-primary btnEnviar col-12 p-4 mt-4 ">SOLICITAR NUEVA CUENTA</a>
+				  
 	        	</ul>
+	          <a href="ServletHomeCliente?homecliente=homecliente" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+	        	
 	        </div>
 	      </div>
        </div>

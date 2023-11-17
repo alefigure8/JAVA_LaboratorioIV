@@ -61,7 +61,7 @@
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
 	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
-	      	<jsp:param name="usuario" value="Ramón Ramirez" />
+	      	<jsp:param name="usuario" value="Ramï¿½n Ramirez" />
 	      </jsp:include>
       <!--CONTENIDO-->
 	    <div class="col-10 d-flex flex-column justify-content-between">
@@ -117,29 +117,28 @@
 	                  <th scope="col">Destinatario</th>
 	                  <th scope="col">Monto</th>
 	                  <th scope="col">Estado</th>
-	                  <th scope="col">Operación</th>
+	                  <th scope="col">Operaciï¿½n</th>
 	                  <th scope="col">Detalle</th>
 	                </tr>
 	              </thead>
 	              <tbody>
 	              <% for(Movimiento movimiento : listadoMovimientos) {
-	            	  Destinatario destinatario = new Destinatario();
-	            	  destinatario = (Destinatario)destinatarios.get(movimiento.getNumeroReferencia());
+	            	  Destinatario destinatario = destinatarios.get(movimiento.getNumeroReferencia());
 	              %>
 	              
 	                <tr>
 	                  <td><span class="black-75"><%= movimiento.getFechaMovimiento() %></span></td>
-	                    <td>
-					        <span class="black-75">
-					            <% if (destinatario != null) { %>
-					                <%= destinatario.getNombre() + " " + destinatario.getApellido() %>
-					                <i class="fa-solid fa-user opacity-75 ms-2"></i>
-					            <% } else { %>
-					                <!-- Manejar el caso donde destinatario es nulo -->
-					                No Disponible
-					            <% } %>
-					        </span>
-					    </td>
+					  <td>
+						<span class="black-75">
+							<% if (destinatario != null) { %>
+								<%= destinatario.getNombre() + " " + destinatario.getApellido() %>
+								<i class="fa-solid fa-user opacity-75 ms-2"></i>
+							<% } else { %>
+								<!-- Manejar el caso donde destinatario es nulo -->
+								No Disponible
+							<% } %>
+						</span>
+					</td>
 	                  <td><span class="black-75"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %></span></td>
 	                  <td><span class="badge <%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> bg-success <%} else {%> bg-danger <%}%> text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
 	                  <td><span class="black-75 me-4"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-success <%}%>  opacity-75"></i></span></td>

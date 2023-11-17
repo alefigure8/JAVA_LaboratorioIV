@@ -43,23 +43,21 @@
 	                  
 	                  
                	  %>
-    <div class="container-fluid">
+    <div class="container-fluid justify-content-center">
         <div class="row">
 
             <!-- SIDEBAR -->
             <div class="col-2">
-	  
-	      
-	      <jsp:include page= "/WEB-INF/Components/menu.jsp">
-	      	<jsp:param name="usuario" value="Ramón Ramirez" />
-	      </jsp:include>
-</div>
+			      <jsp:include page= "/WEB-INF/Components/menu.jsp">
+			      	<jsp:param name="usuario" value="Ramón Ramirez" />
+			      </jsp:include>
+				</div>
      		<!--MAIN-->
       		 
 	        <div class="col-10 d-flex flex-column justify-content-between">
 	          <div class="w-100 pt-2">
 	            <!--TIUTLO PAGINA-->
-	            <h1 class="mt-2">CUENTAS CLIENTES</h1>
+	            <h1 class="mt-2"><i class="fas fa-address-card me-2"></i>CUENTAS CLIENTES</h1>
 	          </div>
 	          <div class="flex-grow-1">
 	            <!--FILTRO-->
@@ -95,7 +93,7 @@
     
 
  
-        <a type="submit" class="btn btn-primary"  href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
+        <a type="submit" class="btn btn-primary btnEnviar"  href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
 
 </div>
 
@@ -176,12 +174,10 @@
 	              
 	            
 	            </div>
+	          <a href="PerfilBanco.jsp" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
 
 	          
 	            </div>
-	            
-	        
-	            
 	         
 	             </div>
 	            	    
