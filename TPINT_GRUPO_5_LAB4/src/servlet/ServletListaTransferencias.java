@@ -30,7 +30,7 @@ public class ServletListaTransferencias extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("listado")!=null) {
-			
+
 			MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();
 			HttpSession session = request.getSession(true);
 			Cliente cliente = (Cliente)session.getAttribute("cliente");
@@ -57,35 +57,47 @@ public class ServletListaTransferencias extends HttpServlet {
 			}
 			
 			
-			/** TRANSFERENCIA DE OPERACION :: ENTRADA Y SALIDA **/
-			if(request.getParameter("operacion")!=null) {
-				String operacion = request.getParameter("operacion");
-				
-				try {
-					//Obtener listado de movimientos por cliente
-					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
-					HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+			/** FILTRO **/
+			if(request.getParameter("btnFiltrarTransferencias")!=null) {
+					request.removeAttribute("lista");
 					
-					//Operacion filtrada					
-					List<Movimiento> listadoMovimientoFiltrado = obtenerListaPorOperacion(listadoMovimiento, operacion);
+					/* Cuentas Destino :: Tercero o Propia */
+					String cuentasDestino = request.getParameter("cuentasDestino") != null ? request.getParameter("cuentasDestino") : "";
 					
-					//Set atributos
-					request.setAttribute("lista", listadoMovimientoFiltrado);
-					request.setAttribute("destinatarios", destinatarios);
+					/* Importes :: Mayor, Menor o Igual */
+					String importes = request.getParameter("importes") != null ? request.getParameter("importes") : "";
+					String rangoImporte = request.getParameter("rangoImporte") != null ? request.getParameter("rangoImporte") : "";
 					
-					//Redirigir
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
-					rd.forward(request, response);
-				} catch (Exception e) {
-					//Error Base de Datos
-					request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
-					rd.forward(request, response);
+					/* Fecha :: Desde y Hasta*/
+					String fechaDesde = request.getParameter("prestamoDesde") != null ? request.getParameter("prestamoDesde") : "";
+					String fechaHasta = request.getParameter("prestamoHasta") != null ? request.getParameter("prestamoHasta") : "";
+										
+					try {
+						/* Listado de Movimientos por Transferencia */
+						List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
+						HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+						List<Movimiento> listadoMovimientoFiltrado = listadoMovimiento;
+						
+						if(!cuentasDestino.equals("todas")) {
+							listadoMovimientoFiltrado = obtenerListaPorDestino(listadoMovimiento, cuentasDestino, cliente, destinatarios);
+						}				
+						
+						//Set atributos
+						request.setAttribute("lista", listadoMovimientoFiltrado);
+						request.setAttribute("destinatarios", destinatarios);
+						
+						//Redirigir
+						RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+						rd.forward(request, response);
+					} catch (Exception e) {
+						//Error Base de Datos
+						request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
+						RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+						rd.forward(request, response);
+					}
 				}
 			}
-					
 		}
-	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -100,6 +112,28 @@ public class ServletListaTransferencias extends HttpServlet {
 			for(Movimiento movimiento : listado) {
 				if(movimiento.getOperacion().equals(operacion)) {
 					listadoMovimiento.add(movimiento);
+				}
+			}
+			
+			return listadoMovimiento;
+	}
+	
+	/** FILTRAR LISTADO POR DESTINO **/
+	protected List<Movimiento> obtenerListaPorDestino(List<Movimiento> listado, String destino, Cliente cliente, HashMap<Integer, Destinatario> destinatario){
+			System.out.println("FUNCION DESTINO " + destino);
+			List<Movimiento> listadoMovimiento = new ArrayList<Movimiento>();
+			
+			if(destino.equals("terceros")) {
+				for(Movimiento movimiento : listado) {
+					if(destinatario.containsKey(movimiento.getNumeroReferencia())) {
+						listadoMovimiento.add(movimiento);
+					}
+				}
+			} else {
+				for(Movimiento movimiento : listado) {
+					if(!destinatario.containsKey(movimiento.getNumeroReferencia())) {
+						listadoMovimiento.add(movimiento);
+					}
 				}
 			}
 			

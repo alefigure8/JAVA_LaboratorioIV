@@ -78,35 +78,46 @@
       			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&cuentaPropia=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center p-4 m-1">Cuenta Propia</a>
 	      	</div>
 	      <div class="flex-grow-1">
+	      
 	        <!--FILTRO-->
 	        <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
 	          <div class="col-4 text-md-start">
 	            <h4 class="opacity-75">Historial de transferencias realizadas</h4>
 	          </div>
 	          <div class="col-md-8">
-	            <form action="" class="d-flex justify-content-around align-items-center gap-2  flex-md-row flex-column">
-	              <select name="Estados" class="form-select form-select-sm w-md-50">
-	                <option value="Todos los Estados">Todos los Estados</option>
-	                <option value="Realiazada">Realiazada</option>
-	                <option value="Rechazada">Rechazada</option>
-	              </select>
-	              <select name="Operacion" class="form-select form-select-sm w-md-50" onChange="operacion(this)">
-	                <option value="Todos las operaciones">Todos las Operaciones</option>
-	                <option value="Entrada">Entrada</option>
-	                <option value="Salida">Salida</option>
-	              </select>
-	              <div class="d-flex gap-2">
+	            <form action="ServletListaTransferencias" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
+                <input type="hidden" name="listado" value="true"/>
+                  <select name="cuentasDestino" class="form-select ">
+                    <option value="todas">Todos los estados</option>
+                    <option value="terceros">Tercerceros</option>
+                    <option value="propias">Propias</option>
+                  </select>
+      
+                   <select id="importes" name="Importes" class="form-select ">
+                    <option value="todas">Todos los importes</option>
+                    <option value="Mayor a">Mayor a</option>
+                    <option value="Igual a">Igual a</option>
+                    <option value="Menor a">Menor a</option>
+                  </select>
+                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
+                  
+                  <div class="d-flex gap-2">
 	                <span >Desde: </span>
-	                <input type="date" name="transferenicaDesde" value="28/10/2023">
+	                <input type="date" name="prestamoDesde" id="desdeInput">
 	              </div>
 	              <div class="d-flex gap-2">
 	                <span>Hasta: </span>
-	                <input type="date" name="transferenicaHasta">
+	                <input type="date" name="prestamoHasta" id="hastaInput">
 	              </div>
-	              <input type="submit" class="btn btn_main" value="Buscar">
-	            </form>
+                  
+
+                  <input type="submit" class="btn btn_main" name="btnFiltrarTransferencias" value="Buscar">
+                  <input type="submit" class="btn btn_main" name="btnLimpiarFiltros" value="Limpiar filtros">
+                  
+                </form >
 	          </div>
 	        </div>
+	        <!-- FIN FILTRO -->
 	        <!--TABLA-->
 	        <div class="d-flex flex-md-row flex-column">
 	          <div class="h-100 me-4 w-100">

@@ -140,12 +140,11 @@ public class ServletAltaCliente extends HttpServlet {
 							session.setAttribute("clienteAmodificar", cliente);
 			            }
 						
-					} catch (SQLException e) {
+					} catch (CorreoException e) {
+						request.setAttribute("errorCorreo", e.getMessage()); 
+			        }catch (Exception e) {
 						e.printStackTrace();
 					}
-					catch (CorreoException e) {
-						request.setAttribute("errorCorreo", e.getMessage()); 
-			        }
 					
 				}
 				else {

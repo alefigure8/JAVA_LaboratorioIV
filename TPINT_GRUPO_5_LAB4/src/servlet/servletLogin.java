@@ -14,6 +14,7 @@ import Helper.GUI;
 import entidad.Cliente;
 import entidad.TipoAcceso;
 import entidad.Usuario;
+import excepciones.UsuarioIncorrectoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 
 @WebServlet("/servletLogin")
@@ -34,9 +35,14 @@ public class servletLogin extends HttpServlet {
 
 			try {
 				existeCliente = clienteNegocio.existeUsuario(usuario, contrasena);
+			} catch (UsuarioIncorrectoException e) {
+				/* ERROR :: Usuario no encontrado */
+				request = GUI.mensajes(request, "error", "Usuario no encontrado", e.getMessage());
+				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
+				rd.forward(request, response);
 			} catch (Exception e) {
-				//Mandamos mensaje de error
-				request = GUI.mensajes(request, "error", "Erro Base de Datos", e.getMessage());
+				/* ERROR :: General */
+				request = GUI.mensajes(request, "error", "Error", e.getMessage());
 				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 				rd.forward(request, response);
 			}
@@ -52,7 +58,7 @@ public class servletLogin extends HttpServlet {
 						HttpSession session = request.getSession(true);
 						session.setAttribute("usuario", usuarioEncontrado);
 						
-						//Guardamos cliente
+						//Guardamos cliente en Session
 						if(usuarioEncontrado.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) {
 							Cliente cliente = clienteNegocio.obtenerUno(usuarioEncontrado.getId());
 							session.setAttribute("cliente", cliente);
@@ -64,9 +70,7 @@ public class servletLogin extends HttpServlet {
 							RequestDispatcher rd = request.getRequestDispatcher("PerfilBanco.jsp");
 							rd.forward(request, response);	
 						} else if(usuarioEncontrado.getTipoAcceso() == TipoAcceso.Cliente) {
-							//Redirigimos a Home Clinet
-							
-							
+							//Redirigimos a Home Cliente
 							request.setAttribute("homecliente", "homecliente");
 							RequestDispatcher rd = request.getRequestDispatcher("/ServletHomeCliente?homecliente=homecliente");
 							rd.forward(request, response);	
@@ -78,15 +82,13 @@ public class servletLogin extends HttpServlet {
 					request = GUI.mensajes(request, "error", "Sin Privilegios", "Su usuario no tiene suficientes privilegios para acceder");
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
-					
-					
+	
 				} catch (Exception e) {
-					//Mandamos mensaje de error
-					request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
+					/* ERROR :: General */
+					request = GUI.mensajes(request, "error", "Error", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
 				}
-				
 			}
 			
 			//El usuario no existe

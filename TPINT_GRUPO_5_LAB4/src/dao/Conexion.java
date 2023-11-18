@@ -7,14 +7,21 @@ import java.sql.SQLException;
 public class Conexion {
 	public static Conexion instancia;
 	private Connection connection;
-	private String host ="jdbc:mysql://localhost:3306/bdbancos?serverTimezone=UTC";
+	
+	/* HOST */
+	private String host ="jdbc:mysql://localhost:3306/";
+	//private String host ="jdbc:mysql://localhost:3306/bdbancos?serverTimezone=UTC";
+	
+	/* USER */
 	private String user = "root";
+	
+	/* PASS*/
 	private String pass = "root";
 	//private String pass = "1234";
 	//private String pass = "Gato21226";
 
-
-	//private String dbName = "bdBancos";
+	/* DB */
+	private String dbName = "bdBancos";
 	
 	private Conexion()
 	{
@@ -23,7 +30,8 @@ public class Conexion {
 		{
 			//Class.forName("com.mysql.cj.jdbc.Driver");
 			Class.forName("com.mysql.jdbc.Driver");
-			this.connection = DriverManager.getConnection(host,user,pass);
+			//this.connection = DriverManager.getConnection(host,user,pass);
+			this.connection = DriverManager.getConnection(host+dbName,user,pass);
 			this.connection.setAutoCommit(false);
 		}
 		catch(Exception e)

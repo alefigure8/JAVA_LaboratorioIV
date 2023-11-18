@@ -8,6 +8,8 @@ import daoImp.ClienteDaoImp;
 import entidad.Cliente;
 import entidad.Usuario;
 import excepciones.CorreoException;
+import excepciones.ErrorInternoException;
+import excepciones.UsuarioIncorrectoException;
 import negocioDao.IClienteNegocioDao;
 
 public class ClienteNegocioDaoImp implements IClienteNegocioDao {
@@ -72,16 +74,18 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 
 	/***************** USUARIO EXISTE ********************/
-	public boolean existeUsuario(String usuario, String contrasena) throws SQLException {
+	public boolean existeUsuario(String usuario, String contrasena) throws ErrorInternoException, UsuarioIncorrectoException {
 
 		boolean existe = false;
 		
 		if(!usuario.trim().isEmpty() & !contrasena.trim().isEmpty()) {
-		
 			try {
 				existe = clienteDao.existeUsuario(usuario, contrasena);
+				if(!existe) {
+					throw new UsuarioIncorrectoException();
+				}
 			} catch (Exception e) {
-				throw e;
+				throw new ErrorInternoException();
 			}
 			
 		}
@@ -90,13 +94,13 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 	
 	/***************** OBTENER USUARIO POR USUARIO ********************/
-	public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException{
+	public Usuario obtenerUsuarioPorUsuario(String usuario) throws ErrorInternoException{
 		
 		if(!usuario.trim().isEmpty()) {			
 			try {
 				return clienteDao.obtenerUsuarioPorUsuario(usuario);
 			} catch (Exception e) {
-				throw e;
+				throw new ErrorInternoException();
 			}	
 		}
 		
@@ -104,7 +108,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 	
 	@Override
-	public boolean existeCorreo(String correo)throws CorreoException{
+	public boolean existeCorreo(String correo)throws CorreoException, ErrorInternoException{
 		boolean existe = false;
 
 	    if (!correo.trim().isEmpty()) {
@@ -112,31 +116,22 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	    	try {
 	    	    existe = clienteDao.existeCorreo(correo);
 	    	} catch (CorreoException e) {
-	    	    throw e;
-	    	} catch (Exception e) {
 	    	    throw new CorreoException("Error al verificar el correo");
+	    	} catch (Exception e) {
+	    		throw new ErrorInternoException();
 	    	}
-
 	    }
 
 	    return existe;
 	}
+	
 	@Override
 	public int clientesPorFecha(String anio, String mes) throws SQLException{
-		
-
-	    return clienteDao.clientesPorFecha(anio, mes);
-		
+	    return clienteDao.clientesPorFecha(anio, mes);	
 	}
+	
 	@Override
 	 public int clientesPorAnio(String anio) throws SQLException{
-		 
-		 
-
 		    return clienteDao.clientesPorAnio(anio);
-		 
-		 }
-
-	
-
+	}
 }

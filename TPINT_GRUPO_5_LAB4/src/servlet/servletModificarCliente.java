@@ -21,6 +21,8 @@ import entidad.Localidad;
 import entidad.Provincia;
 import entidad.TipoDireccion;
 import excepciones.CorreoException;
+import excepciones.ErrorInternoException;
+import excepciones.UsuarioIncorrectoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 import sun.security.util.math.intpoly.P256OrderField;
 
@@ -117,21 +119,11 @@ public class servletModificarCliente extends HttpServlet {
 					rd.forward(request, response);
 				}
 				
-			} catch (SQLException e) {
-				//Retornamos cliente modificado para que corrija datos
-				request.setAttribute("cliente", cliente); 
-				
-				//Popup de error
-				request = GUI.mensajes(request, "error", "Error Base de Datoso", e.getMessage());
-				
-				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
-				rd.forward(request, response);
-			}
-			catch(CorreoException e) {
+			} catch (Exception e) {
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
 				//Popup de error
-				request = GUI.mensajes(request, "error", "Error correo", e.getMessage());
+				request = GUI.mensajes(request, "error", "Error", e.getMessage());
 				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
@@ -144,7 +136,7 @@ public class servletModificarCliente extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ErrorInternoException, UsuarioIncorrectoException {
 		
 		String id = request.getParameter("ID");
 		//Negocio cliente
@@ -204,7 +196,7 @@ public class servletModificarCliente extends HttpServlet {
 			
 			try {
 				cambiarContrasena = clienteNegocioDaoImp.existeUsuario(cliente.getUsuario(), contrasenaVieja);
-			} catch (SQLException e) {
+			} catch (UsuarioIncorrectoException e) {
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
 				throw e;
