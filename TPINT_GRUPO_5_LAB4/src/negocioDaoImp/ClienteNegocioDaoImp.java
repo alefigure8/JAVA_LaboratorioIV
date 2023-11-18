@@ -84,9 +84,9 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 				if(!existe) {
 					throw new UsuarioIncorrectoException();
 				}
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				throw new ErrorInternoException();
-			}
+			} 
 			
 		}
 		
@@ -94,10 +94,16 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	}
 	
 	/***************** OBTENER USUARIO POR USUARIO ********************/
-	public Usuario obtenerUsuarioPorUsuario(String usuario) throws ErrorInternoException{
+	public Usuario obtenerUsuarioPorUsuario(String usuario) throws ErrorInternoException, UsuarioIncorrectoException{
 		
 		if(!usuario.trim().isEmpty()) {			
 			try {
+				Usuario usuarioEncontrado = clienteDao.obtenerUsuarioPorUsuario(usuario);
+				
+				if(usuarioEncontrado == null) {
+					throw new UsuarioIncorrectoException();
+				}
+				
 				return clienteDao.obtenerUsuarioPorUsuario(usuario);
 			} catch (Exception e) {
 				throw new ErrorInternoException();

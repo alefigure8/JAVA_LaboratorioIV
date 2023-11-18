@@ -14,6 +14,7 @@ import Helper.GUI;
 import entidad.Cliente;
 import entidad.TipoAcceso;
 import entidad.Usuario;
+import excepciones.ErrorInternoException;
 import excepciones.UsuarioIncorrectoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 
@@ -40,7 +41,7 @@ public class servletLogin extends HttpServlet {
 				request = GUI.mensajes(request, "error", "Usuario no encontrado", e.getMessage());
 				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 				rd.forward(request, response);
-			} catch (Exception e) {
+			} catch (ErrorInternoException e) {
 				/* ERROR :: General */
 				request = GUI.mensajes(request, "error", "Error", e.getMessage());
 				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
@@ -52,13 +53,13 @@ public class servletLogin extends HttpServlet {
 				try {
 					Usuario usuarioEncontrado = clienteNegocio.obtenerUsuarioPorUsuario(usuario);
 					
-					if(usuarioEncontrado.getActivo()) {
+					if(usuarioEncontrado != null && usuarioEncontrado.getActivo()) {
 						
-						//Guardamos en Session
+						/* Guardamos Session de Usuario*/
 						HttpSession session = request.getSession(true);
 						session.setAttribute("usuario", usuarioEncontrado);
 						
-						//Guardamos cliente en Session
+						/* Guardamos Session de Cliente*/
 						if(usuarioEncontrado.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) {
 							Cliente cliente = clienteNegocio.obtenerUno(usuarioEncontrado.getId());
 							session.setAttribute("cliente", cliente);
@@ -78,12 +79,17 @@ public class servletLogin extends HttpServlet {
 						
 					}
 					
-					//Redirigimos a p�gina de Login en caso de que no tenga TipoAcceso o este Inactivo
+					/* Si el usuario no tiene credenciales se los redirige al Login */
 					request = GUI.mensajes(request, "error", "Sin Privilegios", "Su usuario no tiene suficientes privilegios para acceder");
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
 	
-				} catch (Exception e) {
+				} catch (UsuarioIncorrectoException e) {
+					/* ERROR :: Usuario no Encontrado */
+					request = GUI.mensajes(request, "error", "Usuario no Encontrado", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
+					rd.forward(request, response);	
+				}catch (Exception e) {
 					/* ERROR :: General */
 					request = GUI.mensajes(request, "error", "Error", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");

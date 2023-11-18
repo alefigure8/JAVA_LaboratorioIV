@@ -17,7 +17,7 @@ public interface IClienteNegocioDao {
 	 public Cliente obtenerUno(int id);
 	 public Cliente obtenerCliente(int dni);
 	 public Cliente obtenerClientePorCBU(String cbu);
-	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws ErrorInternoException;
+	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws ErrorInternoException, UsuarioIncorrectoException;
 	 public boolean existeUsuario(String usuario, String contrasena) throws ErrorInternoException, UsuarioIncorrectoException;
 	 public boolean existeCorreo(String correo) throws CorreoException, ErrorInternoException;
 	 public int clientesPorFecha(String anio, String mes) throws SQLException;

@@ -420,11 +420,11 @@ public class ClienteDaoImp implements IClienteDao{
 				pStatement.setString(2, contrasena);
 				rSet=pStatement.executeQuery();
 				
-				rSet.next();
+				if(rSet.next()){
+					existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				}
 				
-				existe = Boolean.valueOf(rSet.getBoolean("existe"));
-				
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				throw e;
 			}
 			
@@ -457,7 +457,7 @@ public class ClienteDaoImp implements IClienteDao{
 					
 				    return new Usuario(usuario, id, contrasena, fechaAlta, activo, tipoAcceso );
 				}
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				throw e;
 			}
 			
