@@ -11,6 +11,8 @@ import dao.IMovimientosDao;
 import daoImp.MovimientosDaoImpl;
 import entidad.Movimiento;
 import entidad.TipoMovimiento;
+import excepciones.OperacionCanceladaException;
+import excepciones.SaldoInsuficienteException;
 import negocioDao.IMovimientoNegocioDao;
 import entidad.Cliente;
 import entidad.Cuenta;
@@ -117,7 +119,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	}
 	
 	//TRANSFERENCIA
-	public boolean insertarTransferencia(String cbuCliente, String cbuDestinatario, Double monto, String concepto) throws Exception {
+	public boolean insertarTransferencia(String cbuCliente, String cbuDestinatario, Double monto, String concepto) throws Exception, SaldoInsuficienteException, OperacionCanceladaException {
 		
 		//Variables
 		boolean transferenciaRealizada = false;
@@ -129,7 +131,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 		
 		if(cuenta.getSaldo() < monto) {
 			//Lanzar error de saldo insuficiente
-			throw new Exception("No tiene suficiente saldo para realizar la transferencia");
+			throw new SaldoInsuficienteException();
 		}
 		
 		//Movimiento Entrada a Destinatario
@@ -168,7 +170,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 			movimiento.setEstado(new Estado(1, "Rechazado"));
 			transferenciaRealizada = this.insertar(movimiento);
 			
-			throw new Exception("La transferencia no pudo ser realizada");
+			throw new OperacionCanceladaException();
 		}
 		
 		return transferenciaRealizada;
@@ -179,5 +181,38 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 
 		return movimientoNegocio.obtenerUnoPorId(id);
 	}
+	
+	@Override
+	public int totalTransferenciasAnio(String anio)throws SQLException{
+		 
+		 
+
+		    return movimientoNegocio.totalTransferenciasAnio(anio);
+		 
+		 }
+	@Override
+	public int totalTransferenciasAnioMes(String anio,String mes)throws SQLException{
+		 
+		 
+
+		    return movimientoNegocio.totalTransferenciasAnioMes(anio, mes);
+		 
+		 }
+	@Override
+	public double MontoTransferenciaAnio(String anio)throws SQLException{
+		 
+		 
+
+		    return movimientoNegocio.MontoTransferenciaAnio(anio);
+		 
+		 }
+	@Override
+	public double MontoTransferenciaAnioMes(String anio,String mes)throws SQLException{
+		 
+		 
+
+		    return movimientoNegocio.MontoTransferenciaAnioMes(anio, mes);
+		 
+		 }
 	
 }

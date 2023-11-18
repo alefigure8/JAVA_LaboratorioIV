@@ -4,14 +4,16 @@ public class Destinatario {
 	private String nombre;
 	private String apellido;
 	private String cbu;
+	private int numeroCuenta;
 	
 	public Destinatario () {}
 	
-	public Destinatario(String nombre, String apellido, String cbu) {
+	public Destinatario(String nombre, String apellido, String cbu, int numeroCuenta) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.cbu = cbu;
+		this.numeroCuenta = numeroCuenta;
 	}
 
 	public String getNombre() {
@@ -36,6 +38,14 @@ public class Destinatario {
 
 	public void setCbu(String cbu) {
 		this.cbu = cbu;
+	}
+	
+	public int getNumeroCuenta() {
+		return numeroCuenta;
+	}
+
+	public void setNumeroCuenta(int numeroCuenta) {
+		this.numeroCuenta = numeroCuenta;
 	}
 	
 }

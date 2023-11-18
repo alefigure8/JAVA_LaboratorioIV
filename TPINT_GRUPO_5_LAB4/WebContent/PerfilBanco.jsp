@@ -63,6 +63,11 @@
 					                       <i class="fas fa-money-check fa-2x me-2"></i>ALTA DE CUENTA
 					                    </a>
 					                </div>
+					               <div class="col-md-12">
+					                    <a href="ServletEstadisticasBancos" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                       <i class="fas fa-money-check fa-2x me-2"></i>ESTADISTICAS BANCO
+					                    </a>
+					                </div>
 					               
 					            </div>
 					        </div>

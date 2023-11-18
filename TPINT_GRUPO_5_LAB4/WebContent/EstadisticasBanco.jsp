@@ -33,140 +33,167 @@
 	                <div class="card-body">
 		                <div class="row">
 		                    <div class="col">
-		                        <label for="montoCuentasClientes">Monto Total Cuentas Clientes</label>
-		                        <input type="text" class="form-control" id="montoCuentasClientes" name="montoCuentasClientes" value="200000000" disabled>
-		                    </div>
-		                    <div class="col">
-		                        <label for="montoCuentaBanco">Monto Total Cuenta Banco</label>
-		                        <input type="text" class="form-control" id="montoCuentaBanco" name="montoCuentaBanco" value="350000000" disabled>
-		                    </div>
-		                    <div class="col">
-		                        <label for="montoCuentasCorrientes">Monto Total Cuentas Corrientes</label>
-		                        <input type="text" class="form-control" id="montoCuentasCorrientes" name="montoCuentasCorrientes" value="100000000" disabled>
-		                    </div>
-		                    <div class="col">
-		                        <label for="montoCajasAhorro">Monto Total Cajas de Ahorro</label>
-		                        <input type="text" class="form-control" id="montoCajasAhorro" name="montoCajasAhorro" value="100000000" disabled>
-		                    </div>
+    <label for="montoCuentasClientes">Monto Total Cuentas Clientes</label>
+    <input type="text" class="form-control" id="montoCuentasClientes" name="montoCuentasClientes" value="${totalCuentas}" disabled>
+</div>
+<div class="col">
+    <label for="montoCuentasCorrientes">Monto Total Cuentas Corrientes</label>
+    <input type="text" class="form-control" id="montoCuentasCorrientes" name="montoCuentasCorrientes" value="${totalCuentaCorriente}" disabled>
+</div>
+<div class="col">
+    <label for="montoCajasAhorro">Monto Total Cajas de Ahorro</label>
+    <input type="text" class="form-control" id="montoCajasAhorro" name="montoCajasAhorro" value="${totalCajaAhorro}" disabled>
+</div>
 	               		</div>
 	            	</div>
         		</div>
- 
+              <form action="ServletEstadisticasBancos" method="get">
         		<div class="card mt-3">
                     <div class="card-body">
            				 <div class="row mt-2 d-flex">
 		                    <div class="col-md-3"> <!-- Dividimos el formulario en 4 columnas para los 4 elementos -->
-		                        <div class = "row">
-		                        <div class="col">
-		                        <label for="Año">Año:</label>
-		                        <select id="Año" class="form-select">
-		                            <option value="2023">2023</option>
-		                            <option value="2022">2022</option>
-		                            <!-- Agrega más opciones según sea necesario -->
-		                        </select>
+		                       
+		                        <label for="anio">Año:</label>
+                                <input type="number" id="anio" name="anio" min="1900" max="9999" oninput="validarAnio()">
+                                <div id="mensajeError" style="color: red;"></div>
 		                        </div>
-		                        <div class="col">
+		                         <div class="col-md-3">
 		                            <label for="Mes">Mes:</label>
-			                        <select id="Mes" class="form-select">
-			                            <option value="Enero">Enero</option>
-			                            <option value="Febrero">Febrero</option>
+			                        <select id="Mes" class="form-select" name="Mes" onchange="validarMes()" disabled>
+			                        <option value="0">Todo el año</option>
+			                            <option value="1">Enero</option>
+                               <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                               <option value="10">Octubre</option>
+                               <option value="11">Noviembre</option>
+                               <option value="12">Diciembre</option>
 			                            <!-- Agrega más opciones según sea necesario -->
 			                        </select>
+			                        <div id="mensajeErrorMes" style="color: red;"></div>
 		                    	</div>
-                       		 </div>
-                   		</div>
-	                     <div class="col-md-2">
-	                        <label for="Sexo">Sexo:</label>
-	                        <select id="Sexo" class="form-select">
-	                            <option value="Masculino">Masculino</option>
-	                            <option value="Femenino">Femenino</option>
-	                            <option value="PrefiereNoDecir">Prefiere no decir</option>
-	                        </select>
-	                    </div>
-	                    <div class="col-md-2">
-	                        <label for="Rangoedad">Rango de Edad:</label>
-	                        <span id="Edadseleccionada">20</span> <!-- Elemento para mostrar el valor del rango -->
-	                        <input type="range" name="Rangoedad" min="20" max="80" class="form-range">
-	                        
-	                    </div>
-	                    <div class="col-md-2">
-	                        <label for="provinceSelect">Provincia:</label>
-	                        <select id="provinceSelect" class="form-select">
-	                            <option value="Provincia1">Buenos Aires</option>
-	                            <option value="Provincia2">Ciudad Autonoma de Buenos Aires</option>
-	                            <option value="Provincia3">Chubut</option>
-	                            <!-- Agrega más opciones según sea necesario -->
-	                        </select>
-	                    </div>
-	                    <div class="col-md-2">
-	                        <label for="SucursalSelect">Sucursal:</label>
-	                        <select id="SucursalSelect" class="form-select">
-	                            <option value="Sucursal1">Tigre</option>
-	                            <option value="Sucursal2">Ciudad Autonoma de Buenos Aires</option>
-	                            <option value="Sucursal3">San Martin</option>
-	                            <!-- Agrega más opciones según sea necesario -->
-	                        </select>
-	                    </div>
+                       		 
+                   		
+	                    
 	                    <div class="col-md-1 d-flex"> <!-- Agregamos un margen top para el botón -->
-	                        <input type="submit" class="btn btn-primary btnEnviar" style="width: 100%;" value="Filtrar">
+	                        <input type="submit" id="btnEnviar" name="btnEnviar" class="btn btn-primary btnEnviar"  value="Filtrar" disabled>
 	                    </div>
 	            	</div>
 	       		 </div>
 	   		 </div>
-
+</form>
 			<div class="card mt-3">
 			    <div class="card-body">
 		       
 		                <div class="row">
 		                    <div class="col-md-6">
 		                        <div class="form-group">
-		                            <label for="clientesNuevos">Clientes Nuevos</label>
-		                            <input type="text" class="form-control" id="clientesNuevos" name="clientesNuevos" value="132" disabled>
-		                        </div>
-		                        <div class="form-group">
-		                            <label for="bajasClientes">Bajas Clientes</label>
-		                            <input type="text" class="form-control" id="bajasClientes" name="bajasClientes" value="14" disabled>
-		                        </div>
+    <label for="clientesNuevos">Clientes Nuevos</label>
+    <input type="text" class="form-control" id="clientesNuevos" name="clientesNuevos" value="<%= request.getAttribute("clientesNuevos") %>" disabled>
+</div>
+		                        
 		                        <div class="form-group">
 		                            <label for="cuentasNuevas">Cuentas Nuevas</label>
-		                            <input type="text" class="form-control" id="cuentasNuevas" name="cuentasNuevas" value="142" disabled>
+		                            <input type="text" class="form-control" id="cuentasNuevas" name="cuentasNuevas" value="<%= request.getAttribute("cuentasNuevas") %>" disabled>
 		                        </div>
-		                        <div class="form-group">
-		                            <label for="bajasCuentas">Bajas Cuentas</label>
-		                            <input type="text" class="form-control" id="bajasCuentas" name="bajasCuentas" value="25" disabled>
-		                        </div>
+		                        
 		                        <div class="form-group">
 		                            <label for="cajasAhorro">Cajas de Ahorros nuevas</label>
-		                            <input type="text" class="form-control" id="cajasAhorro" name="cajasAhorro" value="75" disabled>
+		                            <input type="text" class="form-control" id="cajasAhorro" name="cajasAhorro" value="<%= request.getAttribute("cuentasNuevasCaja") %>" disabled>
+		                        </div>
+		                        <div class="form-group">
+		                            <label for="montoTotalTransferido">Monto Total Transferido</label>
+		                            <input type="text" class="form-control" id="montoTotalTransferido" name="montoTotalTransferido" value="<%= request.getAttribute("totalMontoTransferencias") %>" disabled>
 		                        </div>
 		                    </div>
 		                    <div class="col-md-6">
 		                        <div class="form-group">
 		                            <label for="cuentasCorrientes">Cuentas Corrientes nuevas</label>
-		                            <input type="text" class="form-control" id="cuentasCorrientes" name="cuentasCorrientes" value="80" disabled>
+		                            <input type="text" class="form-control" id="cuentasCorrientes" name="cuentasCorrientes" value="<%= request.getAttribute("cuentasNuevasCorriente") %>" disabled>
 		                        </div>
 		                        <div class="form-group">
 		                            <label for="transferencias">Cantidad de Transferencias</label>
-		                            <input type="text" class="form-control" id="transferencias" name="transferencias" value="1532" disabled >
+		                            <input type="text" class="form-control" id="transferencias" name="transferencias" value="<%= request.getAttribute("cantidadTransferencias") %>" disabled >
 		                        </div>
 		                        <div class="form-group">
 		                            <label for="prestamosOtorgados">Prestamos Otorgados</label>
-		                            <input type="text" class="form-control" id="prestamosOtorgados" name="prestamosOtorgados" value="85" disabled>
+		                            <input type="text" class="form-control" id="prestamosOtorgados" name="prestamosOtorgados" value="<%= request.getAttribute("prestamosNoCancelados") %>" disabled>
 		                        </div>
 		                        <div class="form-group">
 		                            <label for="prestamosCancelados">Prestamos Cancelados</label>
-		                            <input type="text" class="form-control" id="prestamosCancelados" name="prestamosCancelados" value="35" disabled>
+		                            <input type="text" class="form-control" id="prestamosCancelados" name="prestamosCancelados" value="<%= request.getAttribute("prestamosCancelados") %>" disabled>
 		                        </div>
-		                        <div class="form-group">
-		                            <label for="montoTotalTransferido">Monto Total Transferido</label>
-		                            <input type="text" class="form-control" id="montoTotalTransferido" name="montoTotalTransferido"value="2535805" disabled>
-		                        </div>
+		                        
 		                    </div>
 		                </div>
 		            </div>
 		        </div>
+		        
 		    </div> 
        </div>
+       <script>
+    function validarAnio() {
+    	 var botonEnviar = document.getElementById("btnEnviar");
+        var inputAnio = document.getElementById("anio");
+        var mensajeError = document.getElementById("mensajeError");
+        var selectMes = document.getElementById("Mes");
+        var anioActual = new Date().getFullYear();
+        var anioIngresado = parseInt(inputAnio.value, 10);
+
+        if (isNaN(anioIngresado) || anioIngresado < 1900 || anioIngresado > 9999) {
+            mensajeError.textContent = "Ingrese un año válido.";
+            inputAnio.style.borderColor = "red";
+            botonEnviar.disabled = true;
+            selectMes.disabled = true;
+        } else if (anioIngresado > anioActual) {
+            mensajeError.textContent = "El año no puede ser superior al actual.";
+           
+            inputAnio.style.borderColor = "red";
+            botonEnviar.disabled = true;
+            selectMes.disabled = true;
+        } else {
+        	
+            mensajeError.textContent = "";
+            inputAnio.style.borderColor = "";
+            botonEnviar.disabled = false;// Restaurar el color del borde por defecto
+            selectMes.disabled = false;
+            document.getElementById("mensajeErrorMes").innerHTML = "";
+        }
+    }
+    function validarMes() {
+        var mesSelect = document.getElementById("Mes");
+        var botonEnviar = document.getElementById("btnEnviar");
+
+        // Obtén el mes actual
+        var mesActual = new Date().getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+
+        // Parsea el valor del mes como entero
+        var mes = parseInt(mesSelect.value);
+
+        // Verifica si el mes es superior al mes actual
+        if (mes > mesActual) {
+            // Muestra el mensaje de error en rojo
+            document.getElementById("mensajeErrorMes").style.color = "red";
+            document.getElementById("mensajeErrorMes").innerHTML = "El mes no puede ser superior al actual.";
+
+            // Desactiva el botón de enviar
+            botonEnviar.disabled = true;
+        } else {
+            // Borra el mensaje de error
+            document.getElementById("mensajeErrorMes").innerHTML = "";
+
+            // Activa el botón de enviar
+            botonEnviar.disabled = false;
+        }
+    }
+
+   
+</script>
        <!-- FIN MAIN -->
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

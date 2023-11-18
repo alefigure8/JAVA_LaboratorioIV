@@ -136,5 +136,48 @@ public class CuentaNegocioDaoImp implements ICuentaNegocioDao {
 		return seActualizo;
 	}
 	
+	@Override
+	public int obtenerTotalSaldoCajaAhorro() throws SQLException {
+	   
+
+	    return cuentaDao.obtenerTotalSaldoCajaAhorro();
+	}
+	@Override
+	public int obtenerTotalSaldoCuentaCorriente() throws SQLException {
+	   
+
+	    return cuentaDao.obtenerTotalSaldoCuentaCorriente();
+	}
+	@Override
+	public int obtenerTotalSaldoCuentas() throws SQLException {
+	    
+
+	    return cuentaDao.obtenerTotalSaldoCuentas();
+	}
+	@Override
+	public int obtenerTotalCuentasPorAnio(String anio) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnio(anio);
+	}
+	@Override
+	 public int obtenerTotalCuentasPorAnioYMes(String anio, String mes) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnioYMes(anio, mes);
+	}
+	@Override
+	public int obtenerTotalCuentasPorAnioCaja(String anio) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnioCaja(anio);
+	}
+	@Override
+	 public int obtenerTotalCuentasPorAnioYMesCaja(String anio, String mes) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnioYMesCaja(anio, mes);
+	}
+	@Override
+	public int obtenerTotalCuentasPorAnioCorriente(String anio) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnioCorriente(anio);
+	}
+	@Override
+	 public int obtenerTotalCuentasPorAnioYMesCorriente(String anio, String mes) throws SQLException{
+		return cuentaDao.obtenerTotalCuentasPorAnioYMesCorriente(anio, mes);
+	}
+	
 
 }

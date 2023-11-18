@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import entidad.CuotaPrestamo;
@@ -27,4 +28,8 @@ public interface IPrestamosDao {
 	public boolean aceptar(int idPrestamo);
 	public CuotaPrestamo obtenerUltimaCuota(Prestamo prestamo);
 	public List<CuotaPrestamo> obtenertodas();
+	public int cantidadPrestamosAnioCancelados(String anio)throws SQLException;
+	public int cantidadPrestamosAnioYMesCancelados(String anio, String mes)throws SQLException;
+	public int cantidadPrestamosAnio(String anio)throws SQLException;
+	public int cantidadPrestamosAnioYMes(String anio, String mes)throws SQLException;
 }

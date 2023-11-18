@@ -1,3 +1,4 @@
+<%@page import="entidad.Operacion"%>
 <%@page import="entidad.Destinatario"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.Locale"%>
@@ -15,7 +16,7 @@
 <%
 	Movimiento transferencia = new Movimiento();
 	HashMap<Integer, Destinatario> destinatarios = new HashMap<Integer, Destinatario>();
-	Destinatario destinatario = new Destinatario();
+	Destinatario destinatario = null;
 	if(request.getAttribute("transferencia") != null && request.getAttribute("destinatario") != null){
 		transferencia = (Movimiento)request.getAttribute("transferencia");
 		destinatarios = (HashMap<Integer, Destinatario>)request.getAttribute("destinatario");
@@ -51,16 +52,39 @@
             <div class="border border-1 rounded p-2 col-11 col-md-3">
               <p class="mb-0">Estado</p>
               <p class="fs-5"><%= transferencia.getEstado().getDescripcion() %></p>
+              <p class="mb-0">Estado</p>
+              <p class="fs-5"><%= transferencia.getOperacion() %></p>
+              <% if(transferencia.getOperacion().equals(String.valueOf(Operacion.Salida))){ %>
               <p class="mb-0">Cuenta débito</p>
               <p class="fs-5"><%=transferencia.getCuenta().getTipoCuenta().getDescripcion() + ": N° " + transferencia.getCuenta().getNumeroCuenta() %></p>
+              <%} else { %>
+              <p class="mb-0">Cuenta crédito</p>
+              	<% if (destinatario != null) { %>
+					<p class="fs-5"><%= destinatario.getNumeroCuenta() %></p>
+					<% } else { %>
+					<p class="fs-5"><%=transferencia.getCuenta().getTipoCuenta().getDescripcion() + ": N° " + transferencia.getCuenta().getNumeroCuenta() %></p>
+				<% } %>
+              <%} %>
               <p class="mb-0">Fecha de Transferencia</p>
               <p class="fs-5"><%= transferencia.getFechaMovimiento() %></p>
               <p class="mb-0">Monto</p>
               <p class="fs-5"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(transferencia.getMonto()) %></p>
               <p class="mb-0">Transferencia a</p>
-              <p class="fs-5"><%= destinatario.getNombre() + " " + destinatario.getApellido() %></p>
+              <p class="fs-5">
+             	 <% if (destinatario != null) { %>
+					<%= destinatario.getNombre() + " " + destinatario.getApellido() %>
+					<% } else { %>
+					<!-- Manejar el caso donde destinatario es nulo -->
+					Cuenta Propia
+				<% } %></p>
               <p class="mb-0">CBU</p>
-              <p class="fs-5"><%= destinatario.getCbu() %></p>
+              <p class="fs-5">
+				 <% if (destinatario != null) { %>
+					<%= destinatario.getCbu() %>
+				<% } else { %>
+					<!-- Manejar el caso donde destinatario es nulo -->
+					<%=transferencia.getCuenta().getCbu() %>
+				<% } %></p>
               <p class="mb-0">Concepto</p>
               <p class="fs-5"><%= transferencia.getConcepto() %></p>
             </div>

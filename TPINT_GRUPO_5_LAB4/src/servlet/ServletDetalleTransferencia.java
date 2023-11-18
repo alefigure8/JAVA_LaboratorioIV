@@ -36,13 +36,15 @@ public class ServletDetalleTransferencia extends HttpServlet {
 		
 		if(request.getParameter("numeroReferencia") != null){
 			int numeroReferencia = Integer.parseInt(request.getParameter("numeroReferencia"));
+			int idMovimiento = Integer.parseInt(request.getParameter("id"));
+			
 			try {
 				List<Movimiento> movimientoTransferencia = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
 				HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
 				Movimiento transferencia = new Movimiento();
 				
 				for(Movimiento movimiento : movimientoTransferencia) {
-					if(movimiento.getNumeroReferencia() == numeroReferencia) {
+					if(movimiento.getId() == idMovimiento) {
 						transferencia = movimiento;
 					}
 				}

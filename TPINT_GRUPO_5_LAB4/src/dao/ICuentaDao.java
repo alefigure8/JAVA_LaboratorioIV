@@ -22,4 +22,13 @@ public interface ICuentaDao {
 	 public int obtenerUltimaInsertada(int idCliente)throws SQLException;
 	 public String obtenerDescripcion(int id)throws SQLException;
 	 public Cuenta obtenerPorMovimientoYreferencia(int tipoMovimiento, int numeroReferencia);
+	 public int obtenerTotalSaldoCajaAhorro() throws SQLException;;
+	 public int obtenerTotalSaldoCuentaCorriente() throws SQLException;;
+	 public int obtenerTotalSaldoCuentas() throws SQLException;
+	 public int obtenerTotalCuentasPorAnio(String anio) throws SQLException;
+	 public int obtenerTotalCuentasPorAnioYMes(String anio, String mes) throws SQLException;
+	 public int obtenerTotalCuentasPorAnioCaja(String anio) throws SQLException;
+	 public int obtenerTotalCuentasPorAnioYMesCaja(String anio, String mes) throws SQLException;
+	 public int obtenerTotalCuentasPorAnioCorriente(String anio) throws SQLException;
+	 public int obtenerTotalCuentasPorAnioYMesCorriente(String anio, String mes) throws SQLException;
 }

@@ -1,5 +1,6 @@
 package negocioDaoImp;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,4 +154,22 @@ public class PrestamosNegocioDaoImpl implements IPrestamosNegocioDao{
 		return tipoTasaAenviar;
 	}*/
 
+	
+	@Override
+	public int cantidadPrestamosAnioCancelados(String anio)throws SQLException{
+		return prestamosImpl.cantidadPrestamosAnioCancelados(anio);
+	}
+	@Override
+	public int cantidadPrestamosAnioYMesCancelados(String anio, String mes)throws SQLException{
+		return prestamosImpl.cantidadPrestamosAnioYMesCancelados(anio, mes);
+	}
+	@Override
+	public int cantidadPrestamosAnio(String anio)throws SQLException{
+		return prestamosImpl.cantidadPrestamosAnio(anio);
+	}
+	@Override
+	public int cantidadPrestamosAnioYMes(String anio, String mes)throws SQLException{
+		return prestamosImpl.cantidadPrestamosAnioYMes(anio, mes);
+	}
+	
 }

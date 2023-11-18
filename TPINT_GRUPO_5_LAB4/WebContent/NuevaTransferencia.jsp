@@ -40,6 +40,7 @@
 	            <h1 class="mt-2">NUEVA TRANSFERENCIA</h1>
 	          </div>
 	          <div class="flex-grow-1">
+	          
 	            <!--FORMULARIO BUSCAR CLIENTE-->
 	            <%
         			List<Cuenta> cuentas = new ArrayList<Cuenta>();
@@ -51,33 +52,32 @@
 	            <%
 	            	if(request.getParameter("cargacbu")!=null){
 	            	
+	            		/* OTRA CUENTA*/
 	            		if(request.getParameter("otraCuenta") != null){
-	            	
 	            	%>
-	            	
-	            	
-			            <form action="" class="col-6 mt-4">
+			            <form action="ServletNuevaTransferencia" class="col-6 mt-4">
 			              <div class="mb-3">
 			                <label class="form-label" for="cbu">A otro cliente. ¿Cuál es el CBU?</label>
 			                <div class="d-flex align-content-center gap-4">
-			                  <input type="text" name="cbu" placeholder="11 números" class="form-control w-50" id="cbu" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 11); validateInput(this, 9);">
+			                  <input type="text" name="cbuDestinatario" placeholder="11 números" class="form-control w-50" id="cbu" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 11); validateInput(this, 9);">
 			                  <span class="form-text text-danger d-none">Debe tener 11 números.</span>
 			                </div>
 			              </div>
 			              <div class="w-50 d-flex justify-content-center">
-			                <input type="submit" class="btn btn_main" value="Siguiente">
+			                <input type="submit" name="btnBuscar" class="btn btn_main bg-warning text-black w-100" value="Siguiente">
 			              </div>
 			            </form>
 			            
 			            <%} 
 			            
-			            	if(request.getParameter("cuentaPropia") != null){%>
+	            		/* CUENTA PROPIA */
+		            	if(request.getParameter("cuentaPropia") != null){%>
 			            
-			            <form action="" class="col-6 mt-4">
+			            <form action="ServletNuevaTransferencia" class="col-6 mt-4">
 			               <div class="mb-3">
-		                	<label class="form-label" for="concepto">Elija cuenta propia a la cual transferir.</label>
+		                	<label class="form-label" for="concepto">Elija una cuenta propia a la cual transferir.</label>
 			                <div class="d-flex align-content-center gap-4">
-	                			<select class="form-select w-50" name="cbu">
+	                			<select class="form-select w-50" name="cbuDestinatario">
 			                	<%
 			                		for(Cuenta cuenta : cuentas){%>
 					                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getCbu() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
@@ -87,31 +87,34 @@
 			                </div>
 			              </div>
 			              <div class="w-50 d-flex justify-content-center">
-			                <input type="submit" class="btn btn_main" value="Siguiente">
+			                <input type="submit" class="btn btn_main bg-warning text-black w-100" name="btnBuscar" value="Siguiente">
 			              </div>
 			           </form>    
-			           <%}%>
-			               
-               	<%}
-            	
-            	%>
+			
+			           <%}%>  
+			           <div class="mt-4">
+				           <a href="ServletListaTransferencias?listado=true&todos=true" class="p-2 rounded bg-main text-white text-decoration-none col-4 col-md-1 mb-4 mt-4"><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+			           </div>   
+               	<%}%>
+               	
+            <!--FIN FORMULARIO BUSCAR CLIENTE-->
 
             <!--FORMULARIO CARGA DE MONTO-->
             <%
+            	Cliente destinatario = new Cliente();
+            
             	if(request.getParameter("cargamonto")!=null){
-            	
-            		Cliente destinatario = new Cliente();
-            		
-            		if(request.getAttribute("destinatario") != null){
-            			destinatario = (Cliente)request.getAttribute("destinatario");
+
+            		if(session.getAttribute("destinatario") != null){
+            			destinatario = (Cliente)session.getAttribute("destinatario");
             		} 	
             	%>
             	
             		<form action="ServletNuevaTransferencia" class="col-6 mt-5">
-            			<input type="hidden" name="cbuDestintario" value="<%=request.getParameter("cbu")%>"/>
+            			<input type="hidden" name="cbuDestinatario" value="<%=request.getParameter("cbuDestinatario")%>"/>
 		              <div class="text-center w-50 mb-4 d-flex flex-column justify-content-center">
 		                <span class="fs-5 text-uppercase mb-3"><%=destinatario.getNombre() + " " + destinatario.getApellido() %></span>
-		                <span class="fs-5 text-uppercase mb-3">CBU: <%=request.getParameter("cbu") %></span>
+		                <span class="fs-5 text-uppercase mb-3">CBU: <%=request.getParameter("cbuDestinatario") %></span>
 		                <span class="fs-5 text-uppercase mb-3">BANCO CINCO</span>
 		              </div>
 		              <div class="mb-3">
@@ -121,7 +124,7 @@
 		                  <input type="text" name="monto" placeholder="Punto para los decimales" class="form-control w-50" id="monto" onkeypress="return /[0-9]/i.test(event.key)" required oninput="validateInputMonto(this);">
 		                </div>
 		              </div>
-		              <!-- VAMAX CARACTERES -->
+		              <!-- MAX CARACTERES -->
 		              <div class="mb-3">
 		                <label class="form-label" for="concepto">Concepto</label>
 		                <div class="d-flex align-content-center gap-4">
@@ -141,13 +144,14 @@
 		                </div>
 		              </div>
 		              <div class="w-50 d-flex justify-content-center">
-		                <input type="submit" class="btn btn_main" value="Aceptar">
+		                <input type="submit" name="btnTransferir" class="btn btn_main" value="Aceptar">
+		                <a href="ServletNuevaTransferencia?btnCancelar=true" name="btnCancelar" class="btn btn_main bg-danger d-flex ms-4" onclick="return confirm('¿Desea cancelar la transferencia?')">Cancelar</a>
 		              </div>
 		            </form>
             
-            	<%}
-            	
-            %>
+            	<%}%>
+            
+            <!--FIN FORMULARIO CARGA DE MONTO-->
             
           </div>
         </div>

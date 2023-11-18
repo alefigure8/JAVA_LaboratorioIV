@@ -52,6 +52,7 @@
 					            <label for="monto">Monto:</label>
 					            <!-- INGRESO DE MONTO  (NUMERO POSITIVO) -->
 					            <input type="text" class="form-control" id="monto" name="monto" value="<%= session.getAttribute("montoSeleccionado") != null ?  session.getAttribute("montoSeleccionado") : ""%>"required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+					       		<label style="color:orange;">* El monto minimo es de $10.000</label>
 					        </div>
 					        <div class="form-group mt-2">
 					            <label for="cuotas">Cantidad de Cuotas:</label>
@@ -102,7 +103,7 @@
 					        </div>
 					        
 					            <input type="submit" class="btn btn-primary btnEnviar mt-4" name="btnCalcularIntereses" value="Calcular Intereses">
-   							    <input type="submit" class="btn btn-success mt-4" name="btnConfirmarSolicitarPrestamo" value="Solicitar Prestamo" onsubmit="return confirm('¿Está seguro que desea solicitar el prestamo?')">
+   							    <input type="submit" class="btn btn-success mt-4" name="btnConfirmarSolicitarPrestamo" value="Solicitar Prestamo" onclick="return confirm('¿Está seguro que desea solicitar el prestamo?')">
 					    </div>
 					</div>
 					
@@ -121,12 +122,18 @@
     
 		    function validateInput(input, minLength) {
 		    	 const trimmedValue = input.value.trim();
-		    	    if (trimmedValue.length < minLength || !trimmedValue) {
-		    	        input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
-		    	    } else {
+		    	    if (trimmedValue<10000) {
+		    	        input.setCustomValidity(`Monto minimo $10.000`);
+		    	        input.classList.add("is-invalid");
+		    	    } 
+		    	    else {
 		    	        input.setCustomValidity('');
+		    	        input.classList.remove("is-invalid");
+		    	        input.classList.add("is-valid");
 		    	    }
 		    }
+		    
+		    
 
     </script>
 	 

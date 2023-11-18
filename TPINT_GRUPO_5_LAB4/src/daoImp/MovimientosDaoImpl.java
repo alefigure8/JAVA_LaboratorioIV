@@ -91,7 +91,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 																		"where TM.IdTipoMovimiento = 4 " + 
 																		"and C.IdCliente = ?";
 	
-	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = 	"SELECT MO.NumeroReferencia, CU.CBU, CLI.Nombre, CLI.Apellido " +
+	private static final String obtenerDestinatariosTransferenciasPorNumeroCliente = 	"SELECT MO.NumeroReferencia, CU.CBU, CLI.Nombre, CLI.Apellido, CU.NumeroCuenta " +
 																						"FROM Movimientos MO " +
 																						"INNER JOIN Cuentas CU " +
 																						"ON MO.CBU = CU.CBU " +
@@ -118,6 +118,35 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 	private static final String delete = "DELETE FROM movimientos WHERE ID = ?";
 	
 	private static final String obtenerUltimoIdMovimiento="select MAX(ID) as MaxId from movimientos";
+		
+	
+	private static final String TotalTransferenciasAnio = "SELECT COUNT(DISTINCT NumeroReferencia) AS TotalTransferencias\r\n" + 
+			"FROM Movimientos\r\n" + 
+			"WHERE IdTipoMovimiento = (SELECT IdTipoMovimiento FROM TiposMovimiento WHERE descripcion = 'Transferencia')\r\n" + 
+			"    AND YEAR(FechaMovimiento) = ?" ;
+			
+	private static final String TotalTransferenciasAnioMes = "SELECT COUNT(DISTINCT NumeroReferencia) AS TotalTransferencias " + 
+			"FROM Movimientos " + 
+			"WHERE IdTipoMovimiento = (SELECT IdTipoMovimiento FROM TiposMovimiento WHERE descripcion = 'Transferencia') " + 
+			"AND YEAR(FechaMovimiento) = ? " + 
+			"AND MONTH(FechaMovimiento) = ?";
+	
+	private static final String montoTransferenciasAnio = "SELECT COALESCE(SUM(Monto), 0) AS TotalMontoTransferencias\r\n" + 
+			"FROM (\r\n" + 
+			"    SELECT DISTINCT NumeroReferencia, Monto\r\n" + 
+			"    FROM Movimientos\r\n" + 
+			"    WHERE IdTipoMovimiento = (SELECT IdTipoMovimiento FROM TiposMovimiento WHERE descripcion = 'Transferencia')\r\n" + 
+			"        AND YEAR(FechaMovimiento) = ?\r\n" + 
+			") AS TransferenciasUnicas;";
+	
+	private static final String montoTransferenciasAnioMes = "SELECT COALESCE(SUM(Monto), 0) AS TotalMontoTransferencias\r\n" + 
+			"FROM (\r\n" + 
+			"    SELECT DISTINCT NumeroReferencia, Monto\r\n" + 
+			"    FROM Movimientos\r\n" + 
+			"    WHERE IdTipoMovimiento = (SELECT IdTipoMovimiento FROM TiposMovimiento WHERE descripcion = 'Transferencia')\r\n" + 
+			"        AND YEAR(FechaMovimiento) = ?\r\n" + 
+			"        AND MONTH(FechaMovimiento) = ?\r\n" + 
+			") AS TransferenciasUnicas;";
 	
 	//OBTENER TODOS
 	public List<Movimiento> obtenerTodos() throws SQLException {
@@ -252,7 +281,9 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 				String nombre = rSet.getString("Nombre");
 				String apellido = rSet.getString("Apellido");
 				String cbu = rSet.getString("CBU");
-				Destinatario destinatario = new Destinatario(nombre, apellido, cbu);
+				int numeroCuenta = rSet.getInt("NumeroCuenta");
+				
+				Destinatario destinatario = new Destinatario(nombre, apellido, cbu, numeroCuenta);
 				destinatarios.put(numeroReferencia, destinatario);
 			}
 			
@@ -498,6 +529,118 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		return ultimoId;
 	}
 
+	@Override
+	public int totalTransferenciasAnio(String anio)throws SQLException{
+		 
+		 int totalTransferencias = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(TotalTransferenciasAnio);
+		        pStatement.setString(1, anio);
+		       
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalTransferencias = rSet.getInt("TotalTransferencias");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalTransferencias;
+		 
+		 }
+	@Override
+	public int totalTransferenciasAnioMes(String anio,String mes)throws SQLException{
+		 
+		 int totalTransferencias = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(TotalTransferenciasAnioMes);
+		        pStatement.setString(1, anio);
+		        pStatement.setString(2, mes);
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalTransferencias = rSet.getInt("TotalTransferencias");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalTransferencias;
+		 
+		 }
+	@Override
+	public double MontoTransferenciaAnio(String anio)throws SQLException{
+		 
+		 double montoTransferencias = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(montoTransferenciasAnio);
+		        pStatement.setString(1, anio);
+		       
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            montoTransferencias = rSet.getDouble("TotalMontoTransferencias");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return montoTransferencias;
+		 
+		 }
+	@Override
+	public double MontoTransferenciaAnioMes(String anio,String mes)throws SQLException{
+		 
+		 double montoTransferencias = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(montoTransferenciasAnioMes);
+		        pStatement.setString(1, anio);
+		        pStatement.setString(2, mes);
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            montoTransferencias = rSet.getDouble("TotalMontoTransferencias");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return montoTransferencias;
+		 
+		 }
 
 
 }

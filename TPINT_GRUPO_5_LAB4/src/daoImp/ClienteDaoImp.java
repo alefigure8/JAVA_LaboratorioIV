@@ -50,12 +50,14 @@ public class ClienteDaoImp implements IClienteDao{
 			"where C.dni=?";
 
 	private static final String obtenerClientePorCBU="select * from Clientes C inner join Usuarios U on U.Id = C.Id \r\n" + 
-			"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
-			"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
-			"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
-			"where C.CBU=?";
+														"inner join Direcciones D on D.IdDireccion = C.IDDomicilio \r\n" + 
+														"inner join Localidades L on L.IdLocalidad = D.IdLocalidad \r\n" + 
+														"inner join Provincias P on P.IdProvincia = L.IDProvincia \r\n" +
+														"inner join Cuentas CU on CU.IdCliente = C.Id \r\n" +
+														"where CU.CBU=?";
 	
-	
+	private static final String clientePorFecha = "SELECT COUNT(Id) AS TotalClientesNuevo FROM Usuarios WHERE TipoAcceso = 'Cliente' AND YEAR(Fechaalta) = ? AND MONTH(Fechaalta) = ?";
+	private static final String clientePorAnio = "SELECT COUNT(Id) AS TotalClientesNuevo FROM Usuarios WHERE TipoAcceso = 'Cliente' AND YEAR(Fechaalta) = ?";
 	/***************** INSERTAR ********************/
 	@Override
 	public boolean insertar(Cliente cliente) {
@@ -385,7 +387,7 @@ public class ClienteDaoImp implements IClienteDao{
 			Conexion conexion= Conexion.getConexion();
 			
 			try {
-				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorDni);
+				pStatement=conexion.getSQLConexion().prepareStatement(obtenerClientePorCBU);
 				pStatement.setString(1, cbu);
 				rSet=pStatement.executeQuery();
 				
@@ -493,6 +495,65 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			return existe;
 		}
+		@Override
+		public int clientesPorFecha(String anio, String mes) throws SQLException{
+			int totalClientesNuevos = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(clientePorFecha);
+		        pStatement.setString(1, anio);
+		        pStatement.setString(2, mes);
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalClientesNuevos = rSet.getInt("TotalClientesNuevo");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalClientesNuevos;
+			
+		}
+		@Override
+		 public int clientesPorAnio(String anio) throws SQLException{
+			 
+			 int totalClientesNuevos = 0;
+			    
+			    PreparedStatement pStatement;
+			    ResultSet rSet;
+
+			    Conexion conexion = Conexion.getConexion();
+
+			    try {
+			        pStatement = conexion.getSQLConexion().prepareStatement(clientePorAnio);
+			        pStatement.setString(1, anio);
+			       
+
+			        rSet = pStatement.executeQuery();
+
+			        if (rSet.next()) {
+			            totalClientesNuevos = rSet.getInt("TotalClientesNuevo");
+			        }
+
+			    } catch (Exception e) {
+			        throw e;
+			    }
+
+			    return totalClientesNuevos;
+			 
+			 
+			 
+			 
+			 
+		 }
 
 
 }

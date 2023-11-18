@@ -46,6 +46,19 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 			"join TipoTasa TT on TT.IdTipoInteres = P.IdTasaxCuotas \r\n" + 
 			"where P.ID = ? and C.NumeroCuota = TT.CantCuotas"; 	
 	
+	public static final String prestamosCanceladosAnio= "SELECT COUNT(*) AS CantidadCancelados\r\n" + 
+			"FROM Prestamos\r\n" + 
+			"WHERE Cancelado = 1 AND YEAR(FechaPrestamo) = ?";
+    public static final String prestamosCanceladosAnioYMes = "SELECT COUNT(*) AS CantidadCancelados\r\n" + 
+    		"FROM Prestamos\r\n" + 
+    		"WHERE Cancelado = 1 AND YEAR(FechaPrestamo) = ?  AND MONTH(FechaPrestamo)= ?";
+    public static final String prestamosAnio=    "SELECT COUNT(*) AS CantidadCancelados\r\n" + 
+    		"FROM Prestamos\r\n" + 
+    		"WHERE Cancelado = 0 AND YEAR(FechaPrestamo) = ?";
+    public static final String prestamosAnioYMes=  "SELECT COUNT(*) AS CantidadCancelados\r\n" + 
+    		"FROM Prestamos\r\n" + 
+    		"WHERE Cancelado = 0 AND YEAR(FechaPrestamo) = ? AND MONTH(FechaPrestamo)= ?";
+	
 	public List<Prestamo> obtenerTodos() { 
 		
 		 PreparedStatement statement;
@@ -105,6 +118,7 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	             	prestamoaux.setMontoxMes(resultSet.getDouble("MontoXmes"));
 	             	prestamoaux.setEstado(obtenerestado(resultSet.getInt("IdEstados"),conexion));
 	             	prestamoaux.setCancelado(resultSet.getBoolean("Cancelado"));	
+	             	prestamoaux.setNumeroCuenta(resultSet.getInt("Numerocuenta"));
 	               	prestamoaux.setFechaPrestamo(resultSet.getDate("FechaPrestamo").toLocalDate());
 	             	prestamoaux.setIdCliente(idcliente);   	 
 	             	listado.add(prestamoaux);
@@ -682,6 +696,124 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	      }
 	      
 	      return cuotaaux;			
+	}
+	@Override
+	public int cantidadPrestamosAnioYMesCancelados(String anio, String mes)throws SQLException{
+		int totalPrestamosCancelados = 0;
+	    
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(prestamosCanceladosAnioYMes);
+	        pStatement.setString(1, anio);
+	        pStatement.setString(2, mes);
+
+	        rSet = pStatement.executeQuery();
+
+	        if (rSet.next()) {
+	            totalPrestamosCancelados = rSet.getInt("CantidadCancelados");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalPrestamosCancelados;
+		
+	}
+	@Override
+ public int cantidadPrestamosAnioCancelados(String anio)throws SQLException{
+		 
+		 int totalPrestamosCancelados = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(prestamosCanceladosAnio);
+		        pStatement.setString(1, anio);
+		       
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalPrestamosCancelados = rSet.getInt("CantidadCancelados");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalPrestamosCancelados;
+		 
+		 
+		 
+		 
+		 
+	 }
+	@Override
+ public int cantidadPrestamosAnio(String anio)throws SQLException{
+	 
+	 int totalPrestamosCancelados = 0;
+	    
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(prestamosAnio);
+	        pStatement.setString(1, anio);
+	       
+
+	        rSet = pStatement.executeQuery();
+
+	        if (rSet.next()) {
+	            totalPrestamosCancelados = rSet.getInt("CantidadCancelados");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalPrestamosCancelados;
+	 
+	 
+	 
+	 
+	 
+ }
+	@Override
+ public int cantidadPrestamosAnioYMes(String anio, String mes)throws SQLException{
+		int totalPrestamosCancelados = 0;
+	    
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(prestamosAnioYMes);
+	        pStatement.setString(1, anio);
+	        pStatement.setString(2, mes);
+
+	        rSet = pStatement.executeQuery();
+
+	        if (rSet.next()) {
+	            totalPrestamosCancelados = rSet.getInt("CantidadCancelados");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalPrestamosCancelados;
+		
 	}
 	
 	

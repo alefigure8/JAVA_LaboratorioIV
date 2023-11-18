@@ -57,6 +57,7 @@ session.removeAttribute("totalCalculado"); %>
 
 
       <!--CONTENIDO-->
+      
         <div class="col-10 d-flex flex-column justify-content-between">
           <div class="w-100 pt-2">
             <!--TIUTLO PAGINA-->
@@ -76,7 +77,7 @@ session.removeAttribute("totalCalculado"); %>
           <div class="flex-grow-1">
             <!--FILTRO-->
             <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
-              <div class="col-md-7 text-md-start text-center">
+              <div class="col-4 text-md-start ">
               <% if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0){ %>
                 <h4 class="opacity-75">Historial de los prestamos de clientes</h4>
               <%} %>
@@ -84,44 +85,50 @@ session.removeAttribute("totalCalculado"); %>
                 <h4 class="opacity-75">Historial de mis prestamos </h4>
               <%} %>
               </div>
-              <div class="col-md-5">
-                <form action="ServletPrestamos" method="get" class="d-flex justify-content-around align-items-center gap-2  flex-md-row flex-column">
+              
+              <div class="col-md-8">
+                <form action="ServletPrestamos" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
                 
-                  <!--  <div class="d-flex gap-2">
-                    <input type="text" name="cliente" placeholder="Buscar">
-                  </div>
-                  <select name="Estados" class="form-select form-select-sm w-md-50">
-                    <option value="Todos los Estados">Todos los Campos</option>
-                    <option value="Cuenta">Cuenta</option>
-                    <option value="CBU">CBU</option>
-                    <option value="DNI">DNI</option>
-                    <option value="CUIL">CUIL</option>
-                    <option value="Apellido">Apellido</option>
-                  </select>
-                  -->
-                  
-                  
-                  <select name="Estados" class="form-select form-select-sm w-md-50">
-                    <option value="Todos los Estados">Todos los Estados</option>
+                  <select name="Estados" class="form-select ">
+                    <option value="Todos los Estados">Todos los estados</option>
                     <option value="Aprobado">Aprobados</option>
                     <option value="Rechazado">Rechazados</option>
                     <option value="Pendiente">Pendientes</option>
-                    
-	                    <%if(session.getAttribute("prestamoSeleccionado")!=null){
-	                		String opcion=session.getAttribute("prestamoSeleccionado").toString();
-	                		%>
-	                  
-	                   <script>
-				           
-				            document.querySelector('select[name="Estados"]').value = '<%= opcion %>';
-				        </script>
-	                  
-	                  <% }%>
-                    
                   </select>
+                  
+                  <!--  <select name="Cancelado" class="form-select ">
+				    <option value="Todos">Cancelacion</option>
+				    <option value="Saldado">Saldado</option>
+				    <option value="NoSaldado">No Saldado</option>
+				</select>-->
+                  
+                   <select id="importes" name="Importes" class="form-select ">
+                    <option value="Todos los importes">Todos los importes</option>
+                    <option value="Mayor a">Mayor a</option>
+                    <option value="Igual a">Igual a</option>
+                    <option value="Menor a">Menor a</option>
+                  </select>
+                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
+                  
+                  
+                  <div class="d-flex gap-2">
+	                <span >Desde: </span>
+	                <input type="date" name="prestamoDesde" id="desdeInput">
+	              </div>
+	              <div class="d-flex gap-2">
+	                <span>Hasta: </span>
+	                <input type="date" name="prestamoHasta" id="hastaInput">
+	              </div>
+                  
+                  
+                  
                   <input type="submit" class="btn btn_main" name="btnFiltrarPrestamos" value="Buscar">
+                  <input type="submit" class="btn btn_main" name="btnLimpiarFiltros" value="Limpiar filtros">
+                  
                   <!--   <input type="submit" class="btn btn_main" name="btnLimpiar" value="Limpiar filtros"> -->
-                </form>
+                </form >
+                
+              
               </div>
             </div>
 
@@ -325,4 +332,30 @@ session.removeAttribute("totalCalculado"); %>
 	 
 	
 	</style>
+	
+	<script>
+    function validarFechas() {
+        var desde = document.getElementById('desdeInput').value;
+        var hasta = document.getElementById('hastaInput').value;
+
+        if ((desde && !hasta) || (!desde && hasta)) {
+            alert('Por favor, complete ambas fechas o déjelas vacías.');
+            return false;
+        }
+
+        if (desde && hasta) {
+            var fechaDesde = new Date(desde);
+            var fechaHasta = new Date(hasta);
+
+            if (fechaHasta < fechaDesde) {
+                alert('La fecha "Hasta" no puede ser anterior a la fecha "Desde".');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    
+</script>
 </html>

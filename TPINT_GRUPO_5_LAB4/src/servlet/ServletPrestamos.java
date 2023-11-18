@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +57,14 @@ public class ServletPrestamos extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		//Obtenemos prestamos desde admin
-		if(request.getParameter("Prestamos")!=null && request.getParameter("btnFiltrarPrestamos")==null ) {
+		if(request.getParameter("Prestamos")!=null && (request.getParameter("btnFiltrarPrestamos")==null || request.getParameter("btnLimpiarFiltros")!=null) ) {
 			cargarPrestamos(request);
 			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
 			rDispatcher.forward(request, response);
 		}
 		
 		//Obtenemos prestamos desde cliente
-		if(request.getParameter("PrestamosCliente")!=null && request.getParameter("btnFiltrarPrestamos")==null) {
+		if(request.getParameter("PrestamosCliente")!=null && request.getParameter("btnFiltrarPrestamos")==null || request.getParameter("btnLimpiarFiltros")!=null) {
 			cargarPrestamos(request);
 			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
 			rDispatcher.forward(request, response);
@@ -73,12 +74,41 @@ public class ServletPrestamos extends HttpServlet {
 		
 		//Filtros
 		 if(request.getParameter("btnFiltrarPrestamos")!=null && request.getParameter("btnSolicitarPrestamo")==null) {
+			//ESTADOS
+			String estadoSeleccionado=null;	
+			if(request.getParameter("Estados")!=null) {
+				estadoSeleccionado=request.getParameter("Estados");
+			}
+			/*String canceladoSeleccionado=null;
+			if(request.getParameter("Cancelado")!=null) {
+				canceladoSeleccionado=request.getParameter("Cancelado");
+			}*/
 			
-			String estadoSeleccionado=request.getParameter("Estados");
-			System.out.println("Estado "+estadoSeleccionado);
+			//IMPORTES
+			String importeSeleccionado=null;
+			if(request.getParameter("Importes")!=null) {
+				importeSeleccionado=request.getParameter("Importes");
+			}
+			
+			//MONTO IMPORTE
+			String montoImporte=null;
+			if(request.getParameter("rangoImporte")!=null && !request.getParameter("rangoImporte").isEmpty()) {
+				montoImporte=request.getParameter("rangoImporte");
+			}
+			
+			//FECHAS
+			String fechaDesde=null;
+			String fechaHasta=null;
+			if(request.getParameter("prestamoDesde")!=null && !request.getParameter("prestamoDesde").isEmpty()) {
+				fechaDesde=request.getParameter("prestamoDesde");
+			}
+			if(request.getParameter("prestamoHasta")!=null && !request.getParameter("prestamoDesde").isEmpty()) {
+				fechaHasta=request.getParameter("prestamoHasta");
+			}
+			
 			
 			//Listas limpias
-			List<Prestamo>prestamos= (List<Prestamo>)session.getAttribute("listaPrestamos");
+			List<Prestamo>prestamos= (List<Prestamo>)session.getAttribute("prestamos");
 			//Listas para filtrar
 			List<Prestamo>prestamosFiltrados= new ArrayList<>();
 			
@@ -87,61 +117,94 @@ public class ServletPrestamos extends HttpServlet {
 			}
 			
 			//*****SI ES ADMIN FILTRA LISTADO DE PRESTAMOS Y CLIENTES*****....
-			
+			//SI ES CLIENTE FILTRAMOS SOLO PRESTAMOS DE ESE CLIENTE...
+			List<Cliente> clientes=new ArrayList<Cliente>();
+			List<Cliente>clientesFiltrados=new ArrayList<Cliente>();
+			Cliente cliente=new Cliente();
 			if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {
 				//Listas limpias
-				List<Cliente> clientes = (List<Cliente>)session.getAttribute("listaClientes");
-				
+				//List<Cliente> clientes = (List<Cliente>)session.getAttribute("listaClientes");
+				clientes = (List<Cliente>)session.getAttribute("clientes");
 				//Listas para filtrar
-				List<Cliente> clientesFiltrados = new ArrayList<>();
+				clientesFiltrados = new ArrayList<>();
+			}
 				
-				if (estadoSeleccionado.equals("Todos los Estados")) {
-					session.setAttribute("prestamos", session.getAttribute("listaPrestamos"));
-					session.setAttribute("clientes", session.getAttribute("listaClientes"));
-				}
-				else {
-					for(int x=0;x<prestamos.size();x++) {
-						
-						if(prestamos.get(x).getEstado().getDescripcion().equals(estadoSeleccionado)){
-							prestamosFiltrados.add(prestamos.get(x));
-							clientesFiltrados.add(clientes.get(x));
+				for(int x=0;x<prestamos.size();x++) {
+					
+					Prestamo prestamo=prestamos.get(x);
+					if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {
+						cliente=clientes.get(x);
+					}
+					
+					//Estados
+					if(estadoSeleccionado!=null && !estadoSeleccionado.equals("Todos los Estados")) {
+						if(!prestamo.getEstado().getDescripcion().equals(estadoSeleccionado)) {
+							continue;
 						}
 						
 					}
-					session.setAttribute("prestamos", prestamosFiltrados);
+					
+					/*if (!canceladoSeleccionado.equals("Todos")) {
+					    boolean seleccionCancelado = canceladoSeleccionado.equals("Saldado");
+					    if (prestamo.isCancelado() != seleccionCancelado) {
+					        continue;
+					    }
+					}*/
+					
+					
+					
+					//Importe
+					if(importeSeleccionado!=null && montoImporte!=null) {
+						Double monto=Double.parseDouble(montoImporte);
+						switch (importeSeleccionado) {
+						case "Mayor a":
+							if(prestamo.getMontoPedido()<=monto) {
+								continue;
+							}
+							break;
+						case "Igual a":
+							if(prestamo.getMontoPedido()!=monto) {
+								continue;
+							}
+							break;
+						case "Menor a":
+							if(prestamo.getMontoPedido()>=monto) {
+								continue;
+							}
+							break;
+
+						}
+					}
+					
+					//Fechas
+					if(fechaDesde!=null && fechaHasta!=null) {
+						try {
+					        LocalDate fechaPrestamo = prestamo.getFechaPrestamo();
+					        LocalDate desde = LocalDate.parse(fechaDesde);
+					        LocalDate hasta = LocalDate.parse(fechaHasta);
+					        System.out.println("FECHA PRESTAMO " + fechaPrestamo);
+
+					        if (fechaPrestamo.isBefore(desde) || fechaPrestamo.isAfter(hasta)) {
+					            continue;
+					        }
+					    } catch (DateTimeParseException e) {
+					        e.printStackTrace();
+					    }
+						
+					}
+					
+					prestamosFiltrados.add(prestamo);
+					if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {
+						clientesFiltrados.add(cliente);
+					}
+					
+				}
+				
+				session.setAttribute("prestamos", prestamosFiltrados);
+				if(usuario.getTipoAcceso().compareTo(TipoAcceso.Administrador)==0) {
 					session.setAttribute("clientes", clientesFiltrados);
-					
 				}
-			}
 				
-			
-			//SI ES CLIENTE FILTRAMOS SOLO PRESTAMOS DE ESE CLIENTE...
-			
-			if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente)==0) {
-				
-				
-				if (estadoSeleccionado.equals("Todos los Estados")) {
-					session.setAttribute("prestamos", session.getAttribute("listaPrestamos"));
-					
-				}
-				else {
-					for(int x=0;x<prestamos.size();x++) {
-						
-						if(prestamos.get(x).getEstado().getDescripcion().equals(estadoSeleccionado)){
-							prestamosFiltrados.add(prestamos.get(x));
-							
-						}
-						
-					}
-					session.setAttribute("prestamos", prestamosFiltrados);
-					
-					
-				}
-			}
-			
-			
-			
-			session.setAttribute("prestamoSeleccionado", estadoSeleccionado);
 			
 			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
 			rDispatcher.forward(request, response);
@@ -474,6 +537,7 @@ public class ServletPrestamos extends HttpServlet {
 		//SI ES CLIENTE SOLO PRESTAMOS DE ESE CLIENTE
 		if(usuario.getTipoAcceso().compareTo(TipoAcceso.Cliente)==0) {
 			List<Prestamo>prestamos=prestamosNegocio.obtenerTodosxcliente(usuario.getId());
+			System.out.println("prestamos cliente"+ prestamos);
 			session.setAttribute("prestamos", prestamos);
 			
 			//Session limpia

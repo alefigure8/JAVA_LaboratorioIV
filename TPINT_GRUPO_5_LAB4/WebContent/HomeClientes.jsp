@@ -97,7 +97,7 @@ session.removeAttribute("totalCalculado"); %>
 					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
-	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo:$ <%=cuenta.getSaldo() %></h5>
+	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
 	                        <table class="table table-bordered mt-2">
 	                       <tr>
 				                <th>Tipo de Operación</th>
@@ -132,4 +132,30 @@ session.removeAttribute("totalCalculado"); %>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
+	 
+	 
+	 <script>
+	 document.addEventListener("DOMContentLoaded", function() {
+	 	const visibilidad=document.getElementById("visibilidad");
+	 	const saldo=document.getElementById("saldo");
+	 	const eye=document.getElementById("eye");
+	 	let saldoVisible=true;
+	 	
+	 	visibilidad.addEventListener("click", function(){
+	 		saldoVisible=!saldoVisible;
+	 		if(saldoVisible){
+	 			saldo.textContent="<%=cuenta.getSaldo() %>";
+	 			eye.classList.remove("fa-eye-slash");
+	 			eye.classList.add("fa-eye");
+	 		}else{
+	 			saldo.textContent="*********";
+	 			eye.classList.remove("fa-eye");
+	 			eye.classList.add("fa-eye-slash");
+	 		}
+	 	});
+	 });
+	 
+	 </script>
+	 
+	 
 </html>

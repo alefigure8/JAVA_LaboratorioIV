@@ -132,17 +132,17 @@
 						<span class="black-75">
 							<% if (destinatario != null) { %>
 								<%= destinatario.getNombre() + " " + destinatario.getApellido() %>
-								<i class="fa-solid fa-user opacity-75 ms-2"></i>
 							<% } else { %>
 								<!-- Manejar el caso donde destinatario es nulo -->
-								No Disponible
+								Cuenta Propia - <%= movimiento.getCuenta().getNumeroCuenta() %>
 							<% } %>
+							<i class="fa-solid fa-user opacity-75 ms-2"></i>
 						</span>
 					</td>
 	                  <td><span class="black-75"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %></span></td>
 	                  <td><span class="badge <%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> bg-success <%} else {%> bg-danger <%}%> text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
 	                  <td><span class="black-75 me-4"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-success <%}%>  opacity-75"></i></span></td>
-	                  <td><a class="p-2 bg-secondary text-light rounded" href="ServletDetalleTransferencia?numeroReferencia=<%= movimiento.getNumeroReferencia()%>"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
+	                  <td><a class="p-2 bg-secondary text-light rounded" href="ServletDetalleTransferencia?numeroReferencia=<%= movimiento.getNumeroReferencia()%>&id=<%=movimiento.getId()%>"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
 	                </tr>
 	                
 					<%} %>

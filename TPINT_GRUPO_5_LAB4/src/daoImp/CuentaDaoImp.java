@@ -45,6 +45,18 @@ public class CuentaDaoImp implements ICuentaDao{
 			" inner join tiposMovimiento TM on TM.IdTipoMovimiento=M.IdTipoMovimiento "+
 			" where M.IdTipoMovimiento=? and M.NumeroReferencia=? ";
 	
+	private static final String obtenerSaldoCuentaCorriente="SELECT SUM(Saldo) as TotalCuentaCorriente FROM Cuentas WHERE IdTipoCuenta = 2 AND Activo = 1";
+	
+	
+	private static final String obtenerSaldoCajaAhorro="SELECT SUM(Saldo) as TotalCajaAhorro FROM Cuentas WHERE IdTipoCuenta = 1 AND Activo = 1";
+	private static final String obtenerSaldoCuentaTotal="SELECT SUM(Saldo) as TotalCuenta FROM Cuentas WHERE Activo = 1";
+	private static final String obtenerTotalCuentasAnio="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ?";
+	private static final String obtenerTotalCuentasAnioYMes="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ? AND MONTH(fechaCreacion) = ?";
+	private static final String obtenerTotalCuentasAnioCaja="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ? AND IdTipoCuenta = 1";
+	private static final String obtenerTotalCuentasAnioYMesCaja="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ? AND MONTH(fechaCreacion) = ? AND IdTipoCuenta = 1";
+	private static final String obtenerTotalCuentasAnioCorriente="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ? AND IdTipoCuenta = 2";
+	private static final String obtenerTotalCuentasAnioYMesCorriente="SELECT COUNT(NumeroCuenta) AS TotalCuentasNuevas FROM Cuentas WHERE YEAR(fechaCreacion) = ? AND MONTH(fechaCreacion) = ? AND IdTipoCuenta = 2";
+	
 	// INSERTAR CUENTA
 	@Override
 	public boolean insertar(Cuenta cuenta) throws SQLException{
@@ -403,6 +415,250 @@ public class CuentaDaoImp implements ICuentaDao{
 
 	    return cuenta;
 	}
+	
+	@Override
+	public int obtenerTotalSaldoCajaAhorro() throws SQLException {
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+	    int totalSaldoCajaAhorro = 0;
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(obtenerSaldoCajaAhorro);
+	        rSet = pStatement.executeQuery();
+
+	        while (rSet.next()) {
+	            totalSaldoCajaAhorro = rSet.getInt("TotalCajaAhorro");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalSaldoCajaAhorro;
+	}
+	@Override
+	public int obtenerTotalSaldoCuentaCorriente() throws SQLException {
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+	    int totalSaldoCuentaCorriente = 0;
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(obtenerSaldoCuentaCorriente);
+	        rSet = pStatement.executeQuery();
+
+	        while (rSet.next()) {
+	            totalSaldoCuentaCorriente = rSet.getInt("TotalCuentaCorriente");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalSaldoCuentaCorriente;
+	}
+	@Override
+	public int obtenerTotalSaldoCuentas() throws SQLException {
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+	    int totalSaldoCuentas = 0;
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(obtenerSaldoCuentaTotal);
+	        rSet = pStatement.executeQuery();
+
+	        while (rSet.next()) {
+	            totalSaldoCuentas = rSet.getInt("TotalCuenta");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalSaldoCuentas;
+	}
+	
+	@Override
+	public int obtenerTotalCuentasPorAnioYMes(String anio, String mes) throws SQLException{
+		int totalCuentasNuevas = 0;
+	    
+	    PreparedStatement pStatement;
+	    ResultSet rSet;
+
+	    Conexion conexion = Conexion.getConexion();
+
+	    try {
+	        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnioYMes);
+	        pStatement.setString(1, anio);
+	        pStatement.setString(2, mes);
+
+	        rSet = pStatement.executeQuery();
+
+	        if (rSet.next()) {
+	            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+	        }
+
+	    } catch (Exception e) {
+	        throw e;
+	    }
+
+	    return totalCuentasNuevas;
+		
+	}
+	@Override
+	 public int obtenerTotalCuentasPorAnio(String anio) throws SQLException{
+		 
+		 int totalCuentasNuevas = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnio);
+		        pStatement.setString(1, anio);
+		       
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalCuentasNuevas;
+		 
+		 
+		 
+		 
+		 
+	 }
+	
+	
+	 @Override
+		public int obtenerTotalCuentasPorAnioYMesCaja(String anio, String mes) throws SQLException{
+			int totalCuentasNuevas = 0;
+		    
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+
+		    Conexion conexion = Conexion.getConexion();
+
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnioYMesCaja);
+		        pStatement.setString(1, anio);
+		        pStatement.setString(2, mes);
+
+		        rSet = pStatement.executeQuery();
+
+		        if (rSet.next()) {
+		            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+		        }
+
+		    } catch (Exception e) {
+		        throw e;
+		    }
+
+		    return totalCuentasNuevas;
+			
+		}
+	 @Override
+		 public int obtenerTotalCuentasPorAnioCaja(String anio) throws SQLException{
+			 
+			 int totalCuentasNuevas = 0;
+			    
+			    PreparedStatement pStatement;
+			    ResultSet rSet;
+
+			    Conexion conexion = Conexion.getConexion();
+
+			    try {
+			        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnioCaja);
+			        pStatement.setString(1, anio);
+			       
+
+			        rSet = pStatement.executeQuery();
+
+			        if (rSet.next()) {
+			            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+			        }
+
+			    } catch (Exception e) {
+			        throw e;
+			    }
+
+			    return totalCuentasNuevas;
+			 
+			 
+			 
+			 
+			 
+		 }
+		 @Override
+			public int obtenerTotalCuentasPorAnioYMesCorriente(String anio, String mes) throws SQLException{
+				int totalCuentasNuevas = 0;
+			    
+			    PreparedStatement pStatement;
+			    ResultSet rSet;
+
+			    Conexion conexion = Conexion.getConexion();
+
+			    try {
+			        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnioYMesCorriente);
+			        pStatement.setString(1, anio);
+			        pStatement.setString(2, mes);
+
+			        rSet = pStatement.executeQuery();
+
+			        if (rSet.next()) {
+			            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+			        }
+
+			    } catch (Exception e) {
+			        throw e;
+			    }
+
+			    return totalCuentasNuevas;
+				
+			}
+		 @Override
+			 public int obtenerTotalCuentasPorAnioCorriente(String anio) throws SQLException{
+				 
+				 int totalCuentasNuevas = 0;
+				    
+				    PreparedStatement pStatement;
+				    ResultSet rSet;
+
+				    Conexion conexion = Conexion.getConexion();
+
+				    try {
+				        pStatement = conexion.getSQLConexion().prepareStatement(obtenerTotalCuentasAnioCorriente);
+				        pStatement.setString(1, anio);
+				       
+
+				        rSet = pStatement.executeQuery();
+
+				        if (rSet.next()) {
+				            totalCuentasNuevas = rSet.getInt("TotalCuentasNuevas");
+				        }
+
+				    } catch (Exception e) {
+				        throw e;
+				    }
+
+				    return totalCuentasNuevas;
+				 
+				 
+				 
+				 
+				 
+			 }
 	
 
 }

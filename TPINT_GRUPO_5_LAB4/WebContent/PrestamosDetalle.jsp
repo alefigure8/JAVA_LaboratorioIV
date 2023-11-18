@@ -42,6 +42,9 @@ session.removeAttribute("totalCalculado"); %>
 	<jsp:include page= "/WEB-INF/Components/head.jsp">
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
+	
+	
+	
 	<!-- FIN HEAD -->
 	<body class="d-flex flex-column">
 	    <div class="row flex-grow-1 m-0">
@@ -110,6 +113,7 @@ session.removeAttribute("totalCalculado"); %>
 		<!-- Cuadro para detalles de cuotas -->
 		<div>
 		    <h2>Detalles de Cuotas</h2>
+		    <form action="ServletPrestamos" method="post">
 		    <table id="table_id" class="table display text-center">
 		        <thead>
 		            <tr>
@@ -129,7 +133,7 @@ session.removeAttribute("totalCalculado"); %>
 		        <%
 		        	for(CuotaPrestamo cuota : listaCuota){%>
 			            <tr>
-			        <form action="ServletPrestamos" method="post">
+			        
 			        		 <input type="hidden"  name="idCuota" value="<%=cuota.getId() %>">
 			        		<input type="hidden"  name="idPrestamo" value="<%=prestamo.getId() %>">
 			                <td><%=cuota.getNumeroCuota()%></td>
@@ -152,17 +156,20 @@ session.removeAttribute("totalCalculado"); %>
 				                </td>	
 				                <%} %>
 			                <%}%>
-			         </form>
+			        
 			            </tr>
 			            <%indice++; %>
 	           	 	<%}
 	           	 %>
 		        </tbody>
 		    </table>
+		     </form>
+		    
 		</div>
 		
+		<div class="mt-2">
 		<a href="ServletPrestamos?Prestamos=true" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
-		
+		</div>
 		
         </div>
       	</div>
@@ -170,4 +177,8 @@ session.removeAttribute("totalCalculado"); %>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
+	 
+	
+	 
 </html>
+

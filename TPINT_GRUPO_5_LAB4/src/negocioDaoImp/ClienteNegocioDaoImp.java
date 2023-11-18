@@ -121,6 +121,21 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 
 	    return existe;
 	}
+	@Override
+	public int clientesPorFecha(String anio, String mes) throws SQLException{
+		
+
+	    return clienteDao.clientesPorFecha(anio, mes);
+		
+	}
+	@Override
+	 public int clientesPorAnio(String anio) throws SQLException{
+		 
+		 
+
+		    return clienteDao.clientesPorAnio(anio);
+		 
+		 }
 
 	
 

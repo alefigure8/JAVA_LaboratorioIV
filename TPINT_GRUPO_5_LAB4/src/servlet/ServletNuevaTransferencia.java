@@ -22,6 +22,8 @@ import entidad.Estado;
 import entidad.Movimiento;
 import entidad.Operacion;
 import entidad.TipoMovimiento;
+import excepciones.OperacionCanceladaException;
+import excepciones.SaldoInsuficienteException;
 import negocioDaoImp.ClienteNegocioDaoImp;
 import negocioDaoImp.CuentaNegocioDaoImp;
 import negocioDaoImp.MovimientoNegocioDaoImp;
@@ -40,9 +42,11 @@ public class ServletNuevaTransferencia extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//Cliente del banco
+		/* Session */
 		HttpSession session = request.getSession(true);
 		Cliente cliente = (Cliente)session.getAttribute("cliente");
+		
+		/* Cuenta Negocio */
 		CuentaNegocioDaoImp cuentaNegocioDaoImp = new CuentaNegocioDaoImp();
 		List<Cuenta> cuentasCliente = new ArrayList<Cuenta>();
 
@@ -50,8 +54,10 @@ public class ServletNuevaTransferencia extends HttpServlet {
 			cuentasCliente = cuentaNegocioDaoImp.obtenerCuentasCliente(cliente.getId());
 			request.setAttribute("cuentas", cuentasCliente);
 		} catch (Exception e) {
-			//Validacion cliente no entonctrado
+			
+			/* Mensaje */
 			request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado");
+			
 			RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
 			rd.forward(request, response);
 		}
@@ -62,88 +68,151 @@ public class ServletNuevaTransferencia extends HttpServlet {
 				rd.forward(request, response);
 		}
 		
-		//Llega el CBU para buscar
-		if(request.getParameter("cbu") != null) {
+		/* Se carga el cbu o se elige la cuenta propia a la cual transferir*/
+		if(request.getParameter("btnBuscar")!=null) {
 			
-			try {
-				String cbu = request.getParameter("cbu");
+			if(request.getParameter("cbuDestinatario") != null) {
 				
-				//verificar si existe el usuario
-				ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
-				Cliente destinatario = clienteNegocioDaoImp.obtenerClientePorCBU(cbu);
-
-				if(destinatario.getNombre() != null && cuentasCliente.size() != 0) {
-					if(destinatario.getId() != cliente.getId()) {
-						
-						request.setAttribute("destinatario", destinatario);
-						
-						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargamonto=true.jsp");
-						rd.forward(request, response);
-					} else if(destinatario.getId() == cliente.getId() & cuentasCliente.size() > 1){
-						List<Cuenta> cuentasATransferir =  new ArrayList<Cuenta>();
-						
-						for(Cuenta cuentaATransferir : cuentasCliente) {
-							if(cuentaATransferir.getCbu() != cbu) {
-								cuentasATransferir.add(cuentaATransferir);
+				/* URLS */
+				String url = "ServletNuevaTransferencia?cargacbu=true&otraCuenta=true";
+				String urlRedirect = "NuevaTransferencia.jsp?cargamonto=true.jsp";
+				String urlRegresar ="ServletListaTransferencias?listado=true&todos=true";
+				
+				try {
+					String cbu = request.getParameter("cbuDestinatario");
+					
+					//Bucamos usuario por CBU
+					ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
+					Cliente destinatario = clienteNegocioDaoImp.obtenerClientePorCBU(cbu);
+	
+					if(destinatario.getNombre() != null && cuentasCliente.size() != 0) {
+	
+						/* Transferencia a otro destinatario*/
+						if(destinatario.getId() != cliente.getId()) {
+							
+							/* Set Session */
+							session.setAttribute("destinatario", destinatario);
+							
+							/* Request */
+							RequestDispatcher rd = request.getRequestDispatcher(urlRedirect);
+							rd.forward(request, response);
+							
+						} 
+						/* Tranferencia a cuenta propia */
+						else if(destinatario.getId() == cliente.getId() & cuentasCliente.size() > 1){
+							
+							List<Cuenta> cuentasATransferir =  new ArrayList<Cuenta>();
+							
+							for(Cuenta cuentaATransferir : cuentasCliente) {
+								if(cuentaATransferir.getCbu().compareTo(cbu) != 0) {
+										cuentasATransferir.add(cuentaATransferir);
+								}
 							}
+														
+							/* Set Session */
+							session.setAttribute("destinatario", destinatario);
+							
+							request.removeAttribute("cuentas");
+							request.setAttribute("cuentas", cuentasATransferir);
+							
+							/* Request */
+							RequestDispatcher rd = request.getRequestDispatcher(urlRedirect);
+							rd.forward(request, response);
+						} else {
+													
+							/* Mensaje cliente no cuenta con suficientes cuentas*/
+							request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sí mismo");
+							
+							/* Request */
+							RequestDispatcher rd = request.getRequestDispatcher(urlRegresar);
+							rd.forward(request, response);
 						}
-						
-						request.setAttribute("destinatario", destinatario);
-						request.removeAttribute("cuentas");
-						request.setAttribute("cuentas", cuentasATransferir);
-						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargamonto=true.jsp");
-						rd.forward(request, response);
 					} else {
-						request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sí mismo");
-						RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
+						
+						/* Mensaje error cliente no encontrado */
+						request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado");
+						
+						/* Request */
+						RequestDispatcher rd = request.getRequestDispatcher(url);
 						rd.forward(request, response);
 					}
-				} else {
-					//Validacion cliente no entonctrado
-					request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado");
-					RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
+				} catch (Exception e) {
+					
+					/* Mensaje */
+					request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
+					
+					/* Request */
+					RequestDispatcher rd = request.getRequestDispatcher(url);
 					rd.forward(request, response);
 				}
-			} catch (Exception e) {
-				request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
-				RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
-				rd.forward(request, response);
 			}
 		}
 		
-		if(request.getParameter("cbuOrigen")!=null && request.getParameter("monto")!=null) {
-			try {
-				
-				String cbuCliente = request.getParameter("cbuOrigen");
-				String cbuDestinatario = request.getParameter("cbuDestintario");
-				Double monto = Double.valueOf(request.getParameter("monto"));
-				String concepto = request.getParameter("concepto");
-				
-				MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();
-				boolean movimientoCreado = movimientoNegocioDaoImp.insertarTransferencia(cbuCliente, cbuDestinatario, monto, concepto);
-				
-				if(movimientoCreado) {
-					request = GUI.mensajes(request, "exito", "Transferencia realizada", "La transferencia se realizó correctamente.");
-					RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
-					rd.forward(request, response);
-				} else {
+		/* Realización de la transferencia */
+		if(request.getParameter("btnTransferir")!=null) {
+			
+			if(
+				request.getParameter("cbuOrigen")!=null && 
+				request.getParameter("monto")!=null &&
+				request.getParameter("cbuDestinatario")!=null
+				) {
+				try {
 					
-					request = GUI.mensajes(request, "error", "Transferencia fallida", "La transferencia no pudo ser realizada. Intente nuevamente.");
-					RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+					String cbuCliente = request.getParameter("cbuOrigen");
+					String cbuDestinatario = request.getParameter("cbuDestinatario");
+					Double monto = Double.valueOf(request.getParameter("monto"));
+					String concepto = request.getParameter("concepto");
+					
+					MovimientoNegocioDaoImp movimientoNegocioDaoImp = new MovimientoNegocioDaoImp();
+					boolean movimientoCreado = movimientoNegocioDaoImp.insertarTransferencia(cbuCliente, cbuDestinatario, monto, concepto);
+					
+					if(movimientoCreado) {
+						/* Borramos destinatario de session */
+						session.removeAttribute("destinatario");
+						
+						/* Mensaje de exito */
+						request = GUI.mensajes(request, "exito", "Transferencia realizada", "La transferencia se realizó correctamente.");
+						
+						/* Request */
+						RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+						rd.forward(request, response);
+					} else {
+						
+						request = GUI.mensajes(request, "error", "Transferencia fallida", "La transferencia no pudo ser realizada. Intente nuevamente.");
+						RequestDispatcher rd = request.getRequestDispatcher("ListaTransferencias.jsp");
+						rd.forward(request, response);
+					}
+					
+				} catch (OperacionCanceladaException e) {
+					/* Error Operacion cancelada*/
+					request = GUI.mensajes(request, "error", "Operacion Cancelada", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");//Regresa Lista Trans
+					rd.forward(request, response);
+				}catch (SaldoInsuficienteException e) {
+					/* Error saldo insuficiente*/
+					request = GUI.mensajes(request, "error", "Saldo Insuficiente", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargamonto=true.jsp");//Regresa para insertar otro monto
+					rd.forward(request, response);
+				}catch (Exception e) {
+					/* Errores*/
+					request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
+					RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
 					rd.forward(request, response);
 				}
-				
-			} catch (Exception e) {
-				request = GUI.mensajes(request, "error", "Error Base de Datos", e.getMessage());
-				RequestDispatcher rd = request.getRequestDispatcher("NuevaTransferencia.jsp?cargacbu=true.jsp");
-				rd.forward(request, response);
 			}
 		}
+		
+		if(request.getParameter("btnCancelar") != null) {
+			
+			/* removemos datos */
+			session.removeAttribute("destinatario");
+			request.removeAttribute("cbuDestinatario");
+			request.removeAttribute("cuentas");
+			
+			RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");
+			rd.forward(request, response);
+		}
+		
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
+	
 }

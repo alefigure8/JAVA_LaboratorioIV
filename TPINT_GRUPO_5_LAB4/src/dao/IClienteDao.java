@@ -20,5 +20,6 @@ public interface IClienteDao {
 	 public boolean existeUsuario(String usuario, String contrasena) throws SQLException;
 	 public Usuario obtenerUsuarioPorUsuario(String usuario) throws SQLException;
 	 public boolean existeCorreo(String correo) throws CorreoException, SQLException;
-	 
+	 public int clientesPorFecha(String anio, String mes) throws SQLException;
+	 public int clientesPorAnio(String anio) throws SQLException;
 }
