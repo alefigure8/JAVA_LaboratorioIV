@@ -21,6 +21,7 @@
 	<jsp:include page= "/WEB-INF/Components/head.jsp">
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
+	
 	<body class="d-flex flex-column">
  <% 
 	                  ArrayList<Cuenta> listadoCuentas = null;
@@ -43,64 +44,78 @@
 	                  
 	                  
                	  %>
+            
+      <!--CONTENIDO-->
+                	  
     <div class="container-fluid justify-content-center">
-        <div class="row">
+        <div class="row ">
 
             <!-- SIDEBAR -->
-            <div class="col-2">
+           
 			      <jsp:include page= "/WEB-INF/Components/menu.jsp">
 			      	<jsp:param name="usuario" value="Ramón Ramirez" />
 			      </jsp:include>
-				</div>
+				
      		<!--MAIN-->
       		 
 	        <div class="col-10 d-flex flex-column justify-content-between">
 	          <div class="w-100 pt-2">
 	            <!--TIUTLO PAGINA-->
-	            <h1 class="mt-2"><i class="fas fa-address-card me-2"></i>CUENTAS CLIENTES</h1>
+	            <h1 class="mt-4"><i class="fas fa-address-card me-2"></i>CUENTAS CLIENTES</h1>
 	          </div>
 	          <div class="flex-grow-1">
 	            <!--FILTRO-->
-	          <div class="d-flex flex-md-row flex-column justify-content-start align-items-center w-100 gap-2 mt-2 mb-2">
-   
+				 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center w-100 mt-2 mb-2">
+			    <form action="ServletCuentasClientes" method="post">
+			        <% if (request.getAttribute("mostrandoInactivos") == null) { %>
+			            <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
+			        <% } else if ((boolean)request.getAttribute("mostrandoInactivos")) { %>
+			            <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar solo Activas">
+			        <% } else { %>
+			            <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
+			        <% } %>
+			    </form>
+			
+			    <form class="d-flex gap-2" action="ServletCuentasClientes" method="get" onsubmit="return validarFechas()">
+			        <select Name="TipoCuenta" class="form-select">
+			            <option value="0">Todas</option>
+			            <% for (TipoCuenta tc : tiposCuenta) { %>
+			                <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
+			            <% } %>
+			        </select>
+			        
+			        <select id="importes" name="Importes" class="form-select ">			
+	                    <option value="Todos los importes">Todos los importes</option>			
+	                    <option value="Mayor a">Mayor a</option>			
+	                    <option value="Igual a">Igual a</option>			
+	                    <option value="Menor a">Menor a</option>			
+	                  </select>			
+	                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">			
+	                  			
+	                  			
+	                  <div class="d-flex gap-2">			
+		                <span >Desde: </span>		
+		                <input type="date" name="cuentaDesde" id="desdeInput">		
+		              </div>		
+		              <div class="d-flex gap-2">		
+		                <span>Hasta: </span>		
+		                <input type="date" name="cuentaHasta" id="hastaInput">		
+		              </div>		
+			
+			        
+			        
+			        <input class="btn btn-outline-primary" type="submit" name="btnfiltrar" value="Filtrar">
+			        <input type="submit" class="btn btn-primary btnEnviar" name="btnLimpiarFiltros" value="Limpiar filtros">
+			    </form>
+			    
+			    <a type="submit" class="btn btn-primary btnEnviar mt-2 mt-md-0" href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
+			</div>
 
-        <form action="ServletCuentasClientes" method="post">
-            <% if (request.getAttribute("mostrandoInactivos") == null) { %>
-                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
-            <% } else if ((boolean)request.getAttribute("mostrandoInactivos")) { %>
-                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar solo Activas">
-            <% } else { %>
-                <input class="btn btn-outline-primary" type="submit" name="btnMostrarInactivos" value="Mostrar Inactivas">
-            <% } %>
-        </form>
-  
-       
-     <form style="margin-left:400px;" action="ServletCuentasClientes" method="get" class="d-flex gap-2">
-        <div class="d-flex">
-            <select Name="TipoCuenta" class="form-select">
-                <option value="0">Todas</option>
-                <% for (TipoCuenta tc : tiposCuenta) { %>
-                    <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
-                <% } %>
-            </select>
-          
-              </div>
-              <div>
-            <input class="btn btn-outline-primary" type="submit" name="btnfiltrar" value="Filtrar">
-      </div>
-        
-        </form>
-    
-
- 
-        <a type="submit" class="btn btn-primary btnEnviar"  href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
-
-</div>
 
 	                	  
 	    
 	            <!--TABLA-->
-	            <div class="d-flex flex-md-row flex-column">
+	            <div class="d-flex  flex-column">
 	 				   <table id="table_id" class="table display text-center">
 	                <thead>
 	                  <tr>
@@ -188,4 +203,30 @@
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
+	 
+	 <script>
+	    function validarFechas() {
+	        var desde = document.getElementById('desdeInput').value;
+	        var hasta = document.getElementById('hastaInput').value;
+	
+	        if ((desde && !hasta) || (!desde && hasta)) {
+	            alert('Por favor, complete ambas fechas o déjelas vacías.');
+	            return false;
+	        }
+	
+	        if (desde && hasta) {
+	            var fechaDesde = new Date(desde);
+	            var fechaHasta = new Date(hasta);
+	
+	            if (fechaHasta < fechaDesde) {
+	                alert('La fecha "Hasta" no puede ser anterior a la fecha "Desde".');
+	                return false;
+	            }
+	        }
+	        
+	        return true;
+	    }
+    
+    
+</script>
 </html>

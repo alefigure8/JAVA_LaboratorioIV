@@ -27,9 +27,13 @@
      <li class="list-group-item border-0 bg-transparent">
      <a type="submit" href="ServletPrestamos?Prestamos=true">Prestamos</a>
     </li>
-       <li class="list-group-item border-0 bg-transparent">
+      <li class="list-group-item border-0 bg-transparent">
+     <a type="submit" href="ServletEstadisticasBancos">Estadisticas Banco</a>
+    </li>
+    <li class="list-group-item border-0 bg-transparent">
      <a type="submit" href="ServletEstadisticasPrestamos?Estadisticas=Prestamos">Estadisticas Prestamos</a>
     </li>
+
   
     
     <!--  <li class="list-group-item border-0 bg-transparent">Prestamo</li> -->

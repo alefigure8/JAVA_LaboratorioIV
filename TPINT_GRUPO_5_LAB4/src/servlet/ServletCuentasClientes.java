@@ -2,6 +2,8 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -42,12 +44,12 @@ public class ServletCuentasClientes extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 	
-		if(request.getParameter("Cuentas")!=null) {
+		if(request.getParameter("Cuentas")!=null || request.getParameter("btnLimpiarFiltros")!=null && request.getParameter("btnfiltrar")==null) {
 			
 			String value = request.getParameter("Cuentas");
 			
 			
-			if(value.compareTo("CuentasClientes")==0) {
+			//if(value.compareTo("CuentasClientes")==0) {
 				
 				
 				ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
@@ -85,28 +87,25 @@ public class ServletCuentasClientes extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/CuentasClientes.jsp");   
 		        rd.forward(request, response);
 		
-			}
+			//}
 		
 		}
 
-		if(request.getParameter("btnfiltrar")!=null) {
+		if(request.getParameter("btnfiltrar")!=null && request.getParameter("btnLimpiarFiltros")==null) {
+			
+			ArrayList<Cuenta> listaFiltradaxTipo  = new ArrayList<Cuenta>();
 			
 			
-			if(request.getParameter("TipoCuenta")!=null) {
-				
-				ArrayList<Cuenta> listaFiltradaxTipo  = new ArrayList<Cuenta>();
-				int codigotipocuenta = Integer.valueOf(request.getParameter("TipoCuenta"));
-				
-				ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
-				IClienteNegocioDao clienteNegocio = new ClienteNegocioDaoImp();
-				ArrayList<TipoCuenta> tiposCuenta = new ArrayList<TipoCuenta>(); 
-				
+			ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
+			IClienteNegocioDao clienteNegocio = new ClienteNegocioDaoImp();
+			ArrayList<TipoCuenta> tiposCuenta = new ArrayList<TipoCuenta>(); 
+			
 				try {
 					tiposCuenta = (ArrayList<TipoCuenta>) cuentaNegocio.listarTiposCuenta();
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 				try {
 						if(mostrandoInactivos(request, response)){ 
 							listadoCuentas = (ArrayList<Cuenta>) cuentaNegocio.obtenerTodas();
@@ -118,36 +117,122 @@ public class ServletCuentasClientes extends HttpServlet {
 					}
 				
 				 catch (SQLException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
+				 }
+				
+				
+				//TIPOS DE CUENTA
+				int codigotipocuenta = 0;
+				if(request.getParameter("TipoCuenta")!=null) {
+					codigotipocuenta = Integer.valueOf(request.getParameter("TipoCuenta"));
 				}
 				
-				for(Cuenta c : listadoCuentas)
-				if(codigotipocuenta==c.getTipoCuenta().getId()) {
+				
+				//IMPORTE
+				String importeSeleccionado=null;
+				if(request.getParameter("Importes")!=null) {
+					importeSeleccionado=request.getParameter("Importes");
+				}
+				String montoImporte=null;
+				if(request.getParameter("rangoImporte")!=null && !request.getParameter("rangoImporte").isEmpty()) {
+					montoImporte=request.getParameter("rangoImporte");
+				}
+				
+				//FECHAS
+				String fechaDesde=null;
+				String fechaHasta=null;
+				if(request.getParameter("cuentaDesde")!=null && !request.getParameter("cuentaDesde").isEmpty()) {
+					fechaDesde=request.getParameter("cuentaDesde");
+				}
+				if(request.getParameter("cuentaHasta")!=null && !request.getParameter("cuentaHasta").isEmpty()) {
+					fechaHasta=request.getParameter("cuentaHasta");
+				}
+				
+				
+				for(Cuenta c : listadoCuentas) {
+				//if(codigotipocuenta==c.getTipoCuenta().getId()) {
 									
+					//Tipos cuenta
+					if(codigotipocuenta!=0) {
+						if(codigotipocuenta!=c.getTipoCuenta().getId()) {
+							continue;
+						}
+						
+					}
+					
+					//Importe
+					if(importeSeleccionado!=null && montoImporte!=null) {
+						Double monto=Double.parseDouble(montoImporte);
+						switch (importeSeleccionado) {
+						case "Mayor a":
+							if(c.getSaldo()<=monto) {
+								continue;
+							}
+							break;
+						case "Igual a":
+							if(c.getSaldo()!=monto) {
+								continue;
+							}
+							break;
+						case "Menor a":
+							if(c.getSaldo()>=monto) {
+								continue;
+							}
+							break;
+
+						}
+					}
+					
+					//Fechas
+					
+					if(fechaDesde!=null && fechaHasta!=null) {
+						try {
+					        LocalDate fechaPrestamo = c.getFechaCreacion();
+					        LocalDate desde = LocalDate.parse(fechaDesde);
+					        LocalDate hasta = LocalDate.parse(fechaHasta);
+					        //System.out.println("FECHA PRESTAMO " + fechaPrestamo);
+
+					        if (fechaPrestamo.isBefore(desde) || fechaPrestamo.isAfter(hasta)) {
+					            continue;
+					        }
+					    } catch (DateTimeParseException e) {
+					        e.printStackTrace();
+					    }
+						
+					}
+					
 					listaFiltradaxTipo.add(c);
 				}
-				listadoNombres = listarNombres(listadoCuentas, clienteNegocio);
+				//}
+				
+				
 
-				request.setAttribute("tiposCuenta",tiposCuenta);
-				if(codigotipocuenta==0) {
+				//request.setAttribute("tiposCuenta",tiposCuenta);
+				
+				/*if(codigotipocuenta==0) {
 					request.setAttribute("listadoCuentas",listadoCuentas);
 				}
 				else {
 					request.setAttribute("listadoCuentas",listaFiltradaxTipo);
-				}
+				}*/
+				
+				
+				listadoNombres = listarNombres(listadoCuentas, clienteNegocio);
+				request.setAttribute("listadoCuentas",listaFiltradaxTipo);
+				//request.setAttribute("listadoCuentas",listadoCuentas);
 				request.setAttribute("listadoNombres",listadoNombres);
-			
+				request.setAttribute("tiposCuenta",tiposCuenta);
+				
+				
+				
 				RequestDispatcher rd = request.getRequestDispatcher("/CuentasClientes.jsp");   
 		        rd.forward(request, response);
 				
-				
-				
-			}
-			
-			
 			
 		}
+		
+		
 		
 		if(request.getParameter("btnModificarCuentaCiente")!=null) {
 			
@@ -174,7 +259,7 @@ public class ServletCuentasClientes extends HttpServlet {
 			
 
 		
-		listadoNombres = listarNombres(listadoCuentas, clienteNegocio);
+			listadoNombres = listarNombres(listadoCuentas, clienteNegocio);
 		
 			
 			request.setAttribute("listadoNombres",listadoNombres);

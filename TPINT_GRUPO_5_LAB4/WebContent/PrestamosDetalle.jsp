@@ -42,10 +42,8 @@ session.removeAttribute("totalCalculado"); %>
 	<jsp:include page= "/WEB-INF/Components/head.jsp">
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
-	
-	
-	
 	<!-- FIN HEAD -->
+	
 	<body class="d-flex flex-column">
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
@@ -111,65 +109,58 @@ session.removeAttribute("totalCalculado"); %>
 			</div>
 
 		<!-- Cuadro para detalles de cuotas -->
-		<div>
+		
 		    <h2>Detalles de Cuotas</h2>
-		    <form action="ServletPrestamos" method="post">
 		    <table id="table_id" class="table display text-center">
-		        <thead>
-		            <tr>
-		            	
-		                <th>Número de Cuota</th>
-		                <th>Importe</th>
-		                <th>Estado</th>
-		                <th>Fecha de Pago</th>
-		                <th>Nro. Cuenta de pago</th>
-		                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
-		                <!-- PAGAR SOLO CLIENTE -->
+			    <thead>
+			        <tr>
+			            <th>Número de Cuota</th>
+			            <th>Importe</th>
+			            <th>Estado</th>
+			            <th>Fecha de Pago</th>
+			            <th>Nro. Cuenta de pago</th>
+			            <% if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)) { %>
 			                <th>Accion</th>	
-		                <%}%>
-		            </tr>
-		        </thead>
-		        <tbody>
-		        <%
-		        	for(CuotaPrestamo cuota : listaCuota){%>
+			            <% } %>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <% for(CuotaPrestamo cuota : listaCuota) { %>
 			            <tr>
-			        
-			        		 <input type="hidden"  name="idCuota" value="<%=cuota.getId() %>">
-			        		<input type="hidden"  name="idPrestamo" value="<%=prestamo.getId() %>">
 			                <td><%=cuota.getNumeroCuota()%></td>
 			                <td><%=cuota.getMontoCuota()%></td>
 			                <td><%=cuota.getEstado()%></td>
 			                <!-- CUENTA DE PAGO NO DE DEPOSITO DEL PRESTAMO -->
-			               
-			                 <%if(cuota.getFechaPago() != null && cuentasPago != null && indice < cuentasPago.size()){%>
-				                <td><%=cuota.getFechaPago()%></td>	
-				                <td><%=cuentasPago.get(indice).getNumeroCuenta()%></td>
-			                <%} else {%>
-				                <td>No abonado</td>
-				                <td>No abonado</td>
-			                <%}%>
-			                <%if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)){%>
-			                <!-- PAGAR SOLO CLIENTE -->
-			                <%if(cuota.getFechaPago() == null){%>
-				                <td>
-				                	<input type="submit" class="btn btn-primary btnEnviar" value="Pagar" name="btnPagarPrestamo" >
-				                </td>	
-				                <%} %>
-			                <%}%>
-			        
+			                <% if(cuota.getFechaPago() != null && cuentasPago != null && indice < cuentasPago.size()) { %>
+			                    <td><%=cuota.getFechaPago()%></td>	
+			                    <td><%=cuentasPago.get(indice).getNumeroCuenta()%></td>
+			                <% } else { %>
+			                    <td>No abonado</td>
+			                    <td>No abonado</td>
+			                <% } %>
+			                <% if(usuario.getTipoAcceso().equals(TipoAcceso.Cliente)) { %>
+			                <td>
+			                    <% if(cuota.getFechaPago() == null) { %>
+			                        
+			                            <form action="ServletPrestamos" method="post">
+			                                <input type="hidden" name="idPrestamo" value="<%=prestamo.getId() %>">
+			                                <input type="hidden" name="idCuota" value="<%=cuota.getId() %>">
+			                                <button type="submit" class="btn btn-primary btnEnviar" name="btnPagarPrestamo">Pagar</button>
+			                            </form>
+			                       
+			                    <% } %>
+			                 </td>
+			                <% } %>
 			            </tr>
-			            <%indice++; %>
-	           	 	<%}
-	           	 %>
-		        </tbody>
-		    </table>
-		     </form>
-		    
-		</div>
-		
-		<div class="mt-2">
-		<a href="ServletPrestamos?Prestamos=true" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
-		</div>
+			            <% indice++; %>
+			        <% } %>
+			    </tbody>
+			</table>
+
+
+					<div class="mt-2 mb-4">
+						<a href="ServletPrestamos?Prestamos=true" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+					</div>
 		
         </div>
       	</div>
@@ -177,8 +168,7 @@ session.removeAttribute("totalCalculado"); %>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
-	 
-	
-	 
+	  
+	  
 </html>
 

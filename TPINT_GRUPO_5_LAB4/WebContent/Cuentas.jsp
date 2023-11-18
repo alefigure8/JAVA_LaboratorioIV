@@ -44,33 +44,43 @@ session.removeAttribute("totalCalculado"); %>
 	      </jsp:include>
    		<!-- FIN HEAD -->   
      	<!--CONTENT-->
-	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
+	      <div class="col-lg-9 col-md-12 d-flex flex-column ">
 	        <div class="w-100 pt-2">
 	          <h1><i class="fas fa-wallet me-2"></i>MIS CUENTAS</h1>
 	        </div>
-	        <div class="flex-grow-1">
-	          <!-- CONTENIDO-->
-	          <form action="ServletDetalleCuenta" method="get">
-		 	 	<ul class="list-group border-0">
-		         <% for (Cuenta c : cuentasCliente){ 
-		         
-		        	 String cuentastring = String.valueOf(c.getNumeroCuenta());
-		        	 StringBuilder CuentaFormateada = new StringBuilder();
-		        	 CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
-		         
-		         %>
-		          <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
-		          <h4><%=c.getTipoCuenta().getDescripcion()%> | CTA NRO <%=CuentaFormateada%> | $<%=c.getSaldo()%></h4>
-		          <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
-		          <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
-				  </li>
-				 <%} %>
-				 </form>
-				  
-	        	</ul>
-	          <a href="ServletHomeCliente?homecliente=homecliente" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
-	        	
-	        </div>
+	        
+	        <div class="row justify-content-center">
+			  <div class="col-sm-6 mb-3 mb-sm-0">
+			    <div class="card mt-4">
+			      <div class="card-body">
+			       <% for (Cuenta c : cuentasCliente){ 
+			    	      String cuentastring = String.valueOf(c.getNumeroCuenta());
+			              StringBuilder CuentaFormateada = new StringBuilder();
+			              CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+			            %>
+			        <h5 class="card-title">CUENTA NRO. <%=CuentaFormateada%></h5>
+			        <form action="ServletDetalleCuenta" method="get">
+			          <ul class="list-group border-0">
+			           
+			            
+			            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
+			              <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
+			              <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
+			              <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
+			            </li>
+			            <% } %>
+			          </ul>
+			        </form>
+			      </div>
+			      
+			    </div>
+			    	 <a href="ServletHomeCliente?homecliente=homecliente" class="btn btn-primary btnEnviar mt-3"><i class="fa-solid fa-arrow-left me-2"></i>Regresar</a>
+			    
+			  </div>
+			</div>
+
+	        
+	        
 	      </div>
        </div>
        <!-- FIN MAIN -->

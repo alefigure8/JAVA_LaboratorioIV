@@ -29,21 +29,24 @@
 		      
       <!--CONTENT-->
        		 <div class="col-lg-9 col-md-12 d-flex flex-column">
+	       		 <div class="w-100 pt-2" >
+		          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS BANCO</h1>
+		        </div>
 	            <div class="card mt-3">
 	                <div class="card-body">
 		                <div class="row">
 		                    <div class="col">
-    <label for="montoCuentasClientes">Monto Total Cuentas Clientes</label>
-    <input type="text" class="form-control" id="montoCuentasClientes" name="montoCuentasClientes" value="${totalCuentas}" disabled>
-</div>
-<div class="col">
-    <label for="montoCuentasCorrientes">Monto Total Cuentas Corrientes</label>
-    <input type="text" class="form-control" id="montoCuentasCorrientes" name="montoCuentasCorrientes" value="${totalCuentaCorriente}" disabled>
-</div>
-<div class="col">
-    <label for="montoCajasAhorro">Monto Total Cajas de Ahorro</label>
-    <input type="text" class="form-control" id="montoCajasAhorro" name="montoCajasAhorro" value="${totalCajaAhorro}" disabled>
-</div>
+					    <label for="montoCuentasClientes">Monto Total Cuentas Clientes</label>
+					    <input type="text" class="form-control" id="montoCuentasClientes" name="montoCuentasClientes" value="${totalCuentas}" disabled>
+					</div>
+					<div class="col">
+					    <label for="montoCuentasCorrientes">Monto Total Cuentas Corrientes</label>
+					    <input type="text" class="form-control" id="montoCuentasCorrientes" name="montoCuentasCorrientes" value="${totalCuentaCorriente}" disabled>
+					</div>
+					<div class="col">
+					    <label for="montoCajasAhorro">Monto Total Cajas de Ahorro</label>
+					    <input type="text" class="form-control" id="montoCajasAhorro" name="montoCajasAhorro" value="${totalCajaAhorro}" disabled>
+					</div>
 	               		</div>
 	            	</div>
         		</div>

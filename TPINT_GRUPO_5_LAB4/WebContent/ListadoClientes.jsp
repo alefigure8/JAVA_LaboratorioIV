@@ -1,4 +1,3 @@
-<%@page import="Helper.GUI"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List" %>
@@ -32,7 +31,7 @@
 		      <div class="col-lg-10 col-md-12 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2">
 	            	<!--TIUTLO PAGINA-->
-	           		<h1 class="mt-2"> <i class="fas fa-users me-2"></i>LISTADO CLIENTES</h1>
+	           		<h1 class="mt-4"> <i class="fas fa-users me-2"></i>LISTADO CLIENTES</h1>
 	          	</div>
 		        <div class="flex-grow-1">
 		          <!-- CONTENIDO-->
@@ -96,12 +95,10 @@
        		</div> 
     	</div>
 	</div>
-		<!-- CONFIRMAR -->
-		<div id="confirmarEl">CONFIRMAR</div>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	    
-	   <!-- POPUP -->
+	       		<!-- POPUP ERROR DE AUTENTICACION-->
 		<%if(request.getAttribute("tipo") != null){
 			%>
 			<jsp:include page="/WEB-INF/Components/popup.jsp">
@@ -111,9 +108,7 @@
 			</jsp:include>
 		<% } %>
 		<!-- FIN POPUP -->
-		
 	 </body>
-	 
 	 <script>
 	 
 	 	const filtroActivo = document.getElementById("filtroActivo");
@@ -122,7 +117,7 @@
 	 
 	 	//Confirmar y borrar cliente
 	 	function confirmarBorrado(id) {
-		 if (confirm('Seguro que desea eliminar al cliente')) {
+		 if (confirm('¿Seguro que desea eliminar al cliente')) {
 			 	window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?borrar=true&ID=" + id;
 		 	}
 		 }
@@ -131,6 +126,5 @@
 	 		const option = select.value;
 	 		window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?obtener=true&filtro=" + option;
 	 	}
-	 	
 	 </script>
 </html>

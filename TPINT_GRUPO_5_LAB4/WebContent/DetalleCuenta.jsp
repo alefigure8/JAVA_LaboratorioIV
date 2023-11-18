@@ -34,9 +34,7 @@
 	      	<jsp:param name="usuario" value="Ramón Ramirez" />
 	      </jsp:include>
 		      
-		      <% 
-
-
+	 <% 
 	StringBuilder CuentaFormateada = new StringBuilder();
 	Cuenta cuenta=null;
 	if(request.getAttribute("cuenta")!=null){
@@ -59,44 +57,56 @@
 		      
 		      <!--CONTENT-->
 		      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
-		        <div class="w-100 pt-2">
+		        <div class="w-100 pt-2 text-center mt-2">
 		          <h1>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
-		          <h4>NRO CUENTA: <%=CuentaFormateada.toString() %></h4>
-		          <h4>CBU: <%=cuenta.getCbu() %></h4>
-		          <h4>SALDO DISPONIBLE: $<%=cuenta.getSaldo()%></h4>
+		          <h5 class="mt-4">Numero de cuenta: <%=CuentaFormateada.toString() %></h5>
+		          <h5>CBU: <%=cuenta.getCbu() %></h5>
+		          <h5>Saldo: $<%=cuenta.getSaldo()%></h5>
 		        </div>
-		        <div class="flex-grow-1">
+		        <div class="flex-grow-1 mt-4">
 		          	<!-- CONTENIDO-->
-		      	 	<li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		      	     	 
+		      	 	<!--  <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		 -->     	     	 
 
-			      	 <table class="table" id="table_id">
-			      	 	<tr> <th>FECHA</th> <th>CONCEPTO</th><th>DESTINO</th><th>NUMERO</th><th>TIPO DE MOV.</th>  <th>IMPORTE</th>  </tr>
-			     <%for (Movimiento m :listaMovimientos){ %>
-			     		      	 <form action="ServletDetalleMovimiento" method="get">
-			      	 	<tr> <td><%=m.getFechaMovimiento() %></td>	      	 		      	 	
-			      	 	<td><%=m.getTipoMovimiento().getDescripcion() %></td>
-			      	 	<% if (m.getTipoMovimiento().getId()==1 || m.getTipoMovimiento().getId()==2) {%>
-			      	 	<td>CBU:<%=cuenta.getCbu() %></td>			      	 	
-			      	 	<%} else{ %>
-			      	 	<td>#<%=m.getNumeroReferencia() %></td>
-			      	 	<%} %>
-			      	 	
-			      	 	<td><%=m.getId() %></td>
-			      	 	<td><%=m.getOperacion() %></td>
-			      	 	<% if(m.getOperacion().equals("Entrada")) { %>
-	            				 <th style=color:#00a000;>$<%=m.getMonto() %></th>
-	            				 <% } else{ %>
-	            				 <th  style=color:#ff0000;>$<%=m.getMonto() %></th>
-	            				 <%} %>
-	            				
-	            		<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
-	            		    		<td><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></td>
-			      	 	</tr>	
-			      	 		 </form>	      	 	 
-			      	 	<%} %>
-			      	 	
-			      	 </table>
-			      
+			      	<table class="table" id="table_id">
+					  <thead>
+					    <tr> 
+					      <th>FECHA</th>
+					      <th>CONCEPTO</th>
+					      <th>DESTINO</th>
+					      <th>NUMERO</th>
+					      <th>TIPO DE MOV.</th>
+					      <th>IMPORTE</th>
+					      <th>ACCIÓN</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <% for (Movimiento m : listaMovimientos) { %>
+					    <tr>
+					      <td><%= m.getFechaMovimiento() %></td>
+					      <td><%= m.getTipoMovimiento().getDescripcion() %></td>
+					      <% if (m.getTipoMovimiento().getId() == 1 || m.getTipoMovimiento().getId() == 2) { %>
+					      <td>CBU: <%= cuenta.getCbu() %></td>
+					      <% } else { %>
+					      <td>#<%= m.getNumeroReferencia() %></td>
+					      <% } %>
+					      <td><%= m.getId() %></td>
+					      <td><%= m.getOperacion() %></td>
+					      <% if (m.getOperacion().equals("Entrada")) { %>
+					      <td style="color:#00a000;">$<%= m.getMonto() %></td>
+					      <% } else { %>
+					      <td style="color:#ff0000;">$<%= m.getMonto() %></td>
+					      <% } %>
+					      <td>
+					        <form action="ServletDetalleMovimiento" method="get">
+					          <input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER">
+					          <input type="hidden" name="idmovimiento" value="<%= m.getId() %>">
+					        </form>
+					      </td>
+					    </tr>
+					    <% } %>
+					  </tbody>
+					</table>
+
 		        </div>
 		      </div>
 	       </div>

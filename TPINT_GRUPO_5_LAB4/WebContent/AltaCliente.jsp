@@ -588,7 +588,8 @@
 
 		      }
 		 }
-
+	</script>
+	<script>
     //PROVINCIAS Y LOCALIDADES
     
     var provinciasArray = [];
@@ -606,9 +607,12 @@
         for (Localidad localidad : localidades) { %>
             localidadesArray.push({ id: "<%= localidad.getIdLocalidad() %>", nombre: "<%= localidad.getNombre() %>", idProvincia: "<%= localidad.getIdProvincia() %>" });
         <% }
+        
+        
     } %>
 
     function seleccionarProvincia() {
+    	
         var provinciaSelect = document.getElementById("provincia");
         var localidadSelect = document.getElementById("localidad");
         var selectedProvinciaId = provinciaSelect.value;
@@ -634,7 +638,9 @@
         }
     }
     
-    
+    </script>
+     
+   <script>
     
   //VALIDAR FECHA					
 

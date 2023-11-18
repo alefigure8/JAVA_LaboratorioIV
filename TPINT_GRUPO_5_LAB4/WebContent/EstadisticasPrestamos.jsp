@@ -82,7 +82,7 @@
 	     <!--MAIN-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-center" >
 	        <div class="w-100 pt-2" >
-	          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS</h1>
+	          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS PRESTAMOS</h1>
 	        </div>
 	        <div class="flex-grow-1" >
 	      

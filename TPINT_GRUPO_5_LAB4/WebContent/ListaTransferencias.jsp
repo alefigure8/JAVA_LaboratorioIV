@@ -68,7 +68,7 @@
 	    	<!--TITULO-->
 			<div class="w-100 pt-2">
 			  <!--TIUTLO PAGINA-->
-			  <h1 class="mt-2">TRANSFERENCIA</h1>
+			  <h1 class="mt-4"><i class="fas fa-exchange-alt me-2"></i>TRANSFERENCIA</h1>
 			</div>
 			<div class="text-md-start">
 	            <h4 class="opacity-75">Nueva Transferencia</h4>
