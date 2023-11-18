@@ -84,7 +84,7 @@
 	          <div class="col-4 text-md-start">
 	            <h4 class="opacity-75">Historial de transferencias realizadas</h4>
 	          </div>
-	          <div class="col-md-8">
+	          <div class="col-md-8 mb-4">
 	            <form action="ServletListaTransferencias" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
                 <input type="hidden" name="listado" value="true"/>
                   <select name="cuentasDestino" class="form-select ">
@@ -93,11 +93,11 @@
                     <option value="propias">Propias</option>
                   </select>
       
-                   <select id="importes" name="Importes" class="form-select ">
+                   <select id="importes" name="importes" class="form-select ">
                     <option value="todas">Todos los importes</option>
-                    <option value="Mayor a">Mayor a</option>
-                    <option value="Igual a">Igual a</option>
-                    <option value="Menor a">Menor a</option>
+                    <option value="mayor">Mayor a</option>
+                    <option value="igual">Igual a</option>
+                    <option value="menor">Menor a</option>
                   </select>
                   <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
                   

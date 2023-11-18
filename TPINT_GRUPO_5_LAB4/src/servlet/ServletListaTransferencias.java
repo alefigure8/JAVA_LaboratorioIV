@@ -1,8 +1,10 @@
 package servlet;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -36,7 +38,7 @@ public class ServletListaTransferencias extends HttpServlet {
 			Cliente cliente = (Cliente)session.getAttribute("cliente");
 			
 			/** TODOS LOS MOVIMIENTOS DE TRANSFERENCIA **/
-			if(request.getParameter("todos")!=null) {
+			if(request.getParameter("todos")!=null || request.getParameter("btnLimpiarFiltros") !=null) {
 				
 				try {
 					//Obtener listado de movimientos por cliente
@@ -78,9 +80,20 @@ public class ServletListaTransferencias extends HttpServlet {
 						HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
 						List<Movimiento> listadoMovimientoFiltrado = listadoMovimiento;
 						
+						/* FILTRO DESTINO*/
 						if(!cuentasDestino.equals("todas")) {
-							listadoMovimientoFiltrado = obtenerListaPorDestino(listadoMovimiento, cuentasDestino, cliente, destinatarios);
-						}				
+							listadoMovimientoFiltrado = obtenerListaPorDestino(listadoMovimientoFiltrado, cuentasDestino, cliente, destinatarios);
+						}		
+						
+						/* FILTRO IMPORTE */
+						if(!importes.equals("todas")) {
+							listadoMovimientoFiltrado = obtenerListaPorImportes(listadoMovimientoFiltrado, importes, rangoImporte);
+						}	
+						
+						/* FILTRO FECHA */
+						if(!fechaDesde.isEmpty() || !fechaHasta.isEmpty()) {
+							listadoMovimientoFiltrado = obtenerListaPorFecha(listadoMovimientoFiltrado, fechaDesde, fechaHasta);
+						}
 						
 						//Set atributos
 						request.setAttribute("lista", listadoMovimientoFiltrado);
@@ -99,11 +112,6 @@ public class ServletListaTransferencias extends HttpServlet {
 			}
 		}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-	
 	/** FILTRAR LISTADO POR OPERACION **/
 	protected List<Movimiento> obtenerListaPorOperacion(List<Movimiento> listado, String operacion){
 
@@ -120,7 +128,6 @@ public class ServletListaTransferencias extends HttpServlet {
 	
 	/** FILTRAR LISTADO POR DESTINO **/
 	protected List<Movimiento> obtenerListaPorDestino(List<Movimiento> listado, String destino, Cliente cliente, HashMap<Integer, Destinatario> destinatario){
-			System.out.println("FUNCION DESTINO " + destino);
 			List<Movimiento> listadoMovimiento = new ArrayList<Movimiento>();
 			
 			if(destino.equals("terceros")) {
@@ -138,6 +145,65 @@ public class ServletListaTransferencias extends HttpServlet {
 			}
 			
 			return listadoMovimiento;
+	}
+	
+	/** FILTRAR LISTADO POR DESTINO **/
+	protected List<Movimiento> obtenerListaPorImportes(List<Movimiento> listado, String importes, String rangoImporte){
+		
+			Double rango = Double.valueOf(rangoImporte);
+			
+			List<Movimiento> listadoMovimiento = new ArrayList<Movimiento>();
+			
+			if(importes.equals("mayor")) {
+				for(Movimiento movimiento : listado) {
+					if(movimiento.getMonto() > rango) {
+						listadoMovimiento.add(movimiento);
+					}
+				}
+			} 
+			
+			if(importes.equals("menor")) {
+				for(Movimiento movimiento : listado) {
+					if(movimiento.getMonto() < rango) {
+						listadoMovimiento.add(movimiento);
+					}
+				}
+			}
+			
+			if(importes.equals("igual")) {
+				for(Movimiento movimiento : listado) {
+					if(movimiento.getMonto() == rango) {
+						listadoMovimiento.add(movimiento);
+					}
+				}
+			}
+			
+			return listadoMovimiento;
+	}
+	
+	/** FILTRAR LISTADO POR FECHA **/
+	protected List<Movimiento> obtenerListaPorFecha(List<Movimiento> listado, String desde, String hasta) {
+	    List<Movimiento> listadoMovimiento = new ArrayList<>();
+
+	    LocalDate desdeAux = !desde.isEmpty() ? LocalDate.parse(desde) : null;
+	    LocalDate hastaAux = !hasta.isEmpty() ? LocalDate.parse(hasta) : null;
+
+	    Iterator<Movimiento> iterator = listado.iterator();
+	    
+	    while (iterator.hasNext()) {
+	        Movimiento movimiento = iterator.next();
+	        LocalDate fechaMovimiento = movimiento.getFechaMovimiento();
+
+	        if (desdeAux != null && fechaMovimiento.isBefore(desdeAux)) {
+	            iterator.remove();
+	        } else if (hastaAux != null && fechaMovimiento.isAfter(hastaAux)) {
+	            iterator.remove();
+	        } else {
+	            listadoMovimiento.add(movimiento);
+	        }
+	    }
+
+	    return listadoMovimiento;
 	}
 
 }
