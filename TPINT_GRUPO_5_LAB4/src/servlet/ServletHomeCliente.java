@@ -29,7 +29,6 @@ import negocioDaoImp.MovimientoNegocioDaoImp;
 public class ServletHomeCliente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
   
-
 	ICuentaNegocioDao negocioCuenta = new CuentaNegocioDaoImp();
 	ArrayList<Cuenta> cuentasCliente = null;
 	IMovimientoNegocioDao negocioMovimiento = new MovimientoNegocioDaoImp();
@@ -38,15 +37,14 @@ public class ServletHomeCliente extends HttpServlet {
 	IClienteNegocioDao negocioCliente = new ClienteNegocioDaoImp();
 	Cliente cliente = null;
 	Cuenta cuentaVisible = null;
+	
     public ServletHomeCliente() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		
 		HttpSession session = request.getSession();
 		
 		if(request.getParameter("homecliente")!=null) {
@@ -59,6 +57,7 @@ public class ServletHomeCliente extends HttpServlet {
 			//	System.out.println("cliente nulo");
 						
 			}
+			
 			try {
 				cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
 			} catch (SQLException e) {

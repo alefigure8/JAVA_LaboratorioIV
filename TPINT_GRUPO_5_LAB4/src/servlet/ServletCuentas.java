@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import entidad.Cliente;
 import entidad.Cuenta;
+import entidad.Usuario;
 import negocioDao.ICuentaNegocioDao;
 import negocioDaoImp.CuentaNegocioDaoImp;
 
@@ -37,9 +38,9 @@ public class ServletCuentas extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		Cliente cliente = null;
+		Cliente cliente = new Cliente();
 		ICuentaNegocioDao negocioCuenta = new CuentaNegocioDaoImp();
-		ArrayList<Cuenta> cuentasCliente = null;
+		ArrayList<Cuenta> cuentasCliente = new ArrayList<Cuenta>();
 
 		HttpSession session = request.getSession(); 
 		

@@ -10,13 +10,11 @@
     if (session.getAttribute("usuario") == null) {
     	
         // Borramos lo que haya en la sesión
-        session.invalidate();
-
         try {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/servletAutenticacion?sesion=error");
             dispatcher.forward(request, response);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
+        } catch(Exception e){
+        	e.printStackTrace();
         }
     } 
     
@@ -28,7 +26,7 @@
 	    	try {
 	            RequestDispatcher dispatcher = request.getRequestDispatcher("/servletAutenticacion?sesion=permiso");
 	            dispatcher.forward(request, response);
-	        } catch (ServletException | IOException e) {
+	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 	    }

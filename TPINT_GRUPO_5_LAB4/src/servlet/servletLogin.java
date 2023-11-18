@@ -89,7 +89,7 @@ public class servletLogin extends HttpServlet {
 					request = GUI.mensajes(request, "error", "Usuario no Encontrado", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 					rd.forward(request, response);	
-				}catch (Exception e) {
+				}catch (ErrorInternoException e) {
 					/* ERROR :: General */
 					request = GUI.mensajes(request, "error", "Error", e.getMessage());
 					RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");

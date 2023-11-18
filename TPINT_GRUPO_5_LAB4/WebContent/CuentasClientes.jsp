@@ -1,3 +1,4 @@
+<%@page import="entidad.Usuario"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@page import="entidad.Cuenta"%>
 <%@page import="entidad.TipoCuenta"%>
@@ -7,6 +8,19 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
+<%
+	Usuario usuario = new Usuario();
+
+	if(session.getAttribute("usuario") != null ){
+		usuario = (Usuario)session.getAttribute("usuario");
+	}
+%>
+
+<!-- AUTENTICACION -->
+<jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
+	<jsp:param name="TipoUsuarioPagina" value="<%=usuario.getTipoAcceso()%>" />
+</jsp:include>
+<!-- FIN AUTENTICACION -->
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -22,33 +36,30 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	
-	<body class="d-flex flex-column">
+	<body class="d-flex flex-column m-0">
  <% 
-	                  ArrayList<Cuenta> listadoCuentas = null;
-               		  String [] listadoNombres = null;
-      				ArrayList<TipoCuenta> tiposCuenta = null;
-	                  if (request.getAttribute("listadoCuentas")!=null){
-	                	  
-               				listadoCuentas = (ArrayList<Cuenta>)request.getAttribute("listadoCuentas");
-	                            			 
-	                  }
-	                  if (request.getAttribute("listadoNombres")!=null){
-	  	             	    listadoNombres= new String[listadoCuentas.size()];
-	  	                	listadoNombres = (String [])request.getAttribute("listadoNombres");
-	                  }
-	                  if (request.getAttribute("tiposCuenta")!=null){
-	      				tiposCuenta= (ArrayList<TipoCuenta>)  request.getAttribute("tiposCuenta");
-	                  }
-	                  
-	                  
-	                  
-	                  
-               	  %>
+        ArrayList<Cuenta> listadoCuentas = new ArrayList<>();
+     	String [] listadoNombres = null;
+		ArrayList<TipoCuenta> tiposCuenta = null;
+		
+         if (request.getAttribute("listadoCuentas")!=null){
+     		listadoCuentas = (ArrayList<Cuenta>)request.getAttribute("listadoCuentas");        			 
+         }
+         
+         if (request.getAttribute("listadoNombres")!=null){
+       	    listadoNombres= new String[listadoCuentas.size()];
+          	listadoNombres = (String [])request.getAttribute("listadoNombres");
+         }
+         
+         if (request.getAttribute("tiposCuenta")!=null){
+			tiposCuenta= (ArrayList<TipoCuenta>)  request.getAttribute("tiposCuenta");
+         }               
+ %>
             
       <!--CONTENIDO-->
                 	  
-    <div class="container-fluid justify-content-center">
-        <div class="row ">
+    <div class="row justify-content-center flex-grow-1">
+        <div class="row">
 
             <!-- SIDEBAR -->
            
@@ -79,9 +90,11 @@
 			    <form class="d-flex gap-2" action="ServletCuentasClientes" method="get" onsubmit="return validarFechas()">
 			        <select Name="TipoCuenta" class="form-select">
 			            <option value="0">Todas</option>
-			            <% for (TipoCuenta tc : tiposCuenta) { %>
-			                <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
-			            <% } %>
+			            <%if(tiposCuenta != null){ %>
+				            <% for (TipoCuenta tc : tiposCuenta) { %>
+				                <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
+				            <% }
+			            }%>
 			        </select>
 			        
 			        <select id="importes" name="Importes" class="form-select ">			
@@ -103,7 +116,6 @@
 		              </div>		
 			
 			        
-			        
 			        <input class="btn btn-outline-primary" type="submit" name="btnfiltrar" value="Filtrar">
 			        <input type="submit" class="btn btn-primary btnEnviar" name="btnLimpiarFiltros" value="Limpiar filtros">
 			    </form>
@@ -111,90 +123,78 @@
 			    <a type="submit" class="btn btn-primary btnEnviar mt-2 mt-md-0" href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp">Dar cuenta de Alta</a>
 			</div>
 
-
-	                	  
-	    
 	            <!--TABLA-->
 	            <div class="d-flex  flex-column">
+                    <form action="ServletCuentasClientes" method="get">
 	 				   <table id="table_id" class="table display text-center">
-	                <thead>
-	                  <tr>
-	                    <th scope="col">Cuenta</th>
-	                    <th scope="col">CBU</th>
-	                    <th scope="col">Tipo de Cuenta</th>
-	                    <th scope="col">Saldo</th>
-	                    <th scope="col">Cliente</th>
-	                    <th scope="col">Fecha de Alta</th>
-	                    <th scope="col">Estado</th>
-	                    <th scope="col">Modificar</th>
-	                    <th scope="col">Eliminar</th>
-	              	                  </tr>
-	                </thead>
-	                <tbody>
+		                <thead>
+		                  <tr>
+		                    <th scope="col">Cuenta</th>
+		                    <th scope="col">CBU</th>
+		                    <th scope="col">Tipo de Cuenta</th>
+		                    <th scope="col">Saldo</th>
+		                    <th scope="col">Cliente</th>
+		                    <th scope="col">Fecha de Alta</th>
+		                    <th scope="col">Estado</th>
+		                    <th scope="col">Modificar</th>
+		                    <th scope="col">Eliminar</th>
+		              	                  </tr>
+		                </thead>
+		                <tbody>
 	               
-	                	  
 	                	  <% 
-	                	
-	                	  if (listadoCuentas !=null){
+	                	  if (listadoCuentas != null){
 	           
-	                	  for(Cuenta c : listadoCuentas ){
+	                	 	 for(Cuenta c : listadoCuentas ){
 	                	
-	                		  
-	                		  %>
-	                    <tr>
-	                         <form action="ServletCuentasClientes" method="get">
-	                      <td><i class="fa-solid fa-chart-simple opacity-50"></i><span class="black-75 me-2"><%=c.getNumeroCuenta()%></span></td>
-	                      <input type="hidden" name="numerocuenta" value="<%=c.getNumeroCuenta() %>">
-	                      <input type="hidden" name="idcliente" value="<%=c.getIdCliente() %>">
-	                      
-	                      <td><span class="black-75"><%= c.getCbu() %></span></td>
-	                      <td><span class="black-75"><%=c.getTipoCuenta().getDescripcion() %></span></td>
-	                      <td><span class="black-75"><%=c.getSaldo() %></span></td>
-	                      <td><i class="fa-solid fa-user opacity-50 me-2"></i><%=listadoNombres[listadoCuentas.indexOf(c)] %></td>
-	                      <td><span class="black-75"><%=c.getFechaCreacion().toString() %></span></td>
-	                      <%if(c.isActivo()){%>
-	                      <td><span class="btn btn-success btn-sm disabled">Activa</span></td>
-	                         		<th>
-						<input type="submit" class="btn btn-primary btn-sm" name="btnModificarCuenta" value="Modificar">
-				             
-				         </th>
-				         	      
-					                      	<th>
-						<input type="submit" class="btn btn-danger btn-sm" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
-				        
-				         </th>	
-	                      <%}else{%>
-	                      <td><span class="btn btn-secondary btn-sm disabled">Inactiva</span></td>
-	                              		<th>
-						<input type="submit" class="btn btn-primary btn-sm disabled" name="btnModificarCuenta" value="Modificar">
-				             
-				         </th>
-				         	      
-					                      	<th>
-						<input type="submit" class="btn btn-danger btn-sm disabled" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
-				        
-				         </th>	
-	                      <%} %>
-	                   
+	                		%>
+		                    <tr>
+		                      <td><i class="fa-solid fa-chart-simple opacity-50"></i><span class="black-75 me-2"><%=c.getNumeroCuenta()%></span></td>
+		                      <input type="hidden" name="numerocuenta" value="<%=c.getNumeroCuenta() %>">
+		                      <input type="hidden" name="idcliente" value="<%=c.getIdCliente() %>">
+		                      
+		                      <td><span class="black-75"><%= c.getCbu() %></span></td>
+		                      <td><span class="black-75"><%=c.getTipoCuenta().getDescripcion() %></span></td>
+		                      <td><span class="black-75"><%=c.getSaldo() %></span></td>
+		                      <% if(listadoNombres != null) {%>
+		                      	<td><i class="fa-solid fa-user opacity-50 me-2"></i><%=listadoNombres[listadoCuentas.indexOf(c)] %></td>
+		                      <%}%>
+		                      <td><span class="black-75"><%=c.getFechaCreacion().toString() %></span></td>
+		                      <%if(c.isActivo()){%>
+		                      <td><span class="btn btn-success btn-sm disabled">Activa</span></td>
+		                      
+		                      <th>
+							  	<input type="submit" class="btn btn-primary btn-sm" name="btnModificarCuenta" value="Modificar">  
+					         </th>
+					         	      
+						     <th>
+								<input type="submit" class="btn btn-danger btn-sm" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
+					         </th>	
+					         
+		                      <%}else{%>
+		                      
+		                      <td><span class="btn btn-secondary btn-sm disabled">Inactiva</span></td>
+		                      <th>
+								<input type="submit" class="btn btn-primary btn-sm disabled" name="btnModificarCuenta" value="Modificar">  
+					         </th>
+					         	      
+						    <th>
+								<input type="submit" class="btn btn-danger btn-sm disabled" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
+					         </th>	
+		                      <%} %>
 	                 
-	                   
-				         	                 
-	                      </form>
-	                  </tr>
-	                  
-	                  <%} }%>           
-	              	          
+		                  </tr>
+	                  <%} 
+              	 	 }%>                    
 	                </tbody>
 	              </table>
-	              
-	            
+                 </form>
 	            </div>
 	          <a href="PerfilBanco.jsp" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
 
-	          
-	            </div>
+           </div>
 	         
-	             </div>
+        </div>
 	            	    
 	           
 			</div>

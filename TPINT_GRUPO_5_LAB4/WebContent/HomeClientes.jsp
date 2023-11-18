@@ -98,31 +98,34 @@ session.removeAttribute("totalCalculado"); %>
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
 	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
-	                        <table class="table table-bordered mt-2">
-	                       <tr>
-				                <th>Tipo de Operación</th>
-				                <th>Fecha</th>
-				                <th>Monto</th>
-				                <th>Acción</th>
-				            </tr>
+			              		<form action="ServletDetalleMovimiento" method="get">
+	                        		<table class="table table-bordered mt-2">
+				                       <tr>
+							                <th>Tipo de Operación</th>
+							                <th>Fecha</th>
+							                <th>Monto</th>
+							                <th>Acción</th>
+							            </tr>
 	                        
-	                        <% for (Movimiento m : movimientosCuenta) { %>
-					        <tr>
-					              <form action="ServletDetalleMovimiento" method="get">
-	            				<th><%=m.getTipoMovimiento().getDescripcion() %></th>
-	            				 <th><%=m.getFechaMovimiento() %></th>
-	            				<% if(m.getOperacion().equals("Entrada")) { %>
-	            				 <th style=color:#00a000;>$<%=m.getMonto() %></th>
-	            				 <% } else{ %>
-	            				 <th  style=color:#ff0000;>$<%=m.getMonto() %></th>
-	            				 <%} %>
-	            				  	<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
-	            				   	 <th><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></th>	        				
-	        						
-	            			</tr>
-	        				</form>
-	        				<%} %>
-						  </table>
+	                       			 <% for (Movimiento m : movimientosCuenta) { %>
+						        			<tr>
+						              
+					            				<th><%=m.getTipoMovimiento().getDescripcion() %></th>
+					            				 <th><%=m.getFechaMovimiento() %></th>
+					            				 
+				            					 <% if(m.getOperacion().equals("Entrada")) { %>
+					            				 	<th style=color:#00a000;>$<%=m.getMonto() %></th>
+					            				 <% } else{ %>
+					            				 	<th  style=color:#ff0000;>$<%=m.getMonto() %></th>
+					            				 <%} %>
+					            				 
+				           				  		<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
+				            				   	 <th><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></th>	        				
+			        						
+			            					</tr>
+	        						<%} %>
+						  		</table>
+        					</form>
 	   					</div>
 					</div>
 		    	</div>

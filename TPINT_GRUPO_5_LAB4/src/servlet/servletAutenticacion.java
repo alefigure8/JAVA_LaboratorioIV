@@ -36,6 +36,7 @@ public class servletAutenticacion extends HttpServlet {
 			
 			//No tiene credenciales
 			if(value.compareTo("error") == 0) {
+				System.out.println("entro ERROR");
 				session.invalidate();
 				request.setAttribute("tipo", "error");
 				request.setAttribute("titulo", "No tiene permiso");
@@ -46,6 +47,7 @@ public class servletAutenticacion extends HttpServlet {
 			
 			//No tiene Permisos suficientes
 			if(value.compareTo("permiso") == 0) {
+				System.out.println("entro PERMISO");
 				session.invalidate();
 				request.setAttribute("tipo", "error");
 				request.setAttribute("titulo", "Permiso Insuficiente");

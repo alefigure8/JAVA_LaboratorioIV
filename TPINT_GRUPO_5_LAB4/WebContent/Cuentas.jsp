@@ -8,11 +8,20 @@
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
 </jsp:include>
 <!-- FIN AUTENTICACION -->
+
 <% 
-session.removeAttribute("montoSeleccionado");
-session.removeAttribute("tipoTasaSeleccionada");
-session.removeAttribute("interesCalculado");
-session.removeAttribute("totalCalculado"); %>
+	if(session.getAttribute("montoSeleccionado")!=null)
+		session.removeAttribute("montoSeleccionado");
+
+	if(session.getAttribute("tipoTasaSeleccionada")!=null)
+		session.removeAttribute("tipoTasaSeleccionada");
+	
+	if(session.getAttribute("interesCalculado")!=null)
+		session.removeAttribute("interesCalculado");
+	
+	if(session.getAttribute("totalCalculado")!=null)
+		session.removeAttribute("totalCalculado"); 
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -29,13 +38,13 @@ session.removeAttribute("totalCalculado"); %>
 	<body class="d-flex flex-column">
 	
 	<% 
-	ArrayList<Cuenta> cuentasCliente = null;
-	if(request.getAttribute("cuentasCliente")!=null){
+		ArrayList<Cuenta> cuentasCliente = null;
 		
-		cuentasCliente = (ArrayList<Cuenta>)request.getAttribute("cuentasCliente");
-	};
+		if(request.getAttribute("cuentasCliente")!=null){
+			
+			cuentasCliente = (ArrayList<Cuenta>)request.getAttribute("cuentasCliente");
+		};
 
- 
 	%>
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
@@ -53,34 +62,34 @@ session.removeAttribute("totalCalculado"); %>
 			  <div class="col-sm-6 mb-3 mb-sm-0">
 			    <div class="card mt-4">
 			      <div class="card-body">
-			       <% for (Cuenta c : cuentasCliente){ 
-			    	      String cuentastring = String.valueOf(c.getNumeroCuenta());
-			              StringBuilder CuentaFormateada = new StringBuilder();
-			              CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
-			            %>
-			        <h5 class="card-title">CUENTA NRO. <%=CuentaFormateada%></h5>
-			        <form action="ServletDetalleCuenta" method="get">
-			          <ul class="list-group border-0">
-			           
-			            
-			            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
-			              <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
-			              <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
-			              <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
-			            </li>
-			            <% } %>
+			      <%if(cuentasCliente != null){ %>
+				       <% for (Cuenta c : cuentasCliente){ 
+				    	      String cuentastring = String.valueOf(c.getNumeroCuenta());
+				              StringBuilder CuentaFormateada = new StringBuilder();
+				              CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+				            %>
+				        <h5 class="card-title">CUENTA NRO. <%=CuentaFormateada%></h5>
+				        <form action="ServletDetalleCuenta" method="get">
+				          <ul class="list-group border-0">
+				           
+				            
+				            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
+				              <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
+				              <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
+				              <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
+				            </li>
+				            <% 
+				       		}
+				       } %>
 			          </ul>
 			        </form>
 			      </div>
 			      
 			    </div>
 			    	 <a href="ServletHomeCliente?homecliente=homecliente" class="btn btn-primary btnEnviar mt-3"><i class="fa-solid fa-arrow-left me-2"></i>Regresar</a>
-			    
 			  </div>
 			</div>
 
-	        
-	        
 	      </div>
        </div>
        <!-- FIN MAIN -->
