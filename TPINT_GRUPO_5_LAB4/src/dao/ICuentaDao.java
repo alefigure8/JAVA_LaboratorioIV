@@ -9,11 +9,14 @@ import entidad.Cuenta;
 import entidad.TipoCuenta;
 
 public interface ICuentaDao {
+	 public List<Cuenta> obtenerActivas() throws SQLException;
 	 public boolean insertar(Cuenta cuenta) throws SQLException;
 	 public boolean editar(Cuenta cuenta) throws SQLException;
 	 public boolean borrar(int nroCuenta) throws SQLException; // baja logica
 	 public List<Cuenta> obtenerTodas() throws SQLException;
+
 	 public List<Cuenta> obtenerCuentasCliente(int idCliente) throws SQLException;
+	 public List<Cuenta> obtenerCuentasActivasCliente(int idCliente) throws SQLException;
 	 public Cuenta obtenerUna(int nroCuenta) throws SQLException;
 	 public Cuenta obtenerUnaPorCBU(String cbu) throws SQLException;
 	 public int cantidadCuentas(int idCliente) throws SQLException; // devuelve la cantidad de cuentas existentes del cliente
@@ -31,4 +34,5 @@ public interface ICuentaDao {
 	 public int obtenerTotalCuentasPorAnioYMesCaja(String anio, String mes) throws SQLException;
 	 public int obtenerTotalCuentasPorAnioCorriente(String anio) throws SQLException;
 	 public int obtenerTotalCuentasPorAnioYMesCorriente(String anio, String mes) throws SQLException;
+	 
 }

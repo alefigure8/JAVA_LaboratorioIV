@@ -178,6 +178,18 @@ public class CuentaNegocioDaoImp implements ICuentaNegocioDao {
 	 public int obtenerTotalCuentasPorAnioYMesCorriente(String anio, String mes) throws SQLException{
 		return cuentaDao.obtenerTotalCuentasPorAnioYMesCorriente(anio, mes);
 	}
+
+	@Override
+	public List<Cuenta> obtenerCuentasActivasCliente(int idCliente) throws SQLException {
+		
+		return cuentaDao.obtenerCuentasActivasCliente(idCliente);
+	}
+
+	@Override
+	public List<Cuenta> obtenerActivas() throws SQLException {
+	
+		return cuentaDao.obtenerActivas()	;
+	}
 	
 
 }

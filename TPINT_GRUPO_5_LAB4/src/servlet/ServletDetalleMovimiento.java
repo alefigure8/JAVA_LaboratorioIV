@@ -78,9 +78,9 @@ public class ServletDetalleMovimiento extends HttpServlet {
 				case 1:
 				
 				
-			
+			        
 			rd = request.getRequestDispatcher("/DetalleMovimiento.jsp"); 
-				
+			rd.forward(request, response);
 				break;
 				case 2:
 				

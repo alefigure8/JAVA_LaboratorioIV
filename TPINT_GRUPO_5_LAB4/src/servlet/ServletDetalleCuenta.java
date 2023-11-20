@@ -29,7 +29,8 @@ public class ServletDetalleCuenta extends HttpServlet {
        Cuenta cuenta=null;       
        ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp();
        IMovimientoNegocioDao negocioMovimiento = new MovimientoNegocioDaoImp();
-       ArrayList<Movimiento> listaMovimientos = null;
+       ArrayList<Movimiento> listaMovimientos = new ArrayList<Movimiento>();
+       ArrayList<Movimiento> listaMovimientosordenada = new ArrayList<Movimiento>();
 
       public ServletDetalleCuenta() {
         super();
@@ -45,23 +46,36 @@ public class ServletDetalleCuenta extends HttpServlet {
 
 			if(request.getParameter("numeroCuenta")!=null) {
 			
-			try {
-				cuenta = cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("numeroCuenta").toString()));
-			} catch (NumberFormatException | SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}	
+			
+				try {
+					cuenta = cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("numeroCuenta").toString()));
+				} catch (NumberFormatException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		
 				//System.out.println(cuenta.toString());
 			try {
+				listaMovimientos.clear();
+				listaMovimientosordenada.clear();
 				listaMovimientos = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuenta.getCbu());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+			for (int i = 0;i<=listaMovimientos.size()-1;i++) {
+			
+				System.out.println(i);
+				
+				Movimiento aux = new Movimiento();
+				aux = listaMovimientos.get(i);	
+			listaMovimientosordenada.add(aux);
+			}
+			
 			session.setAttribute("origen", "detallecuenta");
 			request.setAttribute("cuenta", cuenta);
-			request.setAttribute("listaMovimientos", listaMovimientos);
+			request.setAttribute("listaMovimientos", listaMovimientosordenada);
 			RequestDispatcher rd = request.getRequestDispatcher("/DetalleCuenta.jsp"); 
 	        rd.forward(request, response);
 			
@@ -77,8 +91,9 @@ public class ServletDetalleCuenta extends HttpServlet {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}	
-					//System.out.println(cuenta.toString());
+				
 				try {
+					listaMovimientos.clear();
 					listaMovimientos = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuenta.getCbu());
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

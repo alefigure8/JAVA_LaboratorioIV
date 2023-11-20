@@ -78,11 +78,13 @@
 				              <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
 				              <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
 				            </li>
+				                  </ul>
+				               </form>
 				            <% 
 				       		}
 				       } %>
-			          </ul>
-			        </form>
+			    
+			     
 			      </div>
 			      
 			    </div>

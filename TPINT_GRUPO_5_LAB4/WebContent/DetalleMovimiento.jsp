@@ -46,7 +46,7 @@
 	      </jsp:include>
 		  <!--CONTENIDO-->
       <div class="col-lg-9 col-md-12 mx-2" >
-        <div class="pt-2 d-flex gap-4 justify-content-start row">
+        <div class="pt-2 d-flex gap-4 justify-content-center row">
 
           <h1 class="mb-2">DETALLE DE MOVIMIENTO</h1>
 
@@ -90,6 +90,8 @@
               <p class="fs-5"><%=m.getFechaMovimiento() %> </p>
               <p class="mb-0">Monto Otorgado</p>
               <p class="fs-5"><%=p.getMontoPedido() %> </p>
+              <p class="mb-0">Monto con Intereses</p>
+              <p class="fs-5"><%=p.getMontoConIntereses() %> </p>
               <p class="mb-0">Cantidad de Cuotas</p>
               <p class="fs-5"><%=p.getTipoTasa().getCantCuotas()%> </p>
               <p class="mb-0">Tasa de interes</p>
@@ -121,7 +123,7 @@
               <p class="mb-0">Fecha de Vencimiento</p>
               <p class="fs-5"><%= cp.getFechaVencimiento() %> </p>
               <p class="mb-0">Fecha de Pago</p>
-              <p class="fs-5"><%= cp.getFechaPago() %> </p>
+              <p class="fs-5"><%= m.getFechaMovimiento() %> </p>
               <p class="mb-0">Monto Abonado</p>
               <p class="fs-5"><%= cp.getMontoCuota()%> </p>
          
@@ -165,11 +167,13 @@
   		%>
             <a href=<%=redirect%> class="p-2 rounded bg-main text-white text-decoration-none col-4 col-md-1 mb-4"><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
           </div>
-
+   
         </div>
-
+</div>
+			    	
       </div>
-	</div>
+            
+	
       <!--FIN MAIN-->
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>

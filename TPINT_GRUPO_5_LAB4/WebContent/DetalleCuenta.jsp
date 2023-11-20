@@ -106,7 +106,9 @@
 					    <% } %>
 					  </tbody>
 					</table>
-
+      <div> 
+ <a href="ServletCuentas?Cuentas=true" class="btn btn-primary btnEnviar mt-3"><i class="fa-solid fa-arrow-left me-2"></i>Regresar</a>
+			  </div>
 		        </div>
 		      </div>
 	       </div>

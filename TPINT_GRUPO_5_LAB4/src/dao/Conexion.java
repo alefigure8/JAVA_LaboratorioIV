@@ -16,9 +16,9 @@ public class Conexion {
 	private String user = "root";
 	
 	/* PASS*/
-	private String pass = "root";
+	//private String pass = "root";
 	//private String pass = "1234";
-	//private String pass = "Gato21226";
+	private String pass = "Gato21226";
 
 	/* DB */
 	private String dbName = "bdBancos";

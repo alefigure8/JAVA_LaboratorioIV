@@ -9,13 +9,13 @@ public class Cliente extends Usuario{
 	private String nombre;
 	private String apellido;
 	private int dni;
-	private int cuil;
+	private long cuil;
 	private String nacionalidad;
 	private String sexo;
 	private LocalDate nacimiento;	
 	private Direccion direccion;
 	private String email;
-	private int telefono;
+	private long telefono;
 	
 	
 	// CONSTRUCTORES
@@ -26,8 +26,8 @@ public class Cliente extends Usuario{
 	}
 	
 	public Cliente(String usuario, int iD, String nombre, String apellido, String contrasenia, LocalDate fechaAlta,
-			Boolean activo, TipoAcceso tipoAcceso, int dni, int cuil, String nacionalidad, String sexo, LocalDate nacimiento, Direccion direccion, String email,
-			int telefono) {
+			Boolean activo, TipoAcceso tipoAcceso, int dni, long cuil, String nacionalidad, String sexo, LocalDate nacimiento, Direccion direccion, String email,
+			long telefono) {
 		super(usuario, iD, contrasenia, fechaAlta, activo, tipoAcceso);
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -66,10 +66,10 @@ public class Cliente extends Usuario{
 	public void setDni(int dni) {
 		this.dni = dni;
 	}
-	public int getCuil() {
+	public long getCuil() {
 		return this.cuil;
 	}
-	public void setCuil(int cuil) {
+	public void setCuil(long cuil) {
 		this.cuil = cuil;
 	}
 	public String getNacionalidad() {
@@ -103,7 +103,7 @@ public class Cliente extends Usuario{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getTelefono() {
+	public long getTelefono() {
 		return this.telefono;
 	}
 	public void setTelefono(int telefono) {

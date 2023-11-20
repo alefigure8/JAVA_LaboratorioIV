@@ -30,9 +30,9 @@ public class ServletHomeCliente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
   
 	ICuentaNegocioDao negocioCuenta = new CuentaNegocioDaoImp();
-	ArrayList<Cuenta> cuentasCliente = null;
+	ArrayList<Cuenta> cuentasCliente = new ArrayList<Cuenta>();
 	IMovimientoNegocioDao negocioMovimiento = new MovimientoNegocioDaoImp();
-	ArrayList<Movimiento> movimientosCuenta = null;
+	ArrayList<Movimiento> movimientosCuenta = new ArrayList<Movimiento>();
 	ArrayList<Movimiento> tresmovimientosCuenta = new ArrayList<Movimiento>();
 	IClienteNegocioDao negocioCliente = new ClienteNegocioDaoImp();
 	Cliente cliente = null;
@@ -53,13 +53,9 @@ public class ServletHomeCliente extends HttpServlet {
 			cliente = (Cliente)session.getAttribute("cliente");
 			
 			}
-			else {
-			//	System.out.println("cliente nulo");
-						
-			}
-			
+		
 			try {
-				cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
+			cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -69,6 +65,7 @@ public class ServletHomeCliente extends HttpServlet {
 				cuentaVisible = cuentasCliente.get(0);
 	
 			}
+			
 			if(cuentaVisible!=null) {
 				
 				 
@@ -84,10 +81,13 @@ public class ServletHomeCliente extends HttpServlet {
 			
 			}
 			
-			for(Movimiento m : movimientosCuenta) {
+			for(int i = 0; i<3;i++) {
 				
-				if(movimientosCuenta.indexOf(m)<3)
-				tresmovimientosCuenta.add(m);
+				System.out.println(i);
+				
+				Movimiento aux = new Movimiento();
+				aux = movimientosCuenta.get(i);
+				tresmovimientosCuenta.add(aux);
 			}
 			
 			request.setAttribute("cuentaVisible", cuentaVisible);

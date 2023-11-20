@@ -94,7 +94,7 @@ public class ServletAltaCliente extends HttpServlet {
 					try {
 						cargarCliente(request,cliente);
 					} catch (SQLException e) {
-						
+						System.out.println("ERROR LINEA 97");
 						e.printStackTrace();
 					}
 					
@@ -108,7 +108,7 @@ public class ServletAltaCliente extends HttpServlet {
 			                response.getWriter().println("El correo no está registrado.");
 			                
 			              //Validamos usuario
-							if(clienteNegocioDao.obtenerUsuarioPorUsuario(request.getParameter("usuario"))==null) {
+							if(!clienteNegocioDao.existeSoloUsuario(request.getParameter("usuario"))) {
 								if(clienteNegocioDao.insertar(cliente)) {
 									session.setAttribute("clienteAgregado", cliente);
 
@@ -116,6 +116,7 @@ public class ServletAltaCliente extends HttpServlet {
 								}
 								else {
 									System.out.println("No se pudo insertar");
+									System.out.println("ERROR LINEA 119");
 								}
 							}
 							else {
@@ -124,7 +125,7 @@ public class ServletAltaCliente extends HttpServlet {
 								try {
 									cargarCliente(request, cliente);
 								} catch (SQLException e) {
-									
+									System.out.println("ERROR LINEA 128");
 									e.printStackTrace();
 								}
 								
@@ -144,6 +145,7 @@ public class ServletAltaCliente extends HttpServlet {
 						request.setAttribute("errorCorreo", e.getMessage()); 
 			        }catch (Exception e) {
 						e.printStackTrace();
+						System.out.println("ERROR LINEA 148");
 					}
 					
 				}
@@ -153,7 +155,7 @@ public class ServletAltaCliente extends HttpServlet {
 					try {
 						cargarCliente(request, cliente);
 					} catch (SQLException e) {
-						
+						System.out.println("ERROR LINEA 158");
 						e.printStackTrace();
 					}
 					
@@ -208,11 +210,13 @@ public class ServletAltaCliente extends HttpServlet {
 		direccion.setTipoDireccion(TipoDireccion.valueOf(request.getParameter("tipoDireccion")));
 		cliente.setDireccion(direccion);
 		
-		System.out.println("Direccion: " + cliente.getDireccion().toString());
+		
 		
 		//USUARIO
 		cliente.setUsuario(request.getParameter("usuario"));
 		cliente.setContrasenia(request.getParameter("contraseña"));
+		System.out.println("Direccion LINEA 218: " + cliente.getDireccion().toString());
+		System.out.println("Cliente LINEA 219: " + cliente);
 	}
 
 }

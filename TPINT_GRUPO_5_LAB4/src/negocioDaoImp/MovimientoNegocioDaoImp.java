@@ -176,6 +176,64 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 		return transferenciaRealizada;
 	}
 
+	//TRANSFERENCIA
+		public boolean insertarTransferenciaAnterior(String cbuCliente, String cbuDestinatario, Double monto, String concepto,LocalDate fecha) throws Exception, SaldoInsuficienteException, OperacionCanceladaException {
+			
+			//Variables
+			boolean transferenciaRealizada = false;
+			int numeroReferencia = generarNumeroReferencia();
+			
+			//Chequear saldo
+			CuentaNegocioDaoImp cuentaNegocioDaoImp = new CuentaNegocioDaoImp();
+			Cuenta cuenta = cuentaNegocioDaoImp.obtenerUnaPorCBU(cbuCliente);
+			
+			if(cuenta.getSaldo() < monto) {
+				//Lanzar error de saldo insuficiente
+				throw new SaldoInsuficienteException();
+			}
+			
+			//Movimiento Entrada a Destinatario
+			Movimiento movimiento = new Movimiento();
+			movimiento.setMonto(monto);
+			movimiento.setConcepto(concepto);
+			movimiento.setEstado(new Estado(1, "Aprobado"));
+			movimiento.setFechaMovimiento(fecha);
+			movimiento.setOperacion(Operacion.Entrada);
+			movimiento.setTipoMovimiento(new TipoMovimiento(4, "Transferencia"));
+			movimiento.setNumeroReferencia(numeroReferencia);
+			Cuenta cuentaAux = new Cuenta();
+			cuentaAux.setCbu(cbuDestinatario);
+			movimiento.setCuenta(cuentaAux);
+			
+			boolean esAprobada = this.insertar(movimiento);
+			
+			//Movimiento Salida Cliente
+			if(esAprobada) {
+				movimiento.setOperacion(Operacion.Salida);
+				cuentaAux.setCbu(cbuCliente);
+				movimiento.setCuenta(cuentaAux);
+				esAprobada = transferenciaRealizada = this.insertar(movimiento);
+				
+				if(esAprobada) {
+					//Restar Saldo
+					cuentaNegocioDaoImp.actualizarSaldo(cbuDestinatario, monto);
+					//SumarSaldo
+					cuentaNegocioDaoImp.actualizarSaldo(cbuCliente, (monto*-1));
+				}
+				
+			} else { //Si no se pudo transferir queda como rechazado
+				movimiento.setOperacion(Operacion.Salida);
+				cuentaAux.setCbu(cbuCliente);
+				movimiento.setCuenta(cuentaAux);
+				movimiento.setEstado(new Estado(1, "Rechazado"));
+				transferenciaRealizada = this.insertar(movimiento);
+				
+				throw new OperacionCanceladaException();
+			}
+			
+			return transferenciaRealizada;
+		}
+	
 	@Override
 	public Movimiento obtenerUnoPorId(int id) throws SQLException {
 

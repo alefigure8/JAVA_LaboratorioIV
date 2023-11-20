@@ -211,6 +211,7 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 		vectordeListasdeMesesCuotas[i] = new ArrayList<CuotaPrestamo>();	
 		vectorDeListasPorMesesPrestamos[i] = new ArrayList<Prestamo>(); 
 		montoTotalOtorgado[i] = 0; 
+		montoAcumuladoaPagarAnual[i] = 0;
 		}
 		//System.out.println("listaPrestamos:"+listadoTodosPrestamos.size());
 		// PROCESO LISTADO TOTAL PRESTAMOS
@@ -219,14 +220,11 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 	
 		if(p.getFechaPrestamo().getYear() == anio) {
 		
-			
-
-		
 		
 		
 		int mesIndice = p.getFechaPrestamo().getMonthValue()-1;
 		vectorDeListasPorMesesPrestamos[mesIndice].add(p);
-		
+		System.out.println(p.getFechaPrestamo());
 		
 	
 		
@@ -267,7 +265,7 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 				
 				if (c.getFechaPago()==null){
 				
-				montoAcumuladoaPagarAnual[i] += (montoAcumuladoaPagarAnual[i]+c.getMontoCuota()); 
+				montoAcumuladoaPagarAnual[i] += c.getMontoCuota(); 
 					
 				}
 				
@@ -442,7 +440,7 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 		
 protected boolean isAceptadoEseMes(Prestamo p,int indiceMes) {
 			
-			if(p.getEstado().getIdEstado()==2) {
+			if(p.getEstado().getIdEstado()==1) {
 				if(p.getFechaPrestamo().getMonthValue()-1 ==indiceMes) {
 				return true;
 				}}

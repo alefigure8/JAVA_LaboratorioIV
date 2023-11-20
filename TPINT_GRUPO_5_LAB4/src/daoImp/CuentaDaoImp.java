@@ -24,9 +24,15 @@ public class CuentaDaoImp implements ICuentaDao{
 	private static final String readAllCuentas = "select * from Cuentas c \r\n" + 
 			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta ";
 			/*"inner join estados e on c.IdEstados = e.IdEstados";*/
+	private static final String readAllActivas = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta where c.Activo=1";
+		
 	private static final String readAllCuentasPorCliente = "select * from Cuentas c \r\n" + 
 			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
 			 "where c.IdCliente = ?";
+	private static final String readAllCuentasActivasPorCliente = "select * from Cuentas c \r\n" + 
+			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
+			 "where c.IdCliente = ? and c.Activo=1";
 	/*"inner join estados e on c.IdEstados = e.IdEstados \r\n"*/
 	private static final String readOnePorNroCuenta = "select * from Cuentas c \r\n" + 
 			"inner join TiposCuenta tc on c.IdTipoCuenta = tc.IdTipoCuenta \r\n" + 
@@ -659,6 +665,51 @@ public class CuentaDaoImp implements ICuentaDao{
 				 
 				 
 			 }
+
+		@Override
+		public List<Cuenta> obtenerCuentasActivasCliente(int idCliente) throws SQLException {
+			PreparedStatement pStatement;
+			ResultSet rSet;
+			List<Cuenta> cuentas = new ArrayList<Cuenta>();
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(readAllCuentasActivasPorCliente);
+				pStatement.setInt(1, idCliente);
+				rSet=pStatement.executeQuery();
+				
+				while(rSet.next()) {
+					cuentas.add(getCuenta(rSet));
+				}
+				
+			} catch (Exception e) {
+				throw e;
+			}
+			
+			return cuentas;
+		}
+
+		@Override
+		public List<Cuenta> obtenerActivas() throws SQLException {
+			PreparedStatement pStatement;
+			ResultSet rSet;
+			List<Cuenta> cuentas = new ArrayList<Cuenta>();
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(readAllActivas);
+				rSet=pStatement.executeQuery();
+				
+				while(rSet.next()) {
+					cuentas.add(getCuenta(rSet));
+				}
+				
+			} catch (Exception e) {
+				throw e;
+			}
+			
+			return cuentas;
+		}
 	
 
 }

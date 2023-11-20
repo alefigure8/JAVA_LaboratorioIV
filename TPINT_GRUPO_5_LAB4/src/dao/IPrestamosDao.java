@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import entidad.CuotaPrestamo;
@@ -9,7 +10,8 @@ import entidad.Prestamo;
 import entidad.TipoTasa;
 
 public interface IPrestamosDao {
-
+	public boolean setcuotapagadaxidcuota (int idcuota, LocalDate fechapago);
+	public int obtenerUltimoIdPrestamo() throws SQLException;
 	public List<Prestamo> obtenerTodos();
 	public List<Prestamo> obtenerTodosxcliente(int idcliente);
 	public List<Prestamo> obtenerTodosxcuenta(int nrocuenta);

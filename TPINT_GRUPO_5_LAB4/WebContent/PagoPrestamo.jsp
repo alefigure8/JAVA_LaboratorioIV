@@ -43,21 +43,21 @@
 			System.out.println("RECIBO CON PARAMETER CUOTA A PAGAR"  + cuota);
     	 %>
      
-        <div class="col-10 d-flex flex-column justify-content-between">
-          <div class="w-100 pt-2">
+        <div class="col-10 d-flex flex-column justify-content-center align-items-center ">
+          <div class="w-100 pt-2 mt-4">
             <!--TIUTLO PAGINA-->
-            <h1 class="mt-2">PAGO PRESTAMO</h1>
+            <h1><i class="fa-solid fa-hand-holding-dollar me-2"></i>PAGO PRESTAMO</h1>
           </div>
-          <div class="flex-grow-1">
+          <div class="flex-grow-1 ">
             <!--FILTRO-->
-            <div class="d-flex flex-md-row flex-column w-100 gap-2 mt-4">
-                <h4 class="opacity-75">Prestamo #<%= prestamo.getId()%></h4>
+            <div class="text-center mt-4">
+                <h4 class="opacity-75" name="idPrestamo">Prestamo #<%= prestamo.getId()%></h4>
             </div>
 
             <!--TABLA-->
             
-       <form action="ServletPrestamos" method="post">
-            <div class="d-flex flex-md-row flex-column">
+       <form action="ServletPrestamos" method="post" >
+            <div class="d-flex justify-content-center flex-md-row flex-column">
               <div class="mt-4 border border-1 border-black border-opacity-25 rounded-1 p-2 mb-4" style="min-width: 300px;">
                 <div class="col-7 d-flex justify-content-between w-100 align-items-center mb-2">
                   <h4 class="opacity-75 m-0">Detalle</h4>
@@ -89,13 +89,20 @@
                     <%} 
                 	  }%>
                   </select>
-                  <input type="submit" class="btn btn-success btnEnviar d-inline w-100 mt-4" name="btnPagarCuota" value="Pagar cuota" onclick="return confirm('¿Estás seguro que deseas abonar la cuota?')">
+                  <input type="submit" class="btn btn-success  d-inline w-100 mt-4" name="btnPagarCuota" value="Pagar cuota" onclick="return confirm('¿Estás seguro que deseas abonar la cuota?')">
                 </div>
+               
               </div>
               
             </div>
+            <div class="text-center mb-4">
+           	  <a href="ServletPrestamosDetalle?PrestamoDetalle=<%=prestamo.getId() %>" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+             </div>
        </form>   
           </div>
+          
+          
+          
         </div>
 <%} %>
 	       </div>

@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import dao.Conexion;
 import dao.IClienteDao;
 import entidad.Cliente;
@@ -109,19 +112,19 @@ public class ClienteDaoImp implements IClienteDao{
 
 	            
 		    // cliente
-		    clienteStatement = connection.prepareStatement(insertClientes);
-		    clienteStatement.setString(1, cliente.getNombre());
-		    clienteStatement.setString(2, cliente.getApellido());
-		    clienteStatement.setInt(3, idUsuario);
-		    clienteStatement.setInt(4, cliente.getDni());
-		    clienteStatement.setInt(5, cliente.getCuil());
-		    clienteStatement.setString(6, cliente.getSexo());
-		    clienteStatement.setString(7, cliente.getNacionalidad());
-	    	java.sql.Date fechaNacSQL = java.sql.Date.valueOf(cliente.getNacimiento()); // pasa de localDate a java.sql.date para la bd
-	    	clienteStatement.setDate(8, fechaNacSQL);
-	    	clienteStatement.setString(9, cliente.getEmail());
-	    	clienteStatement.setInt(10, cliente.getTelefono());
-	    	clienteStatement.setInt(11, idDireccion);
+	            clienteStatement = connection.prepareStatement(insertClientes);
+			    clienteStatement.setString(1, cliente.getNombre());
+			    clienteStatement.setString(2, cliente.getApellido());
+			    clienteStatement.setInt(3, idUsuario);
+			    clienteStatement.setInt(4, cliente.getDni());
+			    clienteStatement.setLong(5, cliente.getCuil());
+			    clienteStatement.setString(6, cliente.getSexo());
+			    clienteStatement.setString(7, cliente.getNacionalidad());
+		    	java.sql.Date fechaNacSQL = java.sql.Date.valueOf(cliente.getNacimiento()); // pasa de localDate a java.sql.date para la bd
+		    	clienteStatement.setDate(8, fechaNacSQL);
+		    	clienteStatement.setString(9, cliente.getEmail());
+		    	clienteStatement.setLong(10, cliente.getTelefono());
+		    	clienteStatement.setInt(11, idDireccion);
 	           
 	        int filasInsertadasClientes = clienteStatement.executeUpdate();
 	            if (filasInsertadasClientes > 0) {
@@ -187,13 +190,13 @@ public class ClienteDaoImp implements IClienteDao{
 	        pStatementClientes.setString(1, cliente.getNombre());
 	        pStatementClientes.setString(2, cliente.getApellido());
 	        pStatementClientes.setInt(3, cliente.getDni());
-	        pStatementClientes.setInt(4, cliente.getCuil());
+	        pStatementClientes.setLong(4, cliente.getCuil());
 	        pStatementClientes.setString(5, cliente.getSexo());
 	        pStatementClientes.setString(6, cliente.getNacionalidad());
 	        java.sql.Date fechaNacSQL = java.sql.Date.valueOf(cliente.getNacimiento());
 	        pStatementClientes.setDate(7, fechaNacSQL);
 	        pStatementClientes.setString(8, cliente.getEmail());
-	        pStatementClientes.setInt(9, cliente.getTelefono());
+	        pStatementClientes.setLong(9, cliente.getTelefono());
 	        pStatementClientes.setInt(10, cliente.getId());
 
 	       
@@ -297,12 +300,12 @@ public class ClienteDaoImp implements IClienteDao{
 		    String nombre=rSet.getString("Nombre");
 			String apellido=rSet.getString("Apellido");
 			int dni=rSet.getInt("Dni");
-			int cuil=rSet.getInt("Cuil");
+			long cuil=rSet.getLong("Cuil");
 			String sexo=rSet.getString("Sexo");
 			String nacionalidad=rSet.getString("Nacionalidad");
 			LocalDate fechaNac=rSet.getDate("FechaNacimiento").toLocalDate();
 			String correo=rSet.getString("Correo");
-			int telefono=rSet.getInt("Telefono");
+			long telefono=rSet.getLong("Telefono");
 			
 			//Atributos Direccion
 			int idDomicilio=rSet.getInt("IdDireccion");
@@ -438,7 +441,7 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			PreparedStatement pStatement;
 			ResultSet rSet;
-		
+			
 			Conexion conexion= Conexion.getConexion();
 			
 			try {
@@ -554,6 +557,35 @@ public class ClienteDaoImp implements IClienteDao{
 			 
 			 
 		 }
+		
+		String existeSoloUsuario = "Select count(*) as existe from Usuarios where Usuario = ?";
+		
+		public Boolean existeSoloUsuario(String usuario) throws SQLException {
+			
+			boolean existe = false;
+			
+			PreparedStatement pStatement;
+			ResultSet rSet;
+
+			Conexion conexion= Conexion.getConexion();
+			
+			try {
+				pStatement=conexion.getSQLConexion().prepareStatement(existeSoloUsuario);
+				pStatement.setString(1, usuario);
+				
+				rSet=pStatement.executeQuery();
+				
+				rSet.next();
+				
+				existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				
+				
+			} catch (Exception e) {
+				throw e;
+			}
+			
+			return existe;
+		}
 
 
 }

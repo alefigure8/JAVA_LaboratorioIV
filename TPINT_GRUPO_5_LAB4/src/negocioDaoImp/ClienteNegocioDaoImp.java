@@ -122,7 +122,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	    	try {
 	    	    existe = clienteDao.existeCorreo(correo);
 	    	} catch (CorreoException e) {
-	    	    throw new CorreoException("Error al verificar el correo");
+	    	    throw new CorreoException(e.getMessage());
 	    	} catch (Exception e) {
 	    		throw new ErrorInternoException();
 	    	}
@@ -139,5 +139,16 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	@Override
 	 public int clientesPorAnio(String anio) throws SQLException{
 		    return clienteDao.clientesPorAnio(anio);
+	}
+
+	@Override
+	public Boolean existeSoloUsuario(String usuario) {
+		boolean existe=false;
+		try {
+			existe= clienteDao.existeSoloUsuario(usuario);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return existe;
 	}
 }

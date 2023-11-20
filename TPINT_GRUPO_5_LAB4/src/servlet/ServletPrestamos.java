@@ -382,12 +382,16 @@ public class ServletPrestamos extends HttpServlet {
 				request=GUI.mensajes(request, "error", "Prestamos", "No se pudo aceptar el prestamo");
 			}
 			
+			
+			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
+			rDispatcher.forward(request, response);
+			
 		}
 		
 		
 		//RECHAZAR
 		if(request.getParameter("btnRechazarPrestamo")!=null) {
-			System.out.println("PRESMTAMO no");
+			
 			int idPrestamo=Integer.parseInt(request.getParameter("idPrestamo").toString());
 			if(prestamosNegocio.rechazar(idPrestamo)) {
 				cargarPrestamos(request);
@@ -398,6 +402,9 @@ public class ServletPrestamos extends HttpServlet {
 				request=GUI.mensajes(request, "error", "Prestamos", "No se pudo rechazar el prestamo");
 			}
 			
+			
+			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
+			rDispatcher.forward(request, response);
 		}
 		
 		
@@ -499,13 +506,77 @@ public class ServletPrestamos extends HttpServlet {
 		    	
 		    	
 		    }
+		  
+		    
+		    
+		    int IdPrestamo = Integer.parseInt(request.getParameter("idPrestamo").toString());
+			
+			//NEGOCIOS
+			ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
+			CuentaNegocioDaoImp cuentaNegocioDaoImp = new CuentaNegocioDaoImp();
+			PrestamosNegocioDaoImpl prestamosNegocioDaoImpl = new PrestamosNegocioDaoImpl();
+			
+			try {
+				
+				Prestamo prestamo = prestamosNegocioDaoImpl.obteneruno(IdPrestamo);
+				
+				
+				if(prestamo != null) {
+					
+					//Buscar prestamo	
+					Cliente cliente = clienteNegocioDaoImp.obtenerUno(prestamo.getIdCliente());
+					
+					//Buscar Cuotas
+					List<CuotaPrestamo> listaCuotas = prestamosNegocioDaoImpl.obtenerCuotasxprestamo(IdPrestamo);
+					
+					//Buscamos Cuenta
+					cuenta = cuentaNegocioDaoImp.obtenerUna(prestamo.getNumeroCuenta());
+					
+					//AGREGAR NRO.CUENTA SEGUN CADA CUOTA, TIPOMOVIMIENTO=3 PAGO PRESTAMO, NRO REFERENCIA=IDCUOTA
+					List<Cuenta> cuentasPagoCuota=new ArrayList<Cuenta>();
+					
+					for(int x=0;x<listaCuotas.size();x++) {
+						cuentasPagoCuota.add(cuentaNegocioDaoImp.obtenerPorMovimientoYreferencia(3, listaCuotas.get(x).getId()));
+					}
+					
+					
+					request.setAttribute("cliente", cliente);
+					request.setAttribute("cuenta", cuenta);
+					request.setAttribute("prestamo", prestamo);
+					request.setAttribute("cuotas", listaCuotas);
+					
+					int cantCuotas=0;
+					List<TipoTasa> tasas=(List<TipoTasa>)prestamosNegocioDaoImpl.obtenerTodosTiposTasas();
+					for(TipoTasa tipoTasa:tasas) {
+						if(tipoTasa.getId()==tipoTasa.getId()) {
+							cantCuotas=tipoTasa.getCantCuotas();
+						}
+					}
+					
+					request.setAttribute("cantCuotas", cantCuotas);
+					
+					//AGREGAR NRO.CUENTA SEGUN CADA CUOTA
+					request.setAttribute("cuentasPagoCuota", cuentasPagoCuota);
+					
+					
+					
+					RequestDispatcher rd = request.getRequestDispatcher("PrestamosDetalle.jsp");
+					rd.forward(request, response);
+				}
+				
+			} catch (Exception e) {
+				//TODO: Retornar error con mensaje de error
+				System.out.println(e.getMessage());
+				
+				RequestDispatcher rd = request.getRequestDispatcher("PrestamosClientes.jsp");
+				rd.forward(request, response);
+			}
 		    
 		    
 		    
 		}
 		
-		RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
-		rDispatcher.forward(request, response);
+		
 	}
 
 	private void cargarPrestamos(HttpServletRequest request) {

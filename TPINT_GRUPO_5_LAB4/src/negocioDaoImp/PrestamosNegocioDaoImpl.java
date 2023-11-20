@@ -1,6 +1,7 @@
 package negocioDaoImp;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,6 +171,17 @@ public class PrestamosNegocioDaoImpl implements IPrestamosNegocioDao{
 	@Override
 	public int cantidadPrestamosAnioYMes(String anio, String mes)throws SQLException{
 		return prestamosImpl.cantidadPrestamosAnioYMes(anio, mes);
+	}
+
+	@Override
+	public boolean setcuotapagadaxidcuota(int idcuota, LocalDate fechapago) {
+		return prestamosImpl.setcuotapagadaxidcuota(idcuota, fechapago);
+	}
+
+	@Override
+	public int obtenerUltimoIdPrestamo() throws SQLException {
+	
+		return prestamosImpl.obtenerUltimoIdPrestamo();
 	}
 	
 }

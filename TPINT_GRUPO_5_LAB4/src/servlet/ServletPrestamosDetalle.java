@@ -37,7 +37,7 @@ public class ServletPrestamosDetalle extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		
-		if(request.getParameter("PrestamoDetalle") != null) {
+		if(request.getParameter("PrestamoDetalle") != null ) {
 			
 			
 			
@@ -100,17 +100,21 @@ public class ServletPrestamosDetalle extends HttpServlet {
 				} catch (Exception e) {
 					//TODO: Retornar error con mensaje de error
 					System.out.println(e.getMessage());
+					
 					RequestDispatcher rd = request.getRequestDispatcher("PrestamosClientes.jsp");
 					rd.forward(request, response);
 				}
 				
 			} else {
+				
 				RequestDispatcher rd = request.getRequestDispatcher("PrestamosClientes.jsp");
 				rd.forward(request, response);
 			}
 		}
+		else {
+			System.out.println("El url  es nulo");
+		}
 		
-		System.out.println("El url  es nulo");
 		/** USUARIO **/
 		if(request.getParameter("user") != null) {
 			

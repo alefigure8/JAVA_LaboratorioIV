@@ -37,9 +37,10 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	private static final String insertarcuotas = "Insert into CuotasPrestamo (IDPrestamo,NumeroCuota,MontoCuota,FechaVencimiento,Estado) values (?, ?, ?, ?, ?)";
 	private static final String setcancelado = "Update Prestamos set Cancelado = 1 where ID = ? ";
 	private static final String setcuotapagada = "Update CuotasPrestamo set Estado = 'Pagado', FechaPagoCuota = ? where IdPrestamo = ? and ID = ?  ";	
+	private static final String obtenerUltimoIdPrestamo="select MAX(ID) as MaxId from Prestamos";
 	private static final String setAceptado= "Update Prestamos set IdEstados=1 where id=?";
 	private static final String setRechazado= "Update Prestamos set IdEstados=3 where id=?";
-	private static final String obtenercuotasxanio = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C WHERE YEAR(C.FechaVencimiento) = ?;";
+	private static final String setcuotapagadaxidcuota = "Update CuotasPrestamo set Estado = 'Pagado', FechaPagoCuota = ? where ID = ? ";
 	private static final String obtenertodascuotas = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C";
 	private static final String obtenerultimacuota = "SELECT C.ID, C.IdPrestamo, C.NumeroCuota, C.MontoCuota, C.FechaVencimiento, C.Estado, C.FechaPagoCuota FROM CuotasPrestamo C \r\n" + 
 			"join Prestamos P on C.IdPrestamo = P.ID \r\n" + 
@@ -422,7 +423,6 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 	            statement.setInt(1, prestamo.getId());
 	            statement.setInt(2, i + 1);
 	            statement.setDouble(3, prestamo.getMontoxMes());
-	            System.out.println("MONTO X MES" + prestamo.getMontoxMes());
 	            statement.setDate(4, java.sql.Date.valueOf(fechadevencimiento));
 	            statement.setString(5, EstadoCuota.Pendiente.toString());
 	            if (statement.executeUpdate() > 0) {
@@ -814,6 +814,60 @@ public class PrestamosImpl implements dao.IPrestamosDao {
 
 	    return totalPrestamosCancelados;
 		
+	}
+
+	@Override
+	public boolean setcuotapagadaxidcuota(int idcuota, LocalDate fechapago) {
+
+		PreparedStatement statement;
+		Connection connection = Conexion.getConexion().getSQLConexion();
+		boolean isupdateExitoso = false;
+	    try 
+	      {
+
+	          statement = connection.prepareStatement(setcuotapagadaxidcuota);
+	          statement.setDate(1,java.sql.Date.valueOf(fechapago));
+	          statement.setInt(2, idcuota);
+
+	          
+	          if(statement.executeUpdate()>0) {
+					
+					connection.commit();
+					isupdateExitoso = true;
+				}
+				
+			}catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					connection.rollback();
+				}catch(SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			return isupdateExitoso;
+	}
+
+	@Override
+	public int obtenerUltimoIdPrestamo() throws SQLException {
+		
+		PreparedStatement pStatement;
+		ResultSet rSet;
+		int ultimoId = 0;
+		Conexion conexion= Conexion.getConexion();
+		
+		try {
+			pStatement=conexion.getSQLConexion().prepareStatement(obtenerUltimoIdPrestamo);
+			rSet=pStatement.executeQuery();
+			
+			while(rSet.next()) {
+				ultimoId = rSet.getInt("MaxId");
+			}
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return ultimoId;
 	}
 	
 	

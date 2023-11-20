@@ -55,7 +55,7 @@ session.removeAttribute("totalCalculado"); %>
       <!--CONTENT-->
       <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
         <div class="w-100 pt-2">
-          <h1>DETALLE DE PRESTAMO</h1>
+          <h1><i class="fas fa-hand-holding-usd me-2"></i>DETALLE DE PRESTAMO</h1>
         </div>
         <div class="flex-grow-1">
           <!-- CONTENIDO-->
@@ -168,7 +168,16 @@ session.removeAttribute("totalCalculado"); %>
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
-	  
+	   <!-- POPUP ERROR DE AUTENTICACION-->
+		<%if(request.getAttribute("tipo") != null){
+			%>
+			<jsp:include page="/WEB-INF/Components/popup.jsp">
+				<jsp:param name="tipo" value="<%= request.getAttribute(\"tipo\") %>"/>
+				<jsp:param name="mensaje" value="<%= request.getAttribute(\"mensaje\") %>"/>
+				<jsp:param name="titulo" value="<%= request.getAttribute(\"titulo\") %>"/>
+			</jsp:include>
+		<% } %>
+		<!-- FIN POPUP -->
 	  
 </html>
 

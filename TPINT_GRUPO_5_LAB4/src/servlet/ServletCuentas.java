@@ -50,13 +50,10 @@ public class ServletCuentas extends HttpServlet {
 				cliente = (Cliente)session.getAttribute("cliente");
 				
 				}
-				else {
-				//	System.out.println("cliente nulo");
-							
-				}
+				
 			
 			try {
-				cuentasCliente = (ArrayList<Cuenta>) negocioCuenta.obtenerCuentasCliente(cliente.getId());
+				cuentasCliente = (ArrayList<Cuenta>) negocioCuenta.obtenerCuentasActivasCliente(cliente.getId());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

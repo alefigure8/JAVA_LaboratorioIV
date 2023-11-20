@@ -104,11 +104,20 @@
 					        
 					            <input type="submit" class="btn btn-primary btnEnviar mt-4" name="btnCalcularIntereses" value="Calcular Intereses">
    							    <input type="submit" class="btn btn-success mt-4" name="btnConfirmarSolicitarPrestamo" value="Solicitar Prestamo" onclick="return confirm('¿Está seguro que desea solicitar el prestamo?')">
+					    	<div class="form-group mt-2">
+							    <a href="PrestamosClientes.jsp" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+							</div>
+					    
 					    </div>
+					    
 					</div>
 					
-		</form>			
+			</form>		
+		
+			
 		        </div>
+		        
+		        
 	      	</div>
        </div>
 	 <%} else{%>

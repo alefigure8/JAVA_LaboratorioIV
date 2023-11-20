@@ -22,4 +22,5 @@ public interface IClienteNegocioDao {
 	 public boolean existeCorreo(String correo) throws CorreoException, ErrorInternoException;
 	 public int clientesPorFecha(String anio, String mes) throws SQLException;
 	 public int clientesPorAnio(String anio) throws SQLException;
+	 public Boolean existeSoloUsuario(String usuario) ;
 }

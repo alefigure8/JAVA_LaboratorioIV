@@ -68,7 +68,7 @@
 				            </div>
 				            <div class="form-group">
 				                <label for="dni">DNI</label>
-				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" value="<%= clienteAmodificar.getDni() %>"   required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" value="<%= clienteAmodificar.getDni() %>"   required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 9);validateInput(this, 1);">
 				            	    
 				            	    
 				            	    <small id="dniError" class="text-danger" style="<% if ((String)request.getAttribute("error") != null && !((String)request.getAttribute("error")).isEmpty()) { %> display: block; <% } else { %> display: none; <% } %>"></small>
@@ -181,7 +181,7 @@
 						    
 						    <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required onchange="habilitarInput()">
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required">
 							        <% 
 							        for (TipoDireccion tipo : TipoDireccion.values()) {
 							            String selected = "";
@@ -197,7 +197,7 @@
 						    
 						    <div class="form-group">
 						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);" disabled >
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);"  >
 						    </div>
 				            
 				            
@@ -343,9 +343,11 @@
 						        <input type="text"  class="form-control" name="numero" id="numero" placeholder="Ingrese el número" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
 						    </div>
 						    
-						    <div class="form-group">
+						    
+				            
+				            <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  onchange="habilitarInput()">
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  >
 							    
 							        <% 
 							        for (TipoDireccion tipo : TipoDireccion.values()) { %>
@@ -357,7 +359,7 @@
 						    
 						    <div class="form-group">
 						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);" disabled >
+						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);"  >
 						    </div>
 				            
 				            
@@ -485,14 +487,16 @@
 					                    <th>Número</th>
 					                    <td><%= clienteAmodificar.getDireccion().getNumero() %></td>
 					                </tr>
+					                 <tr>
+					                    <th>Tipo de Dirección</th>
+					                    <td><%= clienteAmodificar.getDireccion().getTipoDireccion() %></td>
+					                </tr>
+					                <%if (clienteAmodificar.getDireccion().getTipoDireccion().equals(TipoDireccion.Departamento)){ %>
 					                <tr>
 					                    <th>Número de Departamento</th>
 					                    <td><%= clienteAmodificar.getDireccion().getNumeroDepartamento() %></td>
 					                </tr>
-					                <tr>
-					                    <th>Tipo de Dirección</th>
-					                    <td><%= clienteAmodificar.getDireccion().getTipoDireccion() %></td>
-					                </tr>
+					               <%} %>
 					            </tbody>
 					        </table>
 					    </div>
