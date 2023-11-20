@@ -74,8 +74,8 @@
 	            <h4 class="opacity-75">Nueva Transferencia</h4>
           	</div>
 	    	<div class="m-0 d-flex col-12 col-md-4">
-   				<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&otraCuenta=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center p-4 m-1">Otra Cuenta</a>
-      			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&cuentaPropia=true" class="btn btn_main mt-4 d-flex justify-content-center align-items-center p-4 m-1">Cuenta Propia</a>
+   				<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&otraCuenta=true" class="btn btn-main btn-success mt-4 d-flex justify-content-center align-items-center p-4 m-1">Otra Cuenta</a>
+      			<a href="/TPINT_GRUPO_5_LAB4/ServletNuevaTransferencia?cargacbu=true&cuentaPropia=true" class="btn btn-main btn-success mt-4 d-flex justify-content-center align-items-center p-4 m-1">Cuenta Propia</a>
 	      	</div>
 	      <div class="flex-grow-1">
 	      
@@ -118,27 +118,34 @@
 	          </div>
 	        </div>
 	        <!-- FIN FILTRO -->
+	        
 	        <!--TABLA-->
 	        <div class="d-flex flex-md-row flex-column">
 	          <div class="h-100 me-4 w-100">
 	            <table id="table_id" class="table display text-center">
+	              <!-- TABLE HEAD -->
 	              <thead>
 	                <tr>
 	                  <th scope="col">Fecha</th>
 	                  <th scope="col">Destinatario</th>
 	                  <th scope="col">Monto</th>
 	                  <th scope="col">Estado</th>
-	                  <th scope="col">Operaci�n</th>
+	                  <th scope="col">Operacion</th>
 	                  <th scope="col">Detalle</th>
 	                </tr>
 	              </thead>
 	              <tbody>
+	              
+	              <!-- INICIO FOR -->
 	              <% for(Movimiento movimiento : listadoMovimientos) {
 	            	  Destinatario destinatario = destinatarios.get(movimiento.getNumeroReferencia());
 	              %>
 	              
 	                <tr>
+	                  <!-- FECHA -->
 	                  <td><span class="black-75"><%= movimiento.getFechaMovimiento() %></span></td>
+	                  
+	                  <!-- DESTINATARIO -->
 					  <td>
 						<span class="black-75">
 							<% if (destinatario != null) { %>
@@ -150,13 +157,58 @@
 							<i class="fa-solid fa-user opacity-75 ms-2"></i>
 						</span>
 					</td>
-	                  <td><span class="black-75"><%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %></span></td>
-	                  <td><span class="badge <%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> bg-success <%} else {%> bg-danger <%}%> text-white"><%= movimiento.getEstado().getDescripcion() %></span></td>
-	                  <td><span class="black-75 me-4"><%= movimiento.getOperacion()%> <i class="fa-solid <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%> fa-arrow-right text-danger <%} else {%> fa-arrow-left text-success <%}%>  opacity-75"></i></span></td>
-	                  <td><a class="p-2 bg-secondary text-light rounded" href="ServletDetalleTransferencia?numeroReferencia=<%= movimiento.getNumeroReferencia()%>&id=<%=movimiento.getId()%>"><i class="fa-solid fa-circle-info"></i> Detalle</a></td>
+					
+					 <!-- MONTO -->
+	                  <td>
+		                  <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Entrada))){%>
+		                  	<span class="fw-bolder">
+		                  		<%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %> 
+		                  	</span>
+		                  <%}else{%> 
+		                  	<span class="black-75">
+		                  		-<%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %> 
+	                  		</span>
+		                  <%}%>
+	                  </td>
+	                  
+	                  <!-- ESTADO -->
+	                  <td>
+		                  <span class="badge 
+			                  	<%if(movimiento.getEstado().getDescripcion().equals("Aprobado")){%> 
+			                  		bg-success 
+			                  	<%} else {%> 
+			                  		bg-danger 
+			                  	<%}%> 
+		                  			text-white">
+		                  		<%= movimiento.getEstado().getDescripcion() %>
+               			 </span>
+           			</td>
+               			
+                  	<!-- OPERACION -->
+	                  <td>
+	                  	<span class="black-75 me-4">
+	                  		<%= movimiento.getOperacion()%> 
+	                  		<i class="fa-solid 
+	                  			<%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Salida))){%>
+	                  				 fa-arrow-right text-danger 
+	                  			<%} else {%> 
+	                  				fa-arrow-left text-success 
+	                  			<%}%>  opacity-75">
+	                  		</i>
+	                  	</span>
+	                  </td>
+	                  
+	                  <!-- DETALLE -->
+	                  <td>
+	                  	<a class="p-2 bg-secondary text-light rounded" href="ServletDetalleTransferencia?numeroReferencia=<%= movimiento.getNumeroReferencia()%>&id=<%=movimiento.getId()%>">
+	                  		<i class="fa-solid fa-circle-info"></i> Detalle
+	                  	</a>
+                  	  </td>
 	                </tr>
 	                
 					<%} %>
+					<!-- FIN FOR -->
+					
 	              </tbody>
 	            </table>  
 	          </div>
@@ -168,7 +220,7 @@
 	 	<!--FOOTER-->
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	    
-	    		<!-- POPUP ERROR DE AUTENTICACION-->
+	    <!-- POPUP ERROR DE AUTENTICACION-->
 		<%if(request.getAttribute("tipo") != null){
 			%>
 			<jsp:include page="/WEB-INF/Components/popup.jsp">

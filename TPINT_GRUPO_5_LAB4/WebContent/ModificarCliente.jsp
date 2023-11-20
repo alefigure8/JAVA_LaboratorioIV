@@ -47,6 +47,7 @@
 	          	Cliente cliente= new Cliente();
 	          	List<Localidad> listaLocalidad = new ArrayList<Localidad>();
 	          	List<Provincia> listaProvincia = new ArrayList<Provincia>();
+	          	
 	          	//USUARIO
 	          	if(request.getAttribute("cliente")!=null){
 	          		cliente = (Cliente)request.getAttribute("cliente");
@@ -131,12 +132,8 @@
 					                <label for="codpos">Código Postal</label>
 					                <input type="text" class="form-control" name="codpos" id="codpos" value="<%=cliente.getDireccion().getCodigoPostal()%>" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 10); validateInput(this, 4);">
 					            </div>
-					            <!--  <div class="form-group">
-					                <label for="provincia">Provincia</label>
-									<input type="text" class="form-control bg-light text-secondary" name="provincia" id="provincia" value="<%=cliente.getDireccion().getProvincia().getNombre()%>" readOnly>
-					            </div> -->
 					             <div class="form-group">
-					                  <label for="provincia">Localidad</label>
+					                  <label for="provincia">Provincia</label>
 					                	
 					                <select class="form-select" id="provinciaID" name="provincia" data-provinciaID="<%=cliente.getDireccion().getLocalidad().getIdProvincia()%>" onchange="seleccionarProvincia()">
 					                	<%

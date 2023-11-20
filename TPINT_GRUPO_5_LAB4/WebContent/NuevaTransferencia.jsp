@@ -80,7 +80,7 @@
 	                			<select class="form-select w-50" name="cbuDestinatario">
 			                	<%
 			                		for(Cuenta cuenta : cuentas){%>
-					                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getCbu() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
+					                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getNumeroCuenta() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
 		                			<%} 
 	                			%>
 			                	</select>
@@ -137,7 +137,7 @@
                 			<select class="form-select w-50" name="cbuOrigen" oninput="validateInputCuenta(this)">
 		                	<%
 		                		for(Cuenta cuenta : cuentas){%>
-				                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getCbu() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
+				                	<option value="<%=cuenta.getCbu()%>"><%=cuenta.getTipoCuenta().getDescripcion() + ": N° " + cuenta.getNumeroCuenta() + " - " +NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(cuenta.getSaldo())%></option>
 	                			<%} 
                 			%>
 		                	</select>
