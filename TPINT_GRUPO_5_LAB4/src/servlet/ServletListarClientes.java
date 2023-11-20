@@ -68,6 +68,48 @@ public class ServletListarClientes extends HttpServlet {
         	}
     	}
     	
+    	/** ACTIVAR CLIENTE **/
+    	if(request.getParameter("activar") != null) {
+    		
+    		if(request.getParameter("ID") != null) {
+    			String ID = request.getParameter("ID");
+				//Buscamos que exista
+				Cliente existeCliente = clienteNegocioDao.obtenerUno(Integer.parseInt(ID));
+				if(existeCliente != null) {
+					
+					/* Setear activo en true */
+					Boolean clienteActivado = clienteNegocioDao.activar(Integer.parseInt(ID));
+					
+					if(clienteActivado) {
+						//Listamos clinetes
+						List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
+				    	    
+						//Mandamos lista de clientes con request
+						request.setAttribute("clientes", ListarClientesActivos(listaClientes, opcion));
+						
+						//Popup de Exito
+						request = GUI.mensajes(request, "exito", "Cliente activado", "El cliente se activó correctamente");
+						
+						 RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
+				    	 dispatcher.forward(request, response);
+					} else {
+						//Popup de Exito
+						request = GUI.mensajes(request, "error", "Cuentas", "Las Cuentas del cliente no pudieron ser activado");
+						
+						 RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
+				    	    dispatcher.forward(request, response);
+					}
+					
+				} else {
+					//Popup de error
+					request = GUI.mensajes(request, "error", "Cliente no existes", "El cliente que intenta borrar no existe");
+					
+					RequestDispatcher dispatcher = request.getRequestDispatcher("ListadoClientes.jsp");
+					dispatcher.forward(request, response);
+				}
+    		}
+    	}
+    	
     	/** BORRAR CLIENTE **/
     	try {
 			if(request.getParameter("borrar")!= null) {
@@ -90,7 +132,7 @@ public class ServletListarClientes extends HttpServlet {
 							//Mandamos lista de clientes con request
 							request.setAttribute("clientes", ListarClientesActivos(listaClientes, opcion));
 							
-							//Borramos cuentas					
+							//Borramos cuentas	
 							boolean cuentasBorradas = BorrarCuentasClientes(Integer.parseInt(ID));
 							
 							if(cuentasBorradas) {
@@ -131,22 +173,6 @@ public class ServletListarClientes extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
     	
-    	if(request.getParameter("opcionesTabla") != null) {
-    		
-    		// DESCOLGABLE ACTIVO/INACTIVO
-    		if(request.getParameter("filtroActivos") != null){
-    			try {
-    				
-    				
-    			} catch(Exception e) {
-    				
-    				
-    			}
-    			
-    			List<Cliente> listaClientes = clienteNegocioDao.obtenerTodos();
-   
-    		}
-    	}
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

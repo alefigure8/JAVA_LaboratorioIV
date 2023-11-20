@@ -50,44 +50,35 @@ public class ServletHomeCliente extends HttpServlet {
 		if(request.getParameter("homecliente")!=null) {
 			
 			if(session.getAttribute("cliente")!=null) {
-			cliente = (Cliente)session.getAttribute("cliente");
-			
+				cliente = (Cliente)session.getAttribute("cliente");
 			}
 		
 			try {
-			cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
+				cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
 			if(cuentasCliente.size()>0) {
-			
 				cuentaVisible = cuentasCliente.get(0);
-	
 			}
 			
 			if(cuentaVisible!=null) {
-				
-				 
-					try {
-						movimientosCuenta = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuentaVisible.getCbu());
-						tresmovimientosCuenta.clear();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				
-			    
-			
+				try {
+					movimientosCuenta = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuentaVisible.getCbu());
+					tresmovimientosCuenta.clear();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
-			for(int i = 0; i<3;i++) {
-				
-				System.out.println(i);
-				
-				Movimiento aux = new Movimiento();
-				aux = movimientosCuenta.get(i);
-				tresmovimientosCuenta.add(aux);
+			if(movimientosCuenta.size() > 0) {
+				for(int i = 0; i<3;i++) {
+					Movimiento aux = new Movimiento();
+					aux = movimientosCuenta.get(i);
+					tresmovimientosCuenta.add(aux);
+				}
 			}
 			
 			request.setAttribute("cuentaVisible", cuentaVisible);
@@ -100,26 +91,20 @@ public class ServletHomeCliente extends HttpServlet {
 		
 		}
 		
-	
-		
-		
 		response.getWriter().append("Served at: homecliente ").append(request.getContextPath());
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-if(request.getParameter("homecliente")!=null) {
-			
-			//System.out.println("acciona post");
-			
-			
+		if(request.getParameter("homecliente")!=null) {
+			//System.out.println("acciona post");	
 		}
-if(request.getAttribute("homecliente")!=null){
-	
-	//System.out.println("acciona post attribute");
-	
-}
+		
+		if(request.getAttribute("homecliente")!=null){
+			//System.out.println("acciona post attribute");	
+		}
+		
 		doGet(request, response);
 	}
 

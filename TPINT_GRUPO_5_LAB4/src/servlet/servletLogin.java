@@ -58,7 +58,7 @@ public class servletLogin extends HttpServlet {
 						/* Guardamos Session de Usuario*/
 						HttpSession session = request.getSession(true);
 						session.setAttribute("usuario", usuarioEncontrado);
-						
+
 						/* Guardamos Session de Cliente*/
 						if(usuarioEncontrado.getTipoAcceso().compareTo(TipoAcceso.Cliente) == 0) {
 							Cliente cliente = clienteNegocio.obtenerUno(usuarioEncontrado.getId());

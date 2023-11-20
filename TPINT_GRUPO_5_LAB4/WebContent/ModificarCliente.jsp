@@ -171,12 +171,12 @@
 							                <input type="text" class="form-control bg-light text-secondary" name="NombreUsuario" id="NombreUsuario" value="<%=cliente.getUsuario()%>" readonly>
 							            </div>
 							            <div class="form-group">
-						                	<label for="claveVieja">Contraseña Vieja</label>
-						                	<input type="password" class="form-control" id="claveVieja" name="claveVieja" placeholder="Ingrese la contraseña vieja">
+						                	<label for="claveVieja">Contraseña Nueva</label>
+						                	<input type="password" class="form-control" id="claveNueva" name="claveNueva" placeholder="Ingrese la nueva contraseña">
 							            </div>
 							            <div class="form-group">
-							                <label for="claveNueva">Nueva Contraseña</label>
-							                <input type="password" class="form-control" id="claveNueva" name="claveNueva" placeholder="Ingrese la nueva contraseña">
+							                <label for="claveNueva">Repetir Contraseña</label>
+							                <input type="password" class="form-control" id="claveRepetida" name="claveRepetida" placeholder="Repita la nueva contraseña">
 							            </div>
 					    		</fieldset>
 					        </div>

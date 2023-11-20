@@ -46,13 +46,14 @@
 						<% 
 							if(request.getAttribute("existeCliente") != null){
 								
-							boolean existeCliente = Boolean.TRUE == request.getAttribute("existeCliente");
+								boolean existeCliente = Boolean.TRUE == request.getAttribute("existeCliente");
 							
 							if(!existeCliente){
 							%>
-							<p class="text-danger">Usuario o Contraseña Incorrecta</p>
-						<% }
-						}%>
+								<p class="text-danger">Usuario o Contraseña Incorrecta</p>
+							<% }
+							}
+						%>
 					</div>
 				</div>
 			</div>

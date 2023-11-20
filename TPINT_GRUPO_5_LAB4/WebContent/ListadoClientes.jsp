@@ -77,8 +77,22 @@
 							            <td><%= cliente.getNacimiento() %></td>
 							            <td><%= cliente.getEmail() %></td>
 							            <td><%= cliente.getTelefono() %></td>
-							            <td><button onclick="window.location.href='${pageContext.request.contextPath}/servletModificarCliente?obtener=true&ID=<%=cliente.getId()%>'" class="btn btn_main bg-success text-light">Modificar</button></td>
-							            <td><button onclick="confirmarBorrado(<%=cliente.getId()%>)" class="btn btn_main bg-danger text-light">Eliminar</button></td>
+							            <td>
+								            <button onclick="window.location.href='${pageContext.request.contextPath}/servletModificarCliente?obtener=true&ID=<%=cliente.getId()%>'" class="btn btn_main bg-success text-light">
+								           	 	Modificar
+								            </button>
+							            </td>
+							            <td>
+							            	<% if(cliente.getActivo()){ %>
+							            	<button onclick="confirmarBorrado(<%=cliente.getId()%>)" class="btn btn_main bg-danger text-light">
+							            		Eliminar
+							            	</button>
+							            	<%} else {%>
+							            	<button onclick="confirmarActivacion(<%=cliente.getId()%>)" class="btn btn_main bg-warning text-black">
+							            		Activar
+							            	</button>
+							            	<%} %>
+							            </td>
 							        </tr>
 							    <%
 							        }
@@ -119,6 +133,12 @@
 	 	function confirmarBorrado(id) {
 		 if (confirm('¿Seguro que desea eliminar al cliente')) {
 			 	window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?borrar=true&ID=" + id;
+		 	}
+		 }
+	 	
+	 	function confirmarActivacion(id) {
+		 if (confirm('¿Seguro que desea eliminar al cliente')) {
+			 	window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?activar=true&ID=" + id;
 		 	}
 		 }
 	 	

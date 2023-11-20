@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.corba.se.impl.javax.rmi.PortableRemoteObject;
+
 import Helper.GUI;
 import daoImp.LocalidadDaoImp;
 import daoImp.ProvinciaDaoImp;
@@ -24,6 +26,8 @@ import excepciones.CorreoException;
 import excepciones.ErrorInternoException;
 import excepciones.UsuarioIncorrectoException;
 import negocioDaoImp.ClienteNegocioDaoImp;
+import negocioDaoImp.LocalidadNegocioDaoImp;
+import negocioDaoImp.ProvinciaNegocioDaoImp;
 import sun.security.util.math.intpoly.P256OrderField;
 
 
@@ -33,7 +37,6 @@ public class servletModificarCliente extends HttpServlet {
 
     public servletModificarCliente() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,92 +44,87 @@ public class servletModificarCliente extends HttpServlet {
 		//Negocio cliente
 		ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
 		
-		//Buscar cliente para modificar
+		/** BUSCAR CLIENTE PARA MODIFICAR **/
 		if(request.getParameter("obtener") != null) {	
 			try {
+				
 				String id = request.getParameter("ID");
 				
-				//Buscar cliente por id
+				/* Buscar cliente por id */
 				Cliente cliente = clienteNegocioDaoImp.obtenerUno(Integer.parseInt(id));
+					
+				/* Obtener todas las licalidad y Provincias y guardar en request*/
+				obtenerLocalidadYProvincia(request);
 				
-				//Buscar localidades
-				LocalidadDaoImp localidadNegocioDao = new LocalidadDaoImp();
-	        	List<Localidad> listaLocalidad = localidadNegocioDao.obtenerTodas();
-				  	
-			  	//Buscar provincias
-			  	ProvinciaDaoImp provinciaDaoImp = new ProvinciaDaoImp();
-			  	List<Provincia> listaProvincia = provinciaDaoImp.obtenerTodas();
-				
-				//Redirigir a página de Modificar cliente
+				/* guardar cliente */
 				request.setAttribute("cliente", cliente);
-				request.setAttribute("localidades", listaLocalidad);
-				request.setAttribute("provincias", listaProvincia);
+				
+				/* Redirigir a página de Modificar cliente */
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
+				
+				return;
 			} catch (Exception e) {
 				//Popup de error
 				request = GUI.mensajes(request, "error", "Error Base de Datoso", e.getMessage());
 				
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
+				
+				return;
 			}
 		}
 		
-		//Modificar clientes
+		/** MODIFICAR EL CLIENTE **/
 		if(request.getParameter("modificar") != null) {
-					
+
 			Cliente cliente = new Cliente();
-			try {
-				
-				//Modificar Cliente
+			
+			try {		
+				/* Pasar modificaciones a objeto cliente  */
 				cliente = obtenerCliente(request, response);
-				String correo=request.getParameter("correo");
-				
+
 				if(cliente != null && cliente.getActivo()) {
+
+					boolean clienteEditado = clienteNegocioDaoImp.editar(cliente);
 					
-					if(!clienteNegocioDaoImp.existeCorreo(correo)) {
-						
-						boolean clienteEditado = clienteNegocioDaoImp.editar(cliente);
-						
-						if(clienteEditado) {
-							//Popup de exito
-							request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
-							
+					if(clienteEditado) {
+						//Popup de exito
+						request = GUI.mensajes(request, "exito", "Cliente modificado", "El cliente se modificó correctamente");
+						if (!response.isCommitted()) {
 							RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 							rd.forward(request, response);
-						} else {
-							//Popup de error de modificación
-							request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no pudo ser modificado");
-							
-							RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
-							rd.forward(request, response);
+							return;
 						}
-						
-					}
-					else {
+					} else {
+						//Popup de error de modificación
 						request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no pudo ser modificado");
 						
 						RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 						rd.forward(request, response);
+						
+						return;
 					}
-					
-					
-				} else {
+
+				} else {				
 					//Popup de error. Cliente no encontrado o no activo
 					request = GUI.mensajes(request, "Error", "Cliente no modificado", "El cliente no existe o no se encuentra activo");
 					
 					RequestDispatcher rd = request.getRequestDispatcher("ServletListarClientes?obtener=true");
 					rd.forward(request, response);
+					
+					return;
 				}
 				
 			} catch (Exception e) {
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
-				//Popup de error
-				request = GUI.mensajes(request, "error", "Error", e.getMessage());
 				
+				request = GUI.mensajes(request, "error", "Error", e.getMessage());
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
+				
+				return;
 			}
 		}
 	}
@@ -136,15 +134,18 @@ public class servletModificarCliente extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, ErrorInternoException, UsuarioIncorrectoException {
+	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ErrorInternoException, Exception, CorreoException {
+		obtenerLocalidadYProvincia(request);
 		
 		String id = request.getParameter("ID");
+		
 		//Negocio cliente
 		ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
 		
 		//Buscar cliente por id
 		Cliente cliente = clienteNegocioDaoImp.obtenerUno(Integer.parseInt(id));
 		
+		/* Obtener mos parámetros */
 		String nombre = request.getParameter("nombre").trim();
 		String apellido = request.getParameter("apellido").trim();
 		String dni = request.getParameter("dni").trim();
@@ -160,13 +161,14 @@ public class servletModificarCliente extends HttpServlet {
 		String localidadID = request.getParameter("localidadID");
 		String telefono = request.getParameter("telefono").trim();
 		String correo = request.getParameter("correo").trim();
-		String contrasenaVieja = request.getParameter("claveVieja").trim();
 		String contrasenaNueva = request.getParameter("claveNueva").trim();
+		String contrasenaRepetida = request.getParameter("claveRepetida").trim();
 		
+		/* Guardamos valores en cliente auxiliar */
 		cliente.setNombre(nombre);
 		cliente.setApellido(apellido);
 		cliente.setDni(dni.isEmpty() ? 0 : Integer.parseInt(dni));
-		cliente.setCuil(cuil.isEmpty() ? 0 : Integer.parseInt(cuil));
+		cliente.setCuil(cuil.isEmpty() ? 0 : Long.parseLong(cuil));
 		cliente.setNacionalidad(nacionalidad);
 		cliente.setNacimiento(LocalDate.parse(fechaNacimiento));
 		cliente.getDireccion().setCalle(calle);
@@ -174,43 +176,38 @@ public class servletModificarCliente extends HttpServlet {
 		cliente.getDireccion().setCodigoPostal(codPos.isEmpty() ? 0 : Integer.parseInt(codPos));
 		cliente.getDireccion().getLocalidad().setIdLocalidad(localidadID.isEmpty() ? 0 : Integer.parseInt(localidadID));
 		cliente.setTelefono(telefono.isEmpty() ? 0 : Integer.parseInt(telefono));
-		cliente.setEmail(correo);
-				
-		//Cambiar Sexo si se seleccionó algo
-		if(sexo.equals("Seleccionar")) {
+			
+		/*Cambiar Sexo si se seleccionó algo */
+		if(!sexo.equals("Seleccionar")) {
 			cliente.setSexo(sexo);	
 		}
 		
-		//Cambiar numero apartamento si se seleccion algo
-		if(tipoDireccion.equals("Seleccionar")) {
+		/* Cambiar numero apartamento si se seleccion algo */
+		if(!tipoDireccion.equals("Seleccionar")) {
 			cliente.getDireccion().setTipoDireccion(TipoDireccion.valueOf(tipoDireccion));
 			if(tipoDireccion.equals("Departamento")) {
 				cliente.getDireccion().setNumeroDepartamento(apartamento);
 			} 
 		}
 		
-		//cambiar contrasena si la vieja contrasena es correcta
-		if(!contrasenaVieja.isEmpty()) {
-			
-			boolean cambiarContrasena = false;
-			
+		/* Verificar mail */
+		if(!correo.equals(cliente.getEmail())) {
+			System.out.println("Entramos por que son distintos");
 			try {
-				cambiarContrasena = clienteNegocioDaoImp.existeUsuario(cliente.getUsuario(), contrasenaVieja);
-			} catch (UsuarioIncorrectoException e) {
-				//Retornamos cliente modificado para que corrija datos
-				request.setAttribute("cliente", cliente); 
-				throw e;
-			}
-			
-			if(cambiarContrasena) {
-				cliente.setContrasenia(contrasenaNueva);
-			} else {
-				//Retornamos cliente modificado para que corrija datos
-				request.setAttribute("cliente", cliente); 
 				
-				//Popup de error
-				request = GUI.mensajes(request, "error", "Contraseña invalida", "La contraseña no puede ser modificada");
+				boolean existeCorreo = clienteNegocioDaoImp.existeCorreo(correo);
 				
+				if(!existeCorreo) {
+					/* Modificar Correo*/
+					cliente.setEmail(correo);
+				}
+				
+			} catch (CorreoException e) {
+				/* Correo existe */
+				request.setAttribute("cliente", cliente);
+				
+				request = GUI.mensajes(request, "error", "Correo invalido", "El correo ya existe. Pruebe con otro");
+
 				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
 				rd.forward(request, response);
 				
@@ -218,7 +215,38 @@ public class servletModificarCliente extends HttpServlet {
 			}
 		}
 		
-		//Validamos datos luego de colocar los campos en cliente para evitar que el Admin deba completarlos nuevamente
+		/* Verificar que las contraseñas sean iguales o estén ambas */
+		if(!contrasenaNueva.isEmpty() && !contrasenaRepetida.isEmpty()) {
+			
+			if(contrasenaNueva.equals(contrasenaRepetida)) {
+				cliente.setContrasenia(contrasenaNueva);
+			} else {
+				//Retornamos cliente modificado para que corrija datos
+				request.setAttribute("cliente", cliente); 
+				
+				//Popup de error
+				request = GUI.mensajes(request, "error", "Contraseña invalida", "La contraseña deben ser iguales");
+				
+				RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
+				rd.forward(request, response);
+				
+				return null;
+			}
+			
+		} else if(!contrasenaNueva.isEmpty() || !contrasenaRepetida.isEmpty()) {
+			//Retornamos cliente modificado para que corrija datos
+			request.setAttribute("cliente", cliente); 
+						
+			//Popup de error
+			request = GUI.mensajes(request, "error", "Contraseña invalida", "Debe complatar ambas contraseñas");
+			RequestDispatcher rd = request.getRequestDispatcher("ModificarCliente.jsp");
+			rd.forward(request, response);
+			
+			return null;
+			
+		}
+		
+		/* Validamos datos luego de colocar los campos en cliente para evitar que el Admin deba completarlos nuevamente */
 		if(
 			nombre.isEmpty() ||
 			apellido.isEmpty() ||
@@ -233,7 +261,6 @@ public class servletModificarCliente extends HttpServlet {
 			cliente.getTelefono() == 0 ||
 			correo.isEmpty()
 			) {
-			
 				//Retornamos cliente modificado para que corrija datos
 				request.setAttribute("cliente", cliente); 
 				
@@ -248,5 +275,25 @@ public class servletModificarCliente extends HttpServlet {
 		
 		return cliente;
 	}
-
+	
+	/** OBTENER LOCALIDADES Y PROVINCIAS DESDE NEGOCIO **/
+	private void obtenerLocalidadYProvincia(HttpServletRequest request) throws Exception {
+		LocalidadNegocioDaoImp localidadNegocioDao = new LocalidadNegocioDaoImp();
+		ProvinciaNegocioDaoImp provinciaNegocioDao = new ProvinciaNegocioDaoImp();
+		
+		try {
+		//Buscar localidades
+    	List<Localidad> listaLocalidad = localidadNegocioDao.obtenerTodas();
+		  	
+	  	//Buscar provincias
+	  	List<Provincia> listaProvincia = provinciaNegocioDao.obtenerTodas();
+	  	
+	  	//Redirigir a página de Modificar cliente
+	  	request.setAttribute("localidades", listaLocalidad);
+	  	request.setAttribute("provincias", listaProvincia);
+	  	
+		} catch(Exception e) {
+			throw new ErrorInternoException();
+		}
+	}
 }

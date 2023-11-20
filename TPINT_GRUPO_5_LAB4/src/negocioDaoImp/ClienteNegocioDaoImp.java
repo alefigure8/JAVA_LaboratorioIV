@@ -39,6 +39,11 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 	public boolean borrar(int id) {
 		return clienteDao.borrar(id);
 	}
+	
+	@Override
+	public boolean activar(int id) {
+		return clienteDao.activar(id);
+	}
 
 	@Override
 	public List<Cliente> obtenerTodos() {
@@ -80,11 +85,14 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 		
 		if(!usuario.trim().isEmpty() & !contrasena.trim().isEmpty()) {
 			try {
+				
 				existe = clienteDao.existeUsuario(usuario, contrasena);
+				
 				if(!existe) {
 					throw new UsuarioIncorrectoException();
 				}
-			} catch (SQLException e) {
+				
+			} catch ( SQLException e) {
 				throw new ErrorInternoException();
 			} 
 			
@@ -121,6 +129,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 
 	    	try {
 	    	    existe = clienteDao.existeCorreo(correo);
+	    	    System.out.println(existe);
 	    	} catch (CorreoException e) {
 	    	    throw new CorreoException(e.getMessage());
 	    	} catch (Exception e) {

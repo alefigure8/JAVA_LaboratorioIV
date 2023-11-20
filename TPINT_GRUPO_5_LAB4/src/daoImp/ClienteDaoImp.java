@@ -259,7 +259,39 @@ public class ClienteDaoImp implements IClienteDao{
 	    return deleteExitoso;
 	}
 
-	
+	/***************** ACTIVAR ********************/
+	@Override
+	public boolean activar(int idCliente) {
+		PreparedStatement pStatement;
+		Connection connection=Conexion.getConexion().getSQLConexion();
+	    boolean deleteExitoso = false;
+
+	    try {
+
+	        // Desactivar el usuario
+	        String desactivarUsuario = "UPDATE Usuarios SET Activo = 1 WHERE Id = ?";
+	        pStatement = connection.prepareStatement(desactivarUsuario);
+	        pStatement.setInt(1, idCliente);
+
+	        int filasAfectadas = pStatement.executeUpdate();
+
+	        if (filasAfectadas > 0) {
+	            deleteExitoso = true;
+	            connection.commit();
+	        }
+	    } catch (Exception e) {
+	        try {
+	            if (connection != null) {
+	                connection.rollback();
+	            }
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    }
+
+	    return deleteExitoso;
+	}
 	
 	/***************** OBTENER TODOS ********************/
 	@Override
