@@ -92,7 +92,19 @@
 </form>
 			<div class="card mt-3">
 			    <div class="card-body">
+		       <div class="row"  style="margin-bottom: 50px;">
 		       
+		       <div class="col-md-6">
+		       <label for="clientesNuevos">Año Seleccionado</label>
+    <input type="text" class="form-control" id="clientesNuevos" name="MostrarAño" value="<%= request.getAttribute("mostrarAnio") %>" disabled>
+		       </div>
+		       
+		         <div class="col-md-6">
+		         <label for="clientesNuevos">Mes Seleccionado</label>
+    <input type="text" class="form-control" id="clientesNuevos" name="MostrarMes" value="<%= request.getAttribute("mostrarMes") %>" disabled>
+		       </div>
+		       
+		       </div>	
 		                <div class="row">
 		                    <div class="col-md-6">
 		                        <div class="form-group">

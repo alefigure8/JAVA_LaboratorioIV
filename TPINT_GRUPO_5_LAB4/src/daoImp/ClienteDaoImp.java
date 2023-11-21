@@ -518,7 +518,12 @@ public class ClienteDaoImp implements IClienteDao{
 				
 				rSet.next();
 				
-				existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				int count = rSet.getInt("existe");
+				if(count > 0) {
+					existe=true;
+				}
+				
+				
 				
 				if (existe) {
 		            throw new CorreoException("El correo ya se encuentra registrado");
@@ -527,9 +532,10 @@ public class ClienteDaoImp implements IClienteDao{
 			} catch (Exception e) {
 				throw e;
 			}
-			
+			System.out.println("EXISTE DAO: "+existe);
 			return existe;
 		}
+
 		@Override
 		public int clientesPorFecha(String anio, String mes) throws SQLException{
 			int totalClientesNuevos = 0;
@@ -609,7 +615,10 @@ public class ClienteDaoImp implements IClienteDao{
 				
 				rSet.next();
 				
-				existe = Boolean.valueOf(rSet.getBoolean("existe"));
+				int count = rSet.getInt("existe");
+				if(count > 0) {
+					existe=true;
+				}
 				
 				
 			} catch (Exception e) {
@@ -618,6 +627,8 @@ public class ClienteDaoImp implements IClienteDao{
 			
 			return existe;
 		}
+
+
 
 
 }

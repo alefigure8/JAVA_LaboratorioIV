@@ -48,7 +48,6 @@ public class ServletAltaCliente extends HttpServlet {
 			ProvinciaNegocioDaoImp provinciaNegocio= new ProvinciaNegocioDaoImp();
         	try {
 				List<Provincia> provincias= (List<Provincia>)provinciaNegocio.obtenerTodas();
-				request.setAttribute("provincias", provincias);
 				session.setAttribute("provincias", provincias);
 
 			} catch (SQLException e) {
@@ -64,9 +63,8 @@ public class ServletAltaCliente extends HttpServlet {
 			List<Localidad> localidades= new ArrayList<Localidad>();
 			try {
 				localidades=(List<Localidad>)localidadNegocio.obtenerTodas();
-				request.setAttribute("localidades", localidades);
 				session.setAttribute("localidades", localidades);
-				System.out.println("localidades: " + localidades);
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -80,91 +78,56 @@ public class ServletAltaCliente extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		if(request.getParameter("btnAltaCliente")!=null) {
-			HttpSession session = request.getSession();
-			String dni=request.getParameter("dni");
-			String correo=request.getParameter("correo");
-			
-			
-			
-			if(!dni.trim().isEmpty()) {
-				if(!clienteNegocioDao.existeDni(Integer.parseInt(dni))) {
-					//SI NO EXISTE, LO REGISTRAMOS
-					Cliente cliente=new Cliente();
-					try {
-						cargarCliente(request,cliente);
-					} catch (SQLException e) {
-						System.out.println("ERROR LINEA 97");
-						e.printStackTrace();
-					}
-					
-					//Validamos usuario y correo
-					
-					try {
-						
-						//Validamos correo
-						
-						if (!clienteNegocioDao.existeCorreo(correo)) {
-			                response.getWriter().println("El correo no está registrado.");
-			                
-			              //Validamos usuario
-							if(!clienteNegocioDao.existeSoloUsuario(request.getParameter("usuario"))) {
-								if(clienteNegocioDao.insertar(cliente)) {
-									session.setAttribute("clienteAgregado", cliente);
+		if (request.getParameter("btnAltaCliente") != null) {
+		    
+		    String dni = request.getParameter("dni");
+		    String correo = request.getParameter("correo");
+		    Cliente cliente = new Cliente();
 
-									System.out.println("Cliente insertado");
-								}
-								else {
-									System.out.println("No se pudo insertar");
-									System.out.println("ERROR LINEA 119");
-								}
-							}
-							else {
-				                
-								cliente = new Cliente();
-								try {
-									cargarCliente(request, cliente);
-								} catch (SQLException e) {
-									System.out.println("ERROR LINEA 128");
-									e.printStackTrace();
-								}
-								
-								session.setAttribute("clienteAmodificar", cliente);
-								request.setAttribute("errorUsuario", "El Usuario ya existe. Introduce un Usuario diferente.");
-				              
-							}
-			                
-			            } 
-						
-						else {
-			                
-							session.setAttribute("clienteAmodificar", cliente);
-			            }
-						
-					} catch (CorreoException e) {
-						request.setAttribute("errorCorreo", e.getMessage()); 
-			        }catch (Exception e) {
-						e.printStackTrace();
-						System.out.println("ERROR LINEA 148");
-					}
-					
-				}
-				else {
-					//SI EXISTE CARGAMOS LOS DATOS Y LO ENVIAMOS POR SESSION
-					Cliente cliente = new Cliente();
-					try {
-						cargarCliente(request, cliente);
-					} catch (SQLException e) {
-						System.out.println("ERROR LINEA 158");
-						e.printStackTrace();
-					}
-					
-					session.setAttribute("clienteAmodificar", cliente);
-										
-	                request.setAttribute("error", "El DNI ya existe. Introduce un DNI diferente.");
-	                
-				}
-			}
+		    try {
+		        cargarCliente(request, cliente);
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    // dni
+		    if (!dni.trim().isEmpty()) {
+		        if (!clienteNegocioDao.existeDni(Integer.parseInt(dni))) {
+		            try {
+		                // correo
+		                if (!clienteNegocioDao.existeCorreo(correo)) {
+		                    // usuario
+		                    if (!clienteNegocioDao.existeSoloUsuario(request.getParameter("usuario"))) {
+		                        if (clienteNegocioDao.insertar(cliente)) {
+		                            
+		                            request.setAttribute("clienteAgregado", cliente);
+		                            System.out.println("Cliente insertado");
+		                        } else {
+		                            System.out.println("No se pudo insertar");
+		                        }
+		                    } else {
+		                        
+		                        request.setAttribute("clienteAmodificar", cliente);
+		                        request.setAttribute("errorUsuario", "El Usuario ya existe. Introduce un Usuario diferente.");
+		                    }
+		                } else {
+		                   
+		                    request.setAttribute("clienteAmodificar", cliente);
+		                }
+		            } catch (CorreoException e) {
+		            	
+		            	request.setAttribute("clienteAmodificar", cliente);
+		                request.setAttribute("errorCorreo", e.getMessage());
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		                
+		            }
+		        } else {
+		            
+		            request.setAttribute("clienteAmodificar", cliente);
+		            request.setAttribute("error", "El DNI ya existe. Introduce un DNI diferente.");
+		        }
+		    }
 		}
 		
 		RequestDispatcher rDispatcher=request.getRequestDispatcher("AltaCliente.jsp");
@@ -181,12 +144,12 @@ public class ServletAltaCliente extends HttpServlet {
 		cliente.setTipoAcceso(TipoAcceso.Cliente);
 		cliente.setFechaAlta(LocalDate.now());
 		cliente.setDni(Integer.parseInt(request.getParameter("dni")));
-		cliente.setCuil(Integer.parseInt(request.getParameter("cuil")));
+		cliente.setCuil(Long.parseLong(request.getParameter("cuil")));
 		cliente.setNacionalidad(request.getParameter("nacionalidad"));
 		String genero = request.getParameter("sexo");
 		cliente.setSexo(genero);
 		cliente.setEmail(request.getParameter("correo"));
-		cliente.setTelefono(Integer.parseInt(request.getParameter("telefono")));
+		cliente.setTelefono(Long.parseLong(request.getParameter("telefono")));
 		LocalDate fechaNacimiento = LocalDate.parse(request.getParameter("fechaNacimiento"));
 		cliente.setNacimiento(fechaNacimiento);
 		
@@ -211,12 +174,10 @@ public class ServletAltaCliente extends HttpServlet {
 		cliente.setDireccion(direccion);
 		
 		
-		
 		//USUARIO
 		cliente.setUsuario(request.getParameter("usuario"));
 		cliente.setContrasenia(request.getParameter("contraseña"));
-		System.out.println("Direccion LINEA 218: " + cliente.getDireccion().toString());
-		System.out.println("Cliente LINEA 219: " + cliente);
+		
 	}
 
 }

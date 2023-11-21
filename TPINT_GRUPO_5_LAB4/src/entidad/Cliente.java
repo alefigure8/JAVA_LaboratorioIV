@@ -106,7 +106,7 @@ public class Cliente extends Usuario{
 	public long getTelefono() {
 		return this.telefono;
 	}
-	public void setTelefono(int telefono) {
+	public void setTelefono(long telefono) {
 		this.telefono = telefono;
 	}
 	

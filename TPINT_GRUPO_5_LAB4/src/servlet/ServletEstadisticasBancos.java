@@ -55,13 +55,13 @@ public class ServletEstadisticasBancos extends HttpServlet {
         request.setAttribute("totalCajaAhorro", totalCajaAhorro);
         request.setAttribute("totalCuentaCorriente", totalCuentaCorriente);
         request.setAttribute("totalCuentas", totalCuentas);
-       
-        
+        String anio = " ";
+        String mesSeleccionado = " ";
         
         if (request.getParameter("btnEnviar") != null) {
         	 
-        	String anio = request.getParameter("anio");
-            String mesSeleccionado = request.getParameter("Mes");
+        	 anio = request.getParameter("anio");
+             mesSeleccionado = request.getParameter("Mes");
         	int mesSeleccionadoInt = Integer.parseInt(mesSeleccionado);
         	if(mesSeleccionadoInt== 0) {
         		
@@ -73,6 +73,7 @@ public class ServletEstadisticasBancos extends HttpServlet {
         		 prestamosNoCancelados = negocioPrestamo.cantidadPrestamosAnio(anio);
         		 cantidadTransferencias = negocioMovimiento.totalTransferenciasAnio(anio);
         		 totalMontoTransferencias = negocioMovimiento.MontoTransferenciaAnio(anio);
+        		 
         	}
         	else {
         		clientesNuevos = negocioCliente.clientesPorFecha(anio, mesSeleccionado);
@@ -83,10 +84,58 @@ public class ServletEstadisticasBancos extends HttpServlet {
         		 prestamosNoCancelados = negocioPrestamo.cantidadPrestamosAnioYMes(anio, mesSeleccionado);
         		 cantidadTransferencias = negocioMovimiento.totalTransferenciasAnioMes(anio, mesSeleccionado);
         		 totalMontoTransferencias = negocioMovimiento.MontoTransferenciaAnioMes(anio,mesSeleccionado);
+        		 
         	}
         	 
         	
         }
+        
+
+        switch (mesSeleccionado) {
+            case "0":
+                mesSeleccionado = "Todo el año";
+                break;
+            case "1":
+                mesSeleccionado = "Enero";
+                break;
+            case "2":
+                mesSeleccionado = "Febrero";
+                break;
+            case "3":
+                mesSeleccionado = "Marzo";
+                break;
+            case "4":
+                mesSeleccionado = "Abril";
+                break;
+            case "5":
+                mesSeleccionado = "Mayo";
+                break;
+            case "6":
+                mesSeleccionado = "Junio";
+                break;
+            case "7":
+                mesSeleccionado = "Julio";
+                break;
+            case "8":
+                mesSeleccionado = "Agosto";
+                break;
+            case "9":
+                mesSeleccionado = "Septiembre";
+                break;
+            case "10":
+                mesSeleccionado = "Octubre";
+                break;
+            case "11":
+                mesSeleccionado = "Noviembre";
+                break;
+            case "12":
+                mesSeleccionado = "Diciembre";
+                break;
+            default:
+                mesSeleccionado = " ";
+                break;
+        }
+        
         
         request.setAttribute("clientesNuevos", clientesNuevos);
         request.setAttribute("cuentasNuevas", cuentasNuevas);
@@ -96,6 +145,10 @@ public class ServletEstadisticasBancos extends HttpServlet {
         request.setAttribute("prestamosNoCancelados", prestamosNoCancelados);
         request.setAttribute("cantidadTransferencias",cantidadTransferencias );
         request.setAttribute("totalMontoTransferencias",totalMontoTransferencias );
+        request.setAttribute("mostrarMes",mesSeleccionado);
+        request.setAttribute("mostrarAnio",anio );
+        
+        
         
         RequestDispatcher dispatcher = request.getRequestDispatcher("EstadisticasBanco.jsp");
         dispatcher.forward(request, response);

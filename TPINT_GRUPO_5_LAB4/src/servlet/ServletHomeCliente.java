@@ -74,11 +74,22 @@ public class ServletHomeCliente extends HttpServlet {
 			}
 			
 			if(movimientosCuenta.size() > 0) {
-				for(int i = 0; i<3;i++) {
-					Movimiento aux = new Movimiento();
-					aux = movimientosCuenta.get(i);
-					tresmovimientosCuenta.add(aux);
+				int cantidad=movimientosCuenta.size();
+				if(cantidad >=3) {
+					for(int i = 0; i<3;i++) {
+						Movimiento aux = new Movimiento();
+						aux = movimientosCuenta.get(i);
+						tresmovimientosCuenta.add(aux);
+					}
 				}
+				else if(cantidad <3) {
+					for(int i = 0; i<cantidad;i++) {
+						Movimiento aux = new Movimiento();
+						aux = movimientosCuenta.get(i);
+						tresmovimientosCuenta.add(aux);
+					}
+				}
+				
 			}
 			
 			request.setAttribute("cuentaVisible", cuentaVisible);

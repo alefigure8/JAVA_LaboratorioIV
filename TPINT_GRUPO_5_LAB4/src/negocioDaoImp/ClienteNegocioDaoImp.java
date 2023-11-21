@@ -129,7 +129,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 
 	    	try {
 	    	    existe = clienteDao.existeCorreo(correo);
-	    	    System.out.println(existe);
+	    	   
 	    	} catch (CorreoException e) {
 	    	    throw new CorreoException(e.getMessage());
 	    	} catch (Exception e) {
@@ -139,6 +139,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 
 	    return existe;
 	}
+
 	
 	@Override
 	public int clientesPorFecha(String anio, String mes) throws SQLException{
@@ -160,4 +161,5 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 		}
 		return existe;
 	}
+
 }

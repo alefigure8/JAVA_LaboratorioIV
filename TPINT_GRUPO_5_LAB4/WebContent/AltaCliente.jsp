@@ -45,8 +45,8 @@
 	        <div class="flex-grow-1">
 	          <!-- CONTENIDO-->
 	          
-	          <%if(session.getAttribute("clienteAmodificar")!=null && session.getAttribute("clienteAgregado")==null){
-	        	  Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAmodificar");
+	          <%if(request.getAttribute("clienteAmodificar")!=null && request.getAttribute("clienteAgregado")==null){
+	        	  Cliente clienteAmodificar = (Cliente) request.getAttribute("clienteAmodificar");
 	        	  if (clienteAmodificar != null) {
 	        	      System.out.println("Cliente: " + clienteAmodificar.getDireccion().toString()); // verificar cliente
 	        	      
@@ -68,14 +68,14 @@
 				            </div>
 				            <div class="form-group">
 				                <label for="dni">DNI</label>
-				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" value="<%= clienteAmodificar.getDni() %>"   required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 9);validateInput(this, 1);">
+				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" value="<%= clienteAmodificar.getDni() %>"   required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 8);validateInput(this, 1);">
 				            	    
 				            	    
 				            	    <small id="dniError" class="text-danger" style="<% if ((String)request.getAttribute("error") != null && !((String)request.getAttribute("error")).isEmpty()) { %> display: block; <% } else { %> display: none; <% } %>"></small>
 				            </div>
 				            <div class="form-group">
 				                <label for="cuil">CUIL</label>
-				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" value="<%= clienteAmodificar.getCuil() %>"  required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" value="<%= clienteAmodificar.getCuil() %>"  required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 11);validateInput(this, 1);">
 				            </div>
 				            <div class="form-group">
 				                <label for="nacionalidad">Nacionalidad</label>
@@ -99,7 +99,7 @@
 				            </div>
 				            <div class="form-group">
 				                <label for="telefono">Teléfono</label>
-				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required  value="<%= clienteAmodificar.getTelefono() %>"  oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required  value="<%= clienteAmodificar.getTelefono() %>"  oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 8);">
 				            </div>
 				            
 				            <div class="form-group">
@@ -181,7 +181,7 @@
 						    
 						    <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required">
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  onchange="habilitarInput()">
 							        <% 
 							        for (TipoDireccion tipo : TipoDireccion.values()) {
 							            String selected = "";
@@ -196,10 +196,18 @@
 
 						    
 						    <div class="form-group">
-						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>"  placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);"  >
-						    </div>
-				            
+							    <label for="numeroDepartamento">Número de Departamento</label>
+							    <%
+							        String readonly = "";
+							        String clases = "";
+							        if (clienteAmodificar.getDireccion().getTipoDireccion().equals(TipoDireccion.Casa)) {
+							            readonly = "readonly";
+							            clases = "bg-light text-secondary";
+							        }
+							    %>
+							    <input type="text" class="form-control <%= clases %>" name="numeroDepartamento" id="numeroDepartamento" value="<%= clienteAmodificar.getDireccion().getNumeroDepartamento() %>" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);validateInput(this, 1);" <%= readonly %> >
+							</div>
+
 				            
 				            
 				        </div>
@@ -243,7 +251,7 @@
 				</form>
 				
 	          <%
-				} if(session.getAttribute("clienteAmodificar")==null && session.getAttribute("clienteAgregado")==null) {
+				} if(request.getAttribute("clienteAmodificar")==null && request.getAttribute("clienteAgregado")==null) {
 				%>
 	          
 	          
@@ -263,12 +271,12 @@
 				            </div>
 				            <div class="form-group">
 				                <label for="dni">DNI</label>
-				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
+				                <input type="text" class="form-control" name="dni" id="dni" placeholder="Ingrese el DNI" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 8);validateInput(this, 1);">
 				            	
 				            </div>
 				            <div class="form-group">
 				                <label for="cuil">CUIL</label>
-				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				                <input type="text" class="form-control" name="cuil" id="cuil" placeholder="Ingrese el CUIL" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 11);validateInput(this, 1);">
 				            </div>
 				            <div class="form-group">
 				                <label for="nacionalidad">Nacionalidad</label>
@@ -289,7 +297,7 @@
 				            </div>
 				            <div class="form-group">
 				                <label for="telefono">Teléfono</label>
-				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 12);validateInput(this, 1);">
+				                <input type="text" class="form-control" id="telefono" placeholder="Ingrese el teléfono" name="telefono" required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 8);">
 				            </div>
 				            
 				            <div class="form-group">
@@ -310,7 +318,7 @@
 						    <select class="form-control" id="provincia" name="provincia" required onchange="seleccionarProvincia()">
 						        <option value="" disabled selected>Seleccione una provincia</option>
 						        <% 
-						        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+						        List<Provincia> provincias = (List<Provincia>) session.getAttribute("provincias");
 						        if (provincias != null) {
 						            for (Provincia provincia : provincias) {
 						                %>
@@ -347,7 +355,7 @@
 				            
 				            <div class="form-group">
 							    <label for="tipoDireccion">Tipo de Dirección</label>
-							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  >
+							    <select class="form-control" id="tipoDireccion" name="tipoDireccion" required  onchange="habilitarInput()" >
 							    
 							        <% 
 							        for (TipoDireccion tipo : TipoDireccion.values()) { %>
@@ -359,7 +367,7 @@
 						    
 						    <div class="form-group">
 						        <label for="numeroDepartamento">Número de Departamento</label>
-						        <input type="text" class="form-control" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);"  >
+						        <input type="text" class="form-control bg-light text-secondary" name="numeroDepartamento" id="numeroDepartamento" placeholder="Ingrese el número de departamento" oninput="this.value = this.value.replace(/[^A-Za-z0-9\s]/g, ''); this.value = this.value.substring(0, 20);" readonly  >
 						    </div>
 				            
 				            
@@ -401,11 +409,11 @@
 				
 				<%
 				
-				} if(session.getAttribute("clienteAgregado")!=null) {
-					 Cliente clienteAmodificar = (Cliente) session.getAttribute("clienteAgregado");
+				} if(request.getAttribute("clienteAgregado")!=null) {
+					 Cliente clienteAmodificar = (Cliente) request.getAttribute("clienteAgregado");
 					// eliminamos sessions
-					session.removeAttribute("clienteAmodificar");
-					session.removeAttribute("clienteAgregado");
+					request.removeAttribute("clienteAmodificar");
+					request.removeAttribute("clienteAgregado");
 				%>
 					
 					<script>
@@ -580,6 +588,7 @@
 	   
     //VALIDACIONES CARACTERES
 	function validateInput(input, minLength) {
+    		 
 			 const trimmedValue = input.value.trim();
 		       if (trimmedValue.length < minLength || !trimmedValue) {
 		         input.setCustomValidity(`Debe ingresar al menos 1 carácter(es)`);
@@ -599,15 +608,15 @@
     var provinciasArray = [];
     var localidadesArray = [];
 
-    <% if (request.getAttribute("provincias") != null) {
-        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
+    <% if (session.getAttribute("provincias") != null) {
+        List<Provincia> provincias = (List<Provincia>) session.getAttribute("provincias");
         for (Provincia provincia : provincias) { %>
             provinciasArray.push({ id: "<%= provincia.getIdProvincia() %>", nombre: "<%= provincia.getNombre() %>" });
         <% }
     } %>
 
-    <% if (request.getAttribute("localidades") != null) {
-        List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
+    <% if (session.getAttribute("localidades") != null) {
+        List<Localidad> localidades = (List<Localidad>) session.getAttribute("localidades");
         for (Localidad localidad : localidades) { %>
             localidadesArray.push({ id: "<%= localidad.getIdLocalidad() %>", nombre: "<%= localidad.getNombre() %>", idProvincia: "<%= localidad.getIdProvincia() %>" });
         <% }
@@ -677,11 +686,17 @@
 	        var numeroDepartamentoInput = document.getElementById("numeroDepartamento");
 	
 	        if (tipoDireccion.value === "Departamento") {
-	            numeroDepartamentoInput.disabled = false;
-	            numeroDepartamentoInput.value = ""; // Puedes descomentar esta línea si quieres vaciar el campo al habilitarlo
+	            
+	            numeroDepartamentoInput.readOnly = false;
+	            numeroDepartamentoInput.classList.remove("bg-light")
+	 			numeroDepartamentoInput.classList.remove("text-secondary")
+	 			return;
 	        } else {
-	            numeroDepartamentoInput.disabled = true;
+	            
 	            numeroDepartamentoInput.value = "";
+	            numeroDepartamentoInput.readOnly = true;
+	            numeroDepartamentoInput.classList.add("bg-light")
+		 		numeroDepartamentoInput.classList.add("text-secondary")
 	        }
 	    }
 	</script>
