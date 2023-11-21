@@ -97,6 +97,4 @@
 		perfilBtn.classList.add("fw-bold", "text-primary", "border-bottom");
 	}
 	
-	
-		console.log(paginaActual)
 </script>

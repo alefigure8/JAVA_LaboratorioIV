@@ -1,3 +1,4 @@
+<%@page import="entidad.Provincia"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List" %>
@@ -35,17 +36,62 @@
 	          	</div>
 		        <div class="flex-grow-1">
 		          <!-- CONTENIDO-->
-					<div class="d-flex gap-2 align-items-center justify-content-between w-100">
-						<div class="col-md-7 text-md-start text-center">
-		                	<h4 class="opacity-75">Listado de Clientes Generales</h4>
-		             	</div>
-						<p>Mostrar: </p>
-						<select class="form-select form-select-sm w-md-25 w-25 mb-3" onchange="filtroActivos(this)" data-selected="<%=request.getParameter("filtro")%>" id="filtroActivo">
-							<option id="activos">Activos</option>
-							<option id="inactivos">Inactivos</option>
-						</select>
-					</div>
-
+			        <div class="d-flex flex-md-row flex-column justify-content-around align-items-center w-100 gap-2 mt-4">
+			          <div class="col-4 text-md-start">
+			            <h4 class="opacity-75">Listado de Clientes Generales</h4>
+			          </div>
+			          <div class="col-md-8 mb-4">
+				        <!--FILTRO-->
+			            <form action="ServletListarClientes" id="form" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
+		
+							  <!--  ESTADO -->
+			                   <select id="opcion" name="opcion" class="form-select">
+			                    <option value="todos">Todos los Estados</option>
+			                    <option value="activos">Activos</option>
+			                    <option value="inactivos">Inactivos</option>
+			                  </select>
+			                  
+			                  <!--  GENERO -->
+			                  <select name="genero" id="genero" class="form-select">
+			                    <option value="todos">Todos los Generos</option>
+			                    <option value="masculino">Masculino</option>
+			                    <option value="femenino">Femenino</option>
+			                  </select>
+			                  
+			                   <!--  PROVINCIA -->
+			                   <select id="provincia" name="provincia" class="form-select ">
+			                   	<option value="todas">Todas las Provincias</option>
+			                   <%
+			                   	if(session.getAttribute("provinciasFiltroCliente") != null){
+			                   		List<Provincia> listaProvincias = (List<Provincia>)session.getAttribute("provinciasFiltroCliente");
+			                   		
+			                   		for(Provincia provincia : listaProvincias){
+			                   			if(session.getAttribute("provinciaSelect") != null && !session.getAttribute("provinciaSelect").equals("todas") && Integer.parseInt((String)session.getAttribute("provinciaSelect")) == provincia.getIdProvincia()){
+			                  		 %>
+			                   		
+			                    	<option value="<%=provincia.getIdProvincia()%>" selected ><%=provincia.getNombre()%></option>
+			                  			<%} else { %>
+			                	  	<option value="<%=provincia.getIdProvincia()%>" ><%=provincia.getNombre()%></option>
+			                	  <%}
+			                  	}
+			                  } %>
+			                  </select>
+			                  
+			                  <!--  NACIMIENTO -->
+			                  <div class="d-flex gap-2">
+				                <span >Desde: </span>
+				                <input type="date" id="desde" name="fechaDesde" id="fechaDesde"/>
+				              </div>
+				              <div class="d-flex gap-2">
+				                <span>Hasta: </span>
+				                <input type="date" id="hasta" name="fechaHasta" id="fechaHasta"/>
+				              </div>
+			                  <input type="submit" class="btn btn_main" name="btnFiltrarTransferencias" value="Buscar"/>
+			                  <input type="submit" class="btn btn_main" name="btnLimpiarFiltros" value="Limpiar filtros"/>  
+		                </form >
+			          </div>
+			        </div>
+	       			 <!-- FIN FILTRO -->
 					<div>
 					    <table id="table_id" class="table display text-center">
 					        <thead>
@@ -124,11 +170,7 @@
 		<!-- FIN POPUP -->
 	 </body>
 	 <script>
-	 
-	 	const filtroActivo = document.getElementById("filtroActivo");
-	 	const filtroSeleccionado = filtroActivo.getAttribute('data-selected');
-	 	filtroActivo.value=filtroSeleccionado;	
-	 
+	 	 
 	 	//Confirmar y borrar cliente
 	 	function confirmarBorrado(id) {
 		 if (confirm('¿Seguro que desea eliminar al cliente')) {
@@ -142,9 +184,45 @@
 		 	}
 		 }
 	 	
-	 	function filtroActivos(select){
-	 		const option = select.value;
-	 		window.location.href ="${pageContext.request.contextPath}/ServletListarClientes?obtener=true&filtro=" + option;
+	 	let desde = ""
+	 	<%if(session.getAttribute("desdeSelect")!=null){%>
+	 		desde = "<%= session.getAttribute("desdeSelect") %>"
+	 	<%}%>
+	 	
+	 	const selectDesde = document.getElementById("desde");
+	 	selectDesde.value = desde;
+
+	 	
+	 	let hasta = ""
+	 	<%if(session.getAttribute("hastaSelect")!=null){%>
+	 		hasta = "<%= session.getAttribute("hastaSelect") %>"
+	 	<%}%>
+	 	
+	 	const selectHasta= document.getElementById("hasta");
+	 	selectHasta.value = hasta;
+
+	 	let genero = ""
+	 	
+	 	<%if(session.getAttribute("generoSelect")!=null){%>
+	 		genero = "<%= session.getAttribute("generoSelect") %>"
+	 	<%}%>
+	 	
+	 	const selectGenero= document.getElementById("genero");
+
+	 	for (let i = 0; i < selectGenero.options.length; i++) {
+	 		selectGenero.options[i].value == genero ? selectGenero.options[i].selected = true : selectGenero.options[i].selected = false;
 	 	}
+	 	
+	 	let opcion = ""
+	 	<%if(session.getAttribute("opcionSelect")!=null){%>
+	 		opcion = "<%= (String)session.getAttribute("opcionSelect") %>"
+	 	<%}%>
+
+	 	const selectOpcion = document.getElementById("opcion");
+
+	 	for (let i = 0; i < selectOpcion.options.length; i++) {
+	 		selectOpcion.options[i].value == opcion ? selectOpcion.options[i].selected = true : selectOpcion.options[i].selected = false;
+	 	}
+	 	
 	 </script>
 </html>

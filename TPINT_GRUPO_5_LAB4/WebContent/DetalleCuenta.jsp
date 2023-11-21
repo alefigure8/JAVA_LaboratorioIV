@@ -67,7 +67,7 @@
 		          	<!-- CONTENIDO-->
 		      	 	<!--  <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		 -->     	     	 
 
-			      	<table class="table" id="table_id">
+			      	<table class="table" id="table_id_2">
 					  <thead>
 					    <tr> 
 					      <th>FECHA</th>

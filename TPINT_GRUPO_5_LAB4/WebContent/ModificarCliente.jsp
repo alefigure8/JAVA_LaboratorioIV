@@ -54,13 +54,13 @@
 	          	}
 	          	
 	          	//LOCALIDADES
-	          	if(request.getAttribute("localidades")!=null){
-	          		listaLocalidad = (List<Localidad>)request.getAttribute("localidades");
+	          	if(session.getAttribute("localidades")!=null){
+	          		listaLocalidad = (List<Localidad>)session.getAttribute("localidades");
 	          	}
 	          	
 	          	//PROVINCIA
-	          	if(request.getAttribute("provincias")!=null){
-	          		listaProvincia = (List<Provincia>)request.getAttribute("provincias");
+	          	if(session.getAttribute("provincias")!=null){
+	          		listaProvincia = (List<Provincia>)session.getAttribute("provincias");
 	          	}
 	          %>
 				<form action="servletModificarCliente" method="get">

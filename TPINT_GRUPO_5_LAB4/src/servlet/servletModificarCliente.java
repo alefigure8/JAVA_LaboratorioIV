@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.sun.corba.se.impl.javax.rmi.PortableRemoteObject;
 
@@ -128,15 +129,8 @@ public class servletModificarCliente extends HttpServlet {
 			}
 		}
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
 	
-	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ErrorInternoException, Exception, CorreoException {
-		obtenerLocalidadYProvincia(request);
-		
+	private Cliente obtenerCliente(HttpServletRequest request, HttpServletResponse response) throws ErrorInternoException, Exception, CorreoException {	
 		String id = request.getParameter("ID");
 		
 		//Negocio cliente
@@ -192,7 +186,7 @@ public class servletModificarCliente extends HttpServlet {
 		
 		/* Verificar mail */
 		if(!correo.equals(cliente.getEmail())) {
-			System.out.println("Entramos por que son distintos");
+			
 			try {
 				
 				boolean existeCorreo = clienteNegocioDaoImp.existeCorreo(correo);
@@ -288,9 +282,10 @@ public class servletModificarCliente extends HttpServlet {
 	  	//Buscar provincias
 	  	List<Provincia> listaProvincia = provinciaNegocioDao.obtenerTodas();
 	  	
-	  	//Redirigir a página de Modificar cliente
-	  	request.setAttribute("localidades", listaLocalidad);
-	  	request.setAttribute("provincias", listaProvincia);
+	  	/* Session de Localidad y Provincia */
+	  	HttpSession session = request.getSession(true);
+	  	session.setAttribute("localidades", listaLocalidad);
+	  	session.setAttribute("provincias", listaProvincia);
 	  	
 		} catch(Exception e) {
 			throw new ErrorInternoException();

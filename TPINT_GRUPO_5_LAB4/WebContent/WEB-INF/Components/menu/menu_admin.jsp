@@ -47,6 +47,7 @@
 <script>
 	/* HOME */
 	const home = "PerfilBanco.jsp";
+	const home_2 = "servletLogin";
 	
 	/* CUENTA */
 	const cuenta = "ServletCuentasClientes";
@@ -71,7 +72,7 @@
 	/* PAGINA ACTUAL */
 	const paginaActual = window.location.pathname.split("/")[2];
 	
-	if(paginaActual == home){
+	if(paginaActual == home || paginaActual == home_2){
 		const perfilBtn = document.getElementById("inicio");
 		perfilBtn.classList.add("fw-bold", "text-primary", "border-bottom");
 	}
@@ -102,6 +103,4 @@
 		perfilBtn.classList.add("fw-bold", "text-primary", "border-bottom");
 	}
 	
-	
-	console.log(paginaActual)
 </script>

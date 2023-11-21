@@ -39,11 +39,22 @@
 		src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 	
 	<script type="text/javascript">
+		//Sin Ordenar
 		$(document).ready(function() {
 			$('#table_id').DataTable({
 			   "language": {
 		        	"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
 		      	}
+			});
+		});
+		
+		//Ordenar Columna 0
+		$(document).ready(function() {
+			$('#table_id_2').DataTable({
+			   "language": {
+		        	"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+		      	},
+		      	"order": [[0, "desc"]]
 			});
 		});
 	</script>

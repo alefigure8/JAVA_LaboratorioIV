@@ -59,8 +59,8 @@
 			              <div class="mb-3">
 			                <label class="form-label" for="cbu">A otro cliente. ¿Cuál es el CBU?</label>
 			                <div class="d-flex align-content-center gap-4">
-			                  <input type="text" name="cbuDestinatario" placeholder="11 números" class="form-control w-50" id="cbu" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 11); validateInput(this, 9);">
-			                  <span class="form-text text-danger d-none">Debe tener 11 números.</span>
+			                  <input type="text" name="cbuDestinatario" placeholder="22 números" class="form-control w-50" id="cbu" onkeypress="return /[0-9]/i.test(event.key)" required oninput="this.value = this.value.substring(0, 22); validateInput(this, 22);">
+			                  <span class="form-text text-danger d-none">Debe tener 22 números.</span>
 			                </div>
 			              </div>
 			              <div class="w-50 d-flex justify-content-center">

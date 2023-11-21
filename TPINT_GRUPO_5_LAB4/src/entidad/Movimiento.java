@@ -2,7 +2,7 @@ package entidad;
 
 import java.time.LocalDate;
 
-public class Movimiento {
+public class Movimiento implements Comparable<Movimiento>{
 
     private int id;
     private TipoMovimiento tipoMovimiento;
@@ -143,10 +143,11 @@ public class Movimiento {
 		return "Movimiento [id=" + id + ", tipoMovimiento=" + tipoMovimiento + ", numeroReferencia=" + numeroReferencia
 				+ /*", cbudestino=" + cbudestino*/", Cuenta= " + cuenta + ", monto=" + monto + ", operacion=" + operacion + ", fechaMovimiento="
 				+ fechaMovimiento + ", estado=" + estado + ", concepto=" + concepto + "]";
+	}
+
+	@Override
+	public int compareTo(Movimiento o) {	
+		return this.fechaMovimiento.compareTo(o.getFechaMovimiento());
 	}  
 
-	
-
-	
-	
 }

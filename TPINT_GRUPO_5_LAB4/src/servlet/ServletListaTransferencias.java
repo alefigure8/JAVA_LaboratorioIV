@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import Helper.GUI;
 import entidad.Cliente;
 import entidad.Destinatario;
@@ -44,6 +47,9 @@ public class ServletListaTransferencias extends HttpServlet {
 					//Obtener listado de movimientos por cliente
 					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
 					HashMap<Integer, Destinatario> destinatarios = movimientoNegocioDaoImp.obtenerDestinatariosTransferenciasPorNumeroCliente(cliente.getId());
+					
+					/* Ordenar por fecha */
+					Collections.sort(listadoMovimiento);
 					
 					request.setAttribute("lista", listadoMovimiento);
 					request.setAttribute("destinatarios", destinatarios);

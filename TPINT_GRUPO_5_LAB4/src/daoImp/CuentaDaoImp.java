@@ -48,7 +48,7 @@ public class CuentaDaoImp implements ICuentaDao{
 	private static final String obtenerDescripcion="select descripcion from TiposCuenta where IdTipoCuenta = ?";
 	private static final String obtenerPorMovimientoYreferencia="select * from Cuentas C "+
 			" inner join Movimientos M on M.CBU=C.CBU "+
-			" inner join tiposMovimiento TM on TM.IdTipoMovimiento=M.IdTipoMovimiento "+
+			" inner join TiposMovimiento TM on TM.IdTipoMovimiento=M.IdTipoMovimiento "+
 			" where M.IdTipoMovimiento=? and M.NumeroReferencia=? ";
 	
 	private static final String obtenerSaldoCuentaCorriente="SELECT SUM(Saldo) as TotalCuentaCorriente FROM Cuentas WHERE IdTipoCuenta = 2 AND Activo = 1";

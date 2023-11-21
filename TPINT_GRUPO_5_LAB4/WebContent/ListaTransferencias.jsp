@@ -122,7 +122,7 @@
 	        <!--TABLA-->
 	        <div class="d-flex flex-md-row flex-column">
 	          <div class="h-100 me-4 w-100">
-	            <table id="table_id" class="table display text-center">
+	            <table id="table_id_2" class="table display text-center">
 	              <!-- TABLE HEAD -->
 	              <thead>
 	                <tr>
@@ -161,12 +161,12 @@
 					 <!-- MONTO -->
 	                  <td>
 		                  <%if(movimiento.getOperacion().equals(String.valueOf(Operacion.Entrada))){%>
-		                  	<span class="fw-bolder">
+		                  	<span class="fw-bolder text-success">
 		                  		<%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %> 
 		                  	</span>
 		                  <%}else{%> 
-		                  	<span class="black-75">
-		                  		-<%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %> 
+		                  	<span class="black-75 text-danger">
+		                  		<%= NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(movimiento.getMonto()) %> 
 	                  		</span>
 		                  <%}%>
 	                  </td>
@@ -231,12 +231,13 @@
 		<% } %>
 		<!-- FIN POPUP -->
 		
-		<!-- SCRIPT -->
+		<!-- SCRIPT -->		
 		<script>
 			function operacion(select){
 				const opcion = select.value;
 				window.location.href ="${pageContext.request.contextPath}/ServletListaTransferencias?listado=true&operacion=" + opcion;
 			}
+			
 		</script>
 	 </body>
 </html>
