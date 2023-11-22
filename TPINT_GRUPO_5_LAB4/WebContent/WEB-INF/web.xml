@@ -1,0 +1,34 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+    <display-name>TPINT_GRUPO_5_LAB4</display-name>
+    <welcome-file-list>
+        <welcome-file>Login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- Definición del filtro -->
+    <filter>
+        <filter-name>ErrorFilter</filter-name>
+        <filter-class>Helper.ErrorFilter</filter-class>
+    </filter>
+
+    <!-- Mapeo del filtro -->
+    <filter-mapping>
+        <filter-name>ErrorFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <error-page>
+        <!-- Missing login -->
+        <error-code>401</error-code>
+        <location>/Login.jsp</location>
+    </error-page>
+    <error-page>
+        <!-- Forbidden directory listing -->
+        <error-code>403</error-code>
+        <location>/Login.jsp</location>
+    </error-page>
+    <error-page>
+        <!-- Missing resource -->
+        <error-code>404</error-code>
+        <location>/Login.jsp</location>
+    </error-page>
+</web-app>

@@ -145,10 +145,17 @@
 		                        </div>
 		                        
 		                    </div>
+		                     
 		                </div>
+		                
 		            </div>
+		           
 		        </div>
 		        
+		        <div class= "mt-2 mb-2">
+						<a href="PerfilBanco.jsp" class="btn btn-primary btnEnviar "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
+				</div>
+				
 		    </div> 
        </div>
        <script>

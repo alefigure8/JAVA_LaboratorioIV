@@ -76,7 +76,7 @@
 		      <!--CONTENT-->
 		      <div class="col-10 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2 text-center mt-2">
-		          <h1>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
+		          <h1><i class="fas fa-wallet me-2"></i>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
 		          <h5 class="mt-4">Numero de cuenta: <%=CuentaFormateada.toString() %></h5>
 		          <h5>CBU: <%=cuenta.getCbu() %></h5>
 		          <h5>Saldo: $<%=cuenta.getSaldo()%></h5>

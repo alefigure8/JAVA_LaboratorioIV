@@ -323,8 +323,9 @@ public class ServletCuentasClientes extends HttpServlet {
 			}
 			
 			if(request.getParameter("btnModificarCuenta")!=null)
-			{
+			{	
 				int numerocuenta = Integer.valueOf(request.getParameter("numerocuenta"));
+				
 				int cliente = Integer.valueOf(request.getParameter("idcliente"));		
 							
 				String redirectURL = "/ServletModificarCuenta?numerocuenta=" + numerocuenta + "&idcliente=" + cliente;

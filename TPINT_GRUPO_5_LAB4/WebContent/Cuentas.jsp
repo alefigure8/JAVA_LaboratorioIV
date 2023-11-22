@@ -60,35 +60,37 @@
 	        
 	        <div class="row justify-content-center">
 			  <div class="col-sm-6 mb-3 mb-sm-0">
-			    <div class="card mt-4">
-			      <div class="card-body">
-			      <%if(cuentasCliente != null){ %>
-				       <% for (Cuenta c : cuentasCliente){ 
-				    	      String cuentastring = String.valueOf(c.getNumeroCuenta());
-				              StringBuilder CuentaFormateada = new StringBuilder();
-				              CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
-				            %>
-				        <h5 class="card-title">CUENTA NRO. <%=CuentaFormateada%></h5>
-				        <form action="ServletDetalleCuenta" method="get">
-				          <ul class="list-group border-0">
-				           
-				            
-				            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
-				              <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
-				              <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
-				              <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
-				            </li>
-				                  </ul>
-				               </form>
-				            <% 
-				       		}
-				       } %>
-			    
-			     
-			      </div>
+			    <div class="card mt-4 border-0">
+					 <div class="card-body ">
+						    <% if(cuentasCliente != null) { %>
+						        <% for (Cuenta c : cuentasCliente) { 
+						            String cuentastring = String.valueOf(c.getNumeroCuenta());
+						            StringBuilder CuentaFormateada = new StringBuilder();
+						            CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+						        %>
+						            <div class="card mb-4">
+						                <div class="card-body">
+						                    <h5 class="card-title">CUENTA NRO. <%=CuentaFormateada%></h5>
+						                    <form action="ServletDetalleCuenta" method="get">
+						                        <ul class="list-group border-0">
+						                            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
+						                                <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
+						                                <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
+						                                <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
+						                            </li>
+						                        </ul>
+						                    </form>
+						                </div>
+						            </div>
+						        <% } %>
+						    <% } %>
+						</div>
+
 			      
 			    </div>
-			    	 <a href="ServletHomeCliente?homecliente=homecliente" class="btn btn-primary btnEnviar mt-3"><i class="fa-solid fa-arrow-left me-2"></i>Regresar</a>
+			   		 <div class="text-center">
+			    		 <a href="ServletHomeCliente?homecliente=homecliente" class="btn btn-primary btnEnviar mt-3"><i class="fa-solid fa-arrow-left me-2"></i>Regresar</a>
+			  		</div>
 			  </div>
 			</div>
 

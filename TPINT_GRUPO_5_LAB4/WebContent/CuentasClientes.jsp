@@ -164,7 +164,7 @@
 
 	            <!--TABLA-->
 	            <div class="d-flex  flex-column">
-                    <form action="ServletCuentasClientes" method="get">
+                   
 	 				   <table id="table_id" class="table display text-center">
 		                <thead>
 		                  <tr>
@@ -205,41 +205,41 @@
 		                      <%}%>	
 		                      
 		                      
-		                      
-		                      
 		                      <td><span class="black-75"><%=c.getFechaCreacion().toString() %></span></td>
-		                      <%if(c.isActivo()){%>
-		                      <td><span class="btn btn-success btn-sm disabled">Activa</span></td>
-		                      
-		                      <th>
-							  	<input type="submit" class="btn btn-primary btn-sm" name="btnModificarCuenta" value="Modificar">  
-					         </th>
-					         	      
-						     <th>
-								<input type="submit" class="btn btn-danger btn-sm" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
-					         </th>	
-					         
-		                      <%}else{%>
-		                      
-		                      <td><span class="btn btn-secondary btn-sm disabled">Inactiva</span></td>
-		                      <th>
-								<input type="submit" class="btn btn-primary btn-sm disabled" name="btnModificarCuenta" value="Modificar">  
-					         </th>
-					         	      
-						    <th>
-								<input type="submit" class="btn btn-danger btn-sm disabled" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
-					         </th>	
-		                      <%} %>
-	                 
+		                       <form action="ServletCuentasClientes" method="get">
+		                       <input type="hidden" name="numerocuenta" value="<%=c.getNumeroCuenta() %>">
+		                      <input type="hidden" name="idcliente" value="<%=c.getIdCliente() %>">
+			                      <%if(c.isActivo()){%>
+			                      <td><span class="btn btn-success btn-sm disabled">Activa</span></td>
+			                      
+			                      <th>
+								  	<input type="submit" class="btn btn-primary btn-sm" name="btnModificarCuenta" value="Modificar">  
+						         </th>
+						         	      
+							     <th>
+									<input type="submit" class="btn btn-danger btn-sm" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
+						         </th>	
+						         
+			                      <%}else{%>
+			                      
+			                      <td><span class="btn btn-secondary btn-sm disabled">Inactiva</span></td>
+			                      <th>
+									<input type="submit" class="btn btn-primary btn-sm disabled" name="btnModificarCuenta" value="Modificar">  
+						         </th>
+						         	      
+							    <th>
+									<input type="submit" class="btn btn-danger btn-sm disabled" name="btnEliminarCuenta" value="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta cuenta?');">
+						         </th>	
+			                      <%} %>
+	                 		 </form>
+	                 		 
 		                  </tr>
 	                  <%} 
               	 	 }%>                    
 	                </tbody>
 	              </table>
-                 </form>
-                 <div class="d-grid gap-2 col-6 mx-auto mt-5">
-  			    <a type="submit" class="btn btn-primary btn-lg btnEnviar mt-2 mt-md-0" href="/TPINT_GRUPO_5_LAB4/AltaCuentaCliente.jsp"> Alta Cuenta <i class="fa-solid fa-plus"> </i></a>
-			    </div>
+                
+                 
 	            </div>
 	          <a href="PerfilBanco.jsp" class=" btn btn-primary btnEnviar  "><i class="fa-solid fa-arrow-left me-4"></i>Regresar</a>
 

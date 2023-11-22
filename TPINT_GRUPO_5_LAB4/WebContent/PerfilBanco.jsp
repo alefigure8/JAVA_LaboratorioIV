@@ -45,7 +45,7 @@
 					                </div>
 					                   <div class="col-md-12">
 					                    <a href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" class="btn btn-primary btnEnviar col-12 p-3 m-1">
-					                        <i class="fas fa-users fa-2x me-2"></i>LISTADO DE CUENTAS
+					                        <i class="fas fa-list fa-2x me-2"></i>LISTADO DE CUENTAS
 					                    </a>
 					                </div>	
 					                 <div class="col-md-12">

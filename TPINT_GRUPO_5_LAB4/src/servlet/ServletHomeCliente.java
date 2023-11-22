@@ -3,6 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -75,7 +77,20 @@ public class ServletHomeCliente extends HttpServlet {
 			
 			if(movimientosCuenta.size() > 0) {
 				int cantidad=movimientosCuenta.size();
-				if(cantidad >=3) {
+				List<Movimiento> movimientos=new ArrayList<Movimiento>();
+				try {
+					movimientos = negocioMovimiento.obtenerUltimosTresMovimientos(cuentaVisible.getCbu());
+					
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+				movimientos.sort(Comparator.comparingInt(Movimiento::getId).reversed());
+				tresmovimientosCuenta.clear();
+				for (Movimiento movimiento : movimientos) {
+				    tresmovimientosCuenta.add(movimiento);
+				}
+				/*if(cantidad >=3) {
 					for(int i = 0; i<3;i++) {
 						Movimiento aux = new Movimiento();
 						aux = movimientosCuenta.get(i);
@@ -88,7 +103,7 @@ public class ServletHomeCliente extends HttpServlet {
 						aux = movimientosCuenta.get(i);
 						tresmovimientosCuenta.add(aux);
 					}
-				}
+				}*/
 				
 			}
 			

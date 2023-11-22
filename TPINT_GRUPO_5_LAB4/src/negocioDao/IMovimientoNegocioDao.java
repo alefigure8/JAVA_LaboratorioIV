@@ -26,4 +26,5 @@ public interface IMovimientoNegocioDao {
 	public int totalTransferenciasAnioMes(String anio,String mes)throws SQLException;
 	public double MontoTransferenciaAnio(String anio)throws SQLException;
 	public double MontoTransferenciaAnioMes(String anio,String Mes)throws SQLException;
+	public List<Movimiento> obtenerUltimosTresMovimientos(String CBU) throws SQLException;
 }

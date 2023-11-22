@@ -272,5 +272,10 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 		    return movimientoNegocio.MontoTransferenciaAnioMes(anio, mes);
 		 
 		 }
+
+	@Override
+	public List<Movimiento> obtenerUltimosTresMovimientos(String CBU) throws SQLException {
+		return movimientoNegocio.obtenerUltimosTresMovimientos(CBU);
+	}
 	
 }

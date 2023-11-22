@@ -406,7 +406,8 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		//ESTADO
 		Estado estado = new Estado();
 		estado.setIdEstado(rSet.getInt("IdEstados"));
-		estado.setDescripcion(rSet.getNString("estadoDescripcion"));
+		//estado.setDescripcion(rSet.getNString("estadoDescripcion"));
+		estado.setDescripcion(rSet.getString("estadoDescripcion"));
 		movimiento.setEstado(estado);
 				
 		//TIPOMOVIMIENTO
@@ -641,6 +642,38 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 		    return montoTransferencias;
 		 
 		 }
+	
+	private static final String selectUltimosMovimientos = 
+	 "SELECT *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
+	 "inner join Estados E " + 
+	 "on M.IdEstados=E.IdEstados " + 
+	 "inner join TiposMovimiento TM " + 
+	 "on TM.IdTipoMovimiento=M.IdTipoMovimiento " + 
+	 "inner join Cuentas C " + 
+	 "on C.CBU=M.CBU "+  
+	 "inner join TiposCuenta TC " +
+	 "on TC.IdTipoCuenta=C.IdTipoCuenta WHERE M.CBU = ? ORDER BY M.FechaMovimiento DESC, id LIMIT 3";
+	@Override
+		public List<Movimiento> obtenerUltimosTresMovimientos(String CBU) throws SQLException {
+		    PreparedStatement pStatement;
+		    ResultSet rSet;
+		    List<Movimiento> tresUltimosMovimientos = new ArrayList<>();
+		    Conexion conexion = Conexion.getConexion();
+		    
+		    try {
+		        pStatement = conexion.getSQLConexion().prepareStatement(selectUltimosMovimientos);
+		        pStatement.setString(1, CBU);
+		        rSet = pStatement.executeQuery();
+		        
+		        while (rSet.next()) {
+		            tresUltimosMovimientos.add(getMovimiento(rSet));
+		        }
+		    } catch (SQLException e) {
+		        throw e;
+		    }
+		    
+		    return tresUltimosMovimientos;
+		}
 
 
 }
