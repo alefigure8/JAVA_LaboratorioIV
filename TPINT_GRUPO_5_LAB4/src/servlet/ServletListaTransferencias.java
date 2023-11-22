@@ -43,6 +43,12 @@ public class ServletListaTransferencias extends HttpServlet {
 			/** TODOS LOS MOVIMIENTOS DE TRANSFERENCIA **/
 			if(request.getParameter("todos")!=null || request.getParameter("btnLimpiarFiltros") !=null) {
 				
+				session.removeAttribute("desdeSelect");
+				session.removeAttribute("hastaSelect");
+				session.removeAttribute("importesSelect");
+				session.removeAttribute("rangoSelect");
+				session.removeAttribute("destinoSelect");
+				
 				try {
 					//Obtener listado de movimientos por cliente
 					List<Movimiento> listadoMovimiento = movimientoNegocioDaoImp.obtenerTransferenciasPorCliente(cliente.getId());
@@ -88,16 +94,21 @@ public class ServletListaTransferencias extends HttpServlet {
 						
 						/* FILTRO DESTINO*/
 						if(!cuentasDestino.equals("todas")) {
+							session.setAttribute("destinoSelect", cuentasDestino);
 							listadoMovimientoFiltrado = obtenerListaPorDestino(listadoMovimientoFiltrado, cuentasDestino, cliente, destinatarios);
 						}		
 						
 						/* FILTRO IMPORTE */
 						if(!importes.equals("todas")) {
+							session.setAttribute("importesSelect", importes);
+							session.setAttribute("rangoSelect", rangoImporte);
 							listadoMovimientoFiltrado = obtenerListaPorImportes(listadoMovimientoFiltrado, importes, rangoImporte);
 						}	
 						
 						/* FILTRO FECHA */
 						if(!fechaDesde.isEmpty() || !fechaHasta.isEmpty()) {
+							session.setAttribute("fechaDesdeSelect", fechaDesde);
+							session.setAttribute("fechaHastaSelect", fechaHasta);
 							listadoMovimientoFiltrado = obtenerListaPorFecha(listadoMovimientoFiltrado, fechaDesde, fechaHasta);
 						}
 						

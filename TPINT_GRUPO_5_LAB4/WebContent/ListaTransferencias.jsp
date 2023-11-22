@@ -87,27 +87,27 @@
 	          <div class="col-md-8 mb-4">
 	            <form action="ServletListaTransferencias" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
                 <input type="hidden" name="listado" value="true"/>
-                  <select name="cuentasDestino" class="form-select ">
+                  <select id="destino" name="cuentasDestino" class="form-select ">
                     <option value="todas">Todos los estados</option>
                     <option value="terceros">Tercerceros</option>
                     <option value="propias">Propias</option>
                   </select>
       
-                   <select id="importes" name="importes" class="form-select ">
+                   <select id="importe" name="importes" class="form-select ">
                     <option value="todas">Todos los importes</option>
                     <option value="mayor">Mayor a</option>
                     <option value="igual">Igual a</option>
                     <option value="menor">Menor a</option>
                   </select>
-                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
+                  <input type="text" id="rango" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
                   
                   <div class="d-flex gap-2">
 	                <span >Desde: </span>
-	                <input type="date" name="prestamoDesde" id="desdeInput">
+	                <input type="date" name="prestamoDesde" id="desde">
 	              </div>
 	              <div class="d-flex gap-2">
 	                <span>Hasta: </span>
-	                <input type="date" name="prestamoHasta" id="hastaInput">
+	                <input type="date" name="prestamoHasta" id="hasta">
 	              </div>
                   
 
@@ -237,6 +237,52 @@
 				const opcion = select.value;
 				window.location.href ="${pageContext.request.contextPath}/ServletListaTransferencias?listado=true&operacion=" + opcion;
 			}
+			
+			
+		 	let desde = ""
+			 	<%if(session.getAttribute("fechaDesdeSelect")!=null){%>
+			 		desde = "<%= session.getAttribute("fechaDesdeSelect") %>"
+			 	<%}%>
+			 	
+			 	const selectDesde = document.getElementById("desde");
+			 	selectDesde.value = desde;
+
+			 	
+			 	let hasta = ""
+			 	<%if(session.getAttribute("fechaHastaSelect")!=null){%>
+			 		hasta = "<%= session.getAttribute("fechaHastaSelect") %>"
+			 	<%}%>
+			 	
+			 	const selectHasta= document.getElementById("hasta");
+			 	selectHasta.value = hasta;
+
+			 	let importe = ""
+			 	let rango = ""
+			 	<%if(session.getAttribute("importesSelect")!=null){%>
+			 		importe = "<%= session.getAttribute("importesSelect") %>"
+			 		rango = "<%= session.getAttribute("rangoSelect") %>"
+			 	<%} else {%>
+			 		rango = 0;
+			 	<%}%>
+			 	
+			 	const selectImporte= document.getElementById("importe");
+				const rangoInput = document.getElementById("rango");
+				rangoInput.value = rango;
+				
+			 	for (let i = 0; i < selectImporte.options.length; i++) {
+			 		selectImporte.options[i].value == importe ? selectImporte.options[i].selected = true : selectImporte.options[i].selected = false;
+			 	}
+			 	
+			 	let destino = ""
+			 	<%if(session.getAttribute("destinoSelect")!=null){%>
+			 		destino = "<%= (String)session.getAttribute("destinoSelect") %>"
+			 	<%}%>
+
+			 	const selectDestino = document.getElementById("destino");
+
+			 	for (let i = 0; i < selectDestino.options.length; i++) {
+			 		selectDestino.options[i].value == destino ? selectDestino.options[i].selected = true : selectDestino.options[i].selected = false;
+			 	}
 			
 		</script>
 	 </body>

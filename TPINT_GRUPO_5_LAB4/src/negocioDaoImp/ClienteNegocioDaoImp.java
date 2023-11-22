@@ -94,7 +94,7 @@ public class ClienteNegocioDaoImp implements IClienteNegocioDao {
 				
 			} catch ( SQLException e) {
 				throw new ErrorInternoException();
-			} 
+			}
 			
 		}
 		

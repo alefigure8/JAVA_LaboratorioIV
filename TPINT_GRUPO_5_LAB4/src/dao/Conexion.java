@@ -16,9 +16,9 @@ public class Conexion {
 	private String user = "root";
 	
 	/* PASS*/
-	//private String pass = "root";
+	private String pass = "root";
 	//private String pass = "1234";
-	private String pass = "Gato21226";
+	//private String pass = "Gato21226";
 
 	/* DB */
 	private String dbName = "bdBancos";
@@ -26,8 +26,8 @@ public class Conexion {
 	private Conexion()
 	{
 		
-		try
-		{
+		try {
+		
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			//Class.forName("com.mysql.jdbc.Driver");
 			//this.connection = DriverManager.getConnection(host,user,pass);
@@ -36,17 +36,16 @@ public class Conexion {
 		}
 		catch(Exception e)
 		{
-			System.out.println("ERRORES " + e.getMessage());
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
 	public static Conexion getConexion()   
 	{								
-		if(instancia == null)
-		{
+		if(instancia == null){
 			instancia = new Conexion();
 		}
+		
 		return instancia;
 	}
 
