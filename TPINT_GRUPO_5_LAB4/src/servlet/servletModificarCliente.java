@@ -42,6 +42,9 @@ public class servletModificarCliente extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		//Charset
+		request.setCharacterEncoding("UTF-8");
+		
 		//Negocio cliente
 		ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
 		

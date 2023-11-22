@@ -43,8 +43,8 @@ public class ServletListaTransferencias extends HttpServlet {
 			/** TODOS LOS MOVIMIENTOS DE TRANSFERENCIA **/
 			if(request.getParameter("todos")!=null || request.getParameter("btnLimpiarFiltros") !=null) {
 				
-				session.removeAttribute("desdeSelect");
-				session.removeAttribute("hastaSelect");
+				session.removeAttribute("fechaDesdeSelect");
+				session.removeAttribute("fechaHastaSelect");
 				session.removeAttribute("importesSelect");
 				session.removeAttribute("rangoSelect");
 				session.removeAttribute("destinoSelect");

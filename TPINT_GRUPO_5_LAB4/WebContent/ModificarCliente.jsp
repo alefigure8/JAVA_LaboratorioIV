@@ -15,7 +15,7 @@
 <!-- FIN AUTENTICACION -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en">
+<html lang="es">
 	<!-- HEAD -->
 	<% 
 		//TITULO DEL ARCHIVO COMO TITULO DE LA PAGINA
@@ -63,7 +63,7 @@
 	          		listaProvincia = (List<Provincia>)session.getAttribute("provincias");
 	          	}
 	          %>
-				<form action="servletModificarCliente" method="get">
+				<form action="servletModificarCliente" method="get" accept-charset="UTF-8">
 					<!-- HIDDEN ID -->
 					<input type="hidden" name="ID" value="<%=cliente.getId() %>">
 					
@@ -73,11 +73,11 @@
 					    		<legend class="w-auto">Cliente:</legend>
 					    		<div class="form-group">
 					                <label for="nombre">Nombre</label>
-					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
+					                <input type="text" class="form-control" name="nombre" id="nombre" value="<%=cliente.getNombre() %>" required oninput="this.value = this.value.replace(/[^A-Za-zÁ-Úá-ú\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
 					            </div>
 					            <div class="form-group">
 					                <label for="apellido">Apellido</label>
-					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
+					                <input type="text" class="form-control" name="apellido" id="apellido" value="<%=cliente.getApellido() %>" required oninput="this.value = this.value.replace(/[^A-Za-zÁ-Úá-ú\s]/g, ''); this.value = this.value.substring(0, 20); validateInput(this, 2)">
 					            </div>
 					            <div class="form-group">
 					                <label for="dni">DNI</label>

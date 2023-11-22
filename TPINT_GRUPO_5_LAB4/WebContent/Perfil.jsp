@@ -2,6 +2,7 @@
 <%@page import="entidad.Cliente" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
+
 <!-- AUTENTICACION -->
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
