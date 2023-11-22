@@ -49,20 +49,89 @@
 		listaMovimientos = (ArrayList<Movimiento>)request.getAttribute("listaMovimientos");
 	};
 	
+	String concepto = null;
+	String importe = null;
+	String monto = null;
+	String desde = null;
+	String hasta = null;
+	if(request.getAttribute("conceptoSeleccionado")!=null){
+		concepto = (String) request.getAttribute("conceptoSeleccionado");
+	}
+	if(request.getAttribute("importeSeleccionado")!=null){
+		importe = (String) request.getAttribute("importeSeleccionado");;
+	}
+	if(request.getAttribute("montoImporte")!=null){
+		monto = (String) request.getAttribute("montoImporte");
+	}
+	if(request.getAttribute("fechaDesde")!=null){
+		desde = (String) request.getAttribute("fechaDesde");
+	}
+	if(request.getAttribute("fechaHasta")!=null){
+		hasta = (String) request.getAttribute("fechaHasta");
+	}
 	
-	 
- 
 	%>
 		      
 		      
 		      <!--CONTENT-->
-		      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-between">
+		      <div class="col-10 d-flex flex-column justify-content-between">
 		        <div class="w-100 pt-2 text-center mt-2">
 		          <h1>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
 		          <h5 class="mt-4">Numero de cuenta: <%=CuentaFormateada.toString() %></h5>
 		          <h5>CBU: <%=cuenta.getCbu() %></h5>
 		          <h5>Saldo: $<%=cuenta.getSaldo()%></h5>
 		        </div>
+		        
+		         <div class="flex-grow-1">
+            <!--FILTRO-->
+            <div class="d-flex flex-md-row flex-column justify-content-around  w-100 gap-2 mt-4">
+            
+            <div class="col-4 text-md-start ">
+                <h4 class="opacity-75">Historial de movimientos</h4>
+              </div>
+            
+              
+             <div class="col-md-8">
+			    <form action="ServletDetalleCuenta" method="get" class="d-flex justify-content-around gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
+			        <input type="hidden" name="nroCuenta" value="<%= CuentaFormateada.toString()%>">
+			        <input type="hidden" name="cbu" value="<%= cuenta.getCbu()%>">
+			        <select name="Conceptos" class="form-select w-100">
+			            <option value="Todos los conceptos" <%= ("Todos los conceptos".equals(concepto)) ? "selected" : "" %>>Todos los conceptos</option>
+			            <option value="Alta de cuenta" <%= ("Alta de cuenta".equals(concepto)) ? "selected" : "" %>>Alta de cuenta</option>
+			            <option value="Alta de un prestamo" <%= ("Alta de un prestamo".equals(concepto)) ? "selected" : "" %>>Alta de un prestamo</option>
+			            <option value="Pago prestamo" <%= ("Pago prestamo".equals(concepto)) ? "selected" : "" %>>Pago prestamo</option>
+			            <option value="Transferencia" <%= ("Transferencia".equals(concepto)) ? "selected" : "" %>>Transferencia</option>
+			        </select>
+			
+			        <select id="importes" name="Importes" class="form-select w-100">
+			            <option value="Todos los importes" <%= ("Todos los importes".equals(importe)) ? "selected" : "" %>>Todos los importes</option>
+			            <option value="Mayor a" <%= ("Mayor a".equals(importe)) ? "selected" : "" %>>Mayor a</option>
+			            <option value="Igual a" <%= ("Igual a".equals(importe)) ? "selected" : "" %>>Igual a</option>
+			            <option value="Menor a" <%= ("Menor a".equals(importe)) ? "selected" : "" %>>Menor a</option>
+			        </select>
+			
+			        <input type="text" id="rangoImporte" name="rangoImporte" 
+			               oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);" 
+			               value="<%= (monto != null) ? monto : "" %>" >
+			
+			        <div class="d-flex gap-2">
+			            <span>Desde: </span>
+			            <input type="date" name="movimientoDesde" id="desdeInput" value="<%= (desde != null) ? desde : "" %>" >
+			        </div>
+			        <div class="d-flex gap-2">
+			            <span>Hasta: </span>
+			            <input type="date" name="movimientoHasta" id="hastaInput" value="<%= (hasta != null) ? hasta : "" %>">
+			        </div>
+			
+			        <input type="submit" class="btn btn_main" name="btnFiltrarMovimientos" value="Buscar">
+			        <input type="submit" class="btn btn_main" name="btnLimpiarFiltros" value="Limpiar filtros">
+			
+			    </form>
+			</div>
+
+            </div>
+		        
+		        
 		        <div class="flex-grow-1 mt-4">
 		          	<!-- CONTENIDO-->
 		      	 	<!--  <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		 -->     	     	 
@@ -117,5 +186,29 @@
 	    <jsp:include page= "/WEB-INF/Components/footer.html"></jsp:include>
 	 </body>
 	 
-	
+	<script>
+    function validarFechas() {
+        var desde = document.getElementById('desdeInput').value;
+        var hasta = document.getElementById('hastaInput').value;
+
+        if ((desde && !hasta) || (!desde && hasta)) {
+            alert('Por favor, complete ambas fechas o déjelas vacías.');
+            return false;
+        }
+
+        if (desde && hasta) {
+            var fechaDesde = new Date(desde);
+            var fechaHasta = new Date(hasta);
+
+            if (fechaHasta < fechaDesde) {
+                alert('La fecha "Hasta" no puede ser anterior a la fecha "Desde".');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    
+</script>
 </html>

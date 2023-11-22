@@ -20,11 +20,7 @@
 	}
 %>
 
-<% 
-session.removeAttribute("montoSeleccionado");
-session.removeAttribute("tipoTasaSeleccionada");
-session.removeAttribute("interesCalculado");
-session.removeAttribute("totalCalculado"); %>
+
 
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=usuario.getTipoAcceso()%>" />
@@ -32,6 +28,33 @@ session.removeAttribute("totalCalculado"); %>
 
 <!-- FIN AUTENTICACION -->
 
+<% 
+session.removeAttribute("montoSeleccionado");
+session.removeAttribute("tipoTasaSeleccionada");
+session.removeAttribute("interesCalculado");
+session.removeAttribute("totalCalculado"); 
+
+	String estado = null;
+	String importe = null;
+	String monto = null;
+	String desde = null;
+	String hasta = null;
+	if(request.getAttribute("estadoSeleccionado")!=null){
+		estado = (String) request.getAttribute("estadoSeleccionado");
+	}
+	if(request.getAttribute("importeSeleccionado")!=null){
+		importe = (String) request.getAttribute("importeSeleccionado");;
+	}
+	if(request.getAttribute("montoImporte")!=null){
+		monto = (String) request.getAttribute("montoImporte");
+	}
+	if(request.getAttribute("fechaDesde")!=null){
+		desde = (String) request.getAttribute("fechaDesde");
+	}
+	if(request.getAttribute("fechaHasta")!=null){
+		hasta = (String) request.getAttribute("fechaHasta");
+	}
+	%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 	<!-- HEAD -->
@@ -90,10 +113,10 @@ session.removeAttribute("totalCalculado"); %>
                 <form action="ServletPrestamos" method="get" class="d-flex justify-content-around align-items-center gap-2 flex-md-row flex-column" onsubmit="return validarFechas()">
                 
                   <select name="Estados" class="form-select ">
-                    <option value="Todos los Estados">Todos los estados</option>
-                    <option value="Aprobado">Aprobados</option>
-                    <option value="Rechazado">Rechazados</option>
-                    <option value="Pendiente">Pendientes</option>
+                    <option value="Todos los Estados" <%= ("Todos los Estados".equals(estado)) ? "selected" : "" %>>Todos los estados</option>
+                    <option value="Aprobado" <%=("Aprobado".equals(estado)) ? "selected" : "" %>>Aprobados</option>
+                    <option value="Rechazado" <%=("Rechazado".equals(estado)) ? "selected" : "" %>>Rechazados</option>
+                    <option value="Pendiente" <%=("Pendiente".equals(estado)) ? "selected" : "" %>>Pendientes</option>
                   </select>
                   
                   <!--  <select name="Cancelado" class="form-select ">
@@ -103,21 +126,21 @@ session.removeAttribute("totalCalculado"); %>
 				</select>-->
                   
                    <select id="importes" name="Importes" class="form-select ">
-                    <option value="Todos los importes">Todos los importes</option>
-                    <option value="Mayor a">Mayor a</option>
-                    <option value="Igual a">Igual a</option>
-                    <option value="Menor a">Menor a</option>
+                    <option value="Todos los importes" <%= ("Todos los importes".equals(importe)) ? "selected" : "" %>>Todos los importes</option>
+                    <option value="Mayor a" <%= ("Mayor a".equals(importe)) ? "selected" : "" %>>Mayor a</option>
+                    <option value="Igual a" <%= ("Igual a".equals(importe)) ? "selected" : "" %>>Igual a</option>
+                    <option value="Menor a" <%= ("Menor a".equals(importe)) ? "selected" : "" %>>Menor a</option>
                   </select>
-                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);">
+                  <input type="text" id="rangoImporte" name="rangoImporte" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);" value="<%=(monto!=null)?monto : "" %>"">
                   
                   
                   <div class="d-flex gap-2">
 	                <span >Desde: </span>
-	                <input type="date" name="prestamoDesde" id="desdeInput">
+	                <input type="date" name="prestamoDesde" id="desdeInput" value="<%= (desde!=null)?desde:"" %>">
 	              </div>
 	              <div class="d-flex gap-2">
 	                <span>Hasta: </span>
-	                <input type="date" name="prestamoHasta" id="hastaInput">
+	                <input type="date" name="prestamoHasta" id="hastaInput" value="<%= (hasta!=null)?hasta:"" %>">
 	              </div>
                   
                   

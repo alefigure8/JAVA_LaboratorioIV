@@ -2,7 +2,11 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ListResourceBundle;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,6 +35,7 @@ public class ServletDetalleCuenta extends HttpServlet {
        IMovimientoNegocioDao negocioMovimiento = new MovimientoNegocioDaoImp();
        ArrayList<Movimiento> listaMovimientos = new ArrayList<Movimiento>();
        ArrayList<Movimiento> listaMovimientosordenada = new ArrayList<Movimiento>();
+       List<Movimiento>listaMovimientosFiltrada=new ArrayList<Movimiento>();
 
       public ServletDetalleCuenta() {
         super();
@@ -42,7 +47,7 @@ public class ServletDetalleCuenta extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		if(request.getParameter("btnVerMovimientos")!=null) {
+		if(request.getParameter("btnVerMovimientos")!=null || request.getParameter("btnLimpiarFiltros")!=null && request.getParameter("btnFiltrarMovimientos")==null) {
 
 			if(request.getParameter("numeroCuenta")!=null) {
 			
@@ -50,17 +55,17 @@ public class ServletDetalleCuenta extends HttpServlet {
 				try {
 					cuenta = cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("numeroCuenta").toString()));
 				} catch (NumberFormatException | SQLException e1) {
-					// TODO Auto-generated catch block
+					
 					e1.printStackTrace();
 				}
 		
-				//System.out.println(cuenta.toString());
+				
 			try {
 				listaMovimientos.clear();
 				listaMovimientosordenada.clear();
 				listaMovimientos = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuenta.getCbu());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			
@@ -72,7 +77,7 @@ public class ServletDetalleCuenta extends HttpServlet {
 				aux = listaMovimientos.get(i);	
 			listaMovimientosordenada.add(aux);
 			}
-			
+			listaMovimientosFiltrada.clear();
 			session.setAttribute("origen", "detallecuenta");
 			request.setAttribute("cuenta", cuenta);
 			request.setAttribute("listaMovimientos", listaMovimientosordenada);
@@ -82,24 +87,37 @@ public class ServletDetalleCuenta extends HttpServlet {
 			}
 		}
 		
-			if(request.getParameter("detallecuenta")!=null) {
+			if(request.getParameter("detallecuenta")!=null || request.getParameter("btnLimpiarFiltros")!=null && request.getParameter("btnFiltrarMovimientos")==null) {
 
-								
-				try {
-					cuenta = cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("detallecuenta").toString()));
-				} catch (NumberFormatException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}	
+				if(request.getParameter("detallecuenta")!=null)	{
+					try {
+						cuenta = cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("detallecuenta").toString()));
+					} catch (NumberFormatException | SQLException e1) {
+						
+						e1.printStackTrace();
+					}	
+					
+				}
+				
+				
+				if (request.getParameter("btnLimpiarFiltros")!=null) {
+					try {
+						cuenta=cuentaNegocio.obtenerUna(Integer.valueOf(request.getParameter("nroCuenta").toString()));
+					} catch (NumberFormatException | SQLException e) {
+						
+						e.printStackTrace();
+					}
+				}
+				
 				
 				try {
 					listaMovimientos.clear();
 					listaMovimientos = (ArrayList<Movimiento>) negocioMovimiento.obtenerPorCBU(cuenta.getCbu());
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
-				
+				listaMovimientosFiltrada.clear();
 				session.setAttribute("origen", "detallecuenta");
 				request.setAttribute("cuenta", cuenta);
 				request.setAttribute("listaMovimientos", listaMovimientos);
@@ -109,7 +127,117 @@ public class ServletDetalleCuenta extends HttpServlet {
 				}
 			
 			
-		
+		//Filtros
+			if(request.getParameter("btnFiltrarMovimientos")!=null && request.getParameter("btnLimpiarFiltros")==null) {
+				//CONCEPTOS
+				String conceptoSeleccionado=null;	
+				if(request.getParameter("Conceptos")!=null) {
+					conceptoSeleccionado=request.getParameter("Conceptos");
+				}
+				
+				//IMPORTES
+				String importeSeleccionado=null;
+				if(request.getParameter("Importes")!=null) {
+					importeSeleccionado=request.getParameter("Importes");
+				}
+				
+				//MONTO IMPORTE
+				String montoImporte=null;
+				if(request.getParameter("rangoImporte")!=null && !request.getParameter("rangoImporte").isEmpty()) {
+					montoImporte=request.getParameter("rangoImporte");
+				}
+				
+				//FECHAS
+				String fechaDesde=null;
+				String fechaHasta=null;
+				if(request.getParameter("movimientoDesde")!=null && !request.getParameter("movimientoDesde").isEmpty()) {
+					fechaDesde=request.getParameter("movimientoDesde");
+				}
+				if(request.getParameter("movimientoHasta")!=null && !request.getParameter("movimientoHasta").isEmpty()) {
+					fechaHasta=request.getParameter("movimientoHasta");
+				}
+				
+				
+				//Listas limpias
+				
+				if (!listaMovimientosFiltrada.isEmpty()) {
+					listaMovimientos.clear();
+			        listaMovimientos.addAll(listaMovimientosFiltrada);
+			    }
+				
+				//Listas para filtrar
+				listaMovimientosFiltrada.clear();
+				
+					for(int x=0;x<listaMovimientos.size();x++) {
+						
+						Movimiento movimiento=listaMovimientos.get(x);
+						
+						//Conceptos
+						if(conceptoSeleccionado!=null && !conceptoSeleccionado.equals("Todos los conceptos")) {
+							if(!movimiento.getTipoMovimiento().getDescripcion().equals(conceptoSeleccionado)) {
+								continue;
+							}
+							
+						}
+						
+						//Importe
+						if(importeSeleccionado!=null && montoImporte!=null) {
+							Double monto=Double.parseDouble(montoImporte);
+							switch (importeSeleccionado) {
+							case "Mayor a":
+								if(movimiento.getMonto()<=monto) {
+									continue;
+								}
+								break;
+							case "Igual a":
+								if(movimiento.getMonto()!=monto) {
+									continue;
+								}
+								break;
+							case "Menor a":
+								if(movimiento.getMonto()>=monto) {
+									continue;
+								}
+								break;
+
+							}
+						}
+						
+						//Fechas
+						if(fechaDesde!=null && fechaHasta!=null) {
+							try {
+						        LocalDate fechaMovimiento = movimiento.getFechaMovimiento();
+						        LocalDate desde = LocalDate.parse(fechaDesde);
+						        LocalDate hasta = LocalDate.parse(fechaHasta);
+						        
+						        if (fechaMovimiento.isBefore(desde) || fechaMovimiento.isAfter(hasta)) {
+						            continue;
+						        }
+						    } catch (DateTimeParseException e) {
+						        e.printStackTrace();
+						    }
+							
+						}
+						
+						listaMovimientosFiltrada.add(movimiento);
+						
+					}
+					
+					
+				request.setAttribute("cuenta", cuenta);
+				request.setAttribute("listaMovimientos", listaMovimientosFiltrada);	
+				
+				request.setAttribute("conceptoSeleccionado", conceptoSeleccionado);
+				request.setAttribute("importeSeleccionado", importeSeleccionado);
+				request.setAttribute("montoImporte", montoImporte);
+				request.setAttribute("fechaDesde", fechaDesde);
+				request.setAttribute("fechaHasta", fechaHasta);
+				
+				RequestDispatcher rDispatcher=request.getRequestDispatcher("DetalleCuenta.jsp");
+				rDispatcher.forward(request, response);
+				
+			}	
+			
 		
 		
 		response.getWriter().append("Served at getdetalle cuenta: ").append(request.getContextPath());

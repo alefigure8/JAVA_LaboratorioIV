@@ -34,32 +34,57 @@ public class ServletCuentasClientes extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    HttpSession session=null;
+    
 	ArrayList<Cuenta> listadoCuentas = null;
 	ArrayList<Cuenta> listaFiltrada = null;
 	ArrayList<Cuenta> listaFiltradaxTipo = null;
 	String [] listadoNombres = null;
 	int [] listadoDni=null;
+	
+	ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
+	IClienteNegocioDao clienteNegocio = new ClienteNegocioDaoImp();
+	ArrayList<TipoCuenta> tiposCuenta = new ArrayList<TipoCuenta>(); 
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		
 		HttpSession session = request.getSession();
-	
-		if(request.getParameter("Cuentas")!=null || request.getParameter("btnLimpiarFiltros")!=null && request.getParameter("btnfiltrar")==null) {
+		
+		if(request.getParameter("btnLimpiarFiltros")!=null && request.getParameter("btnfiltrar")==null) {
 			
-			String value = request.getParameter("Cuentas");
-			
-			
-			//if(value.compareTo("CuentasClientes")==0) {
+			limpiarSession(session);
+
+			try {
+				tiposCuenta = (ArrayList<TipoCuenta>) cuentaNegocio.listarTiposCuenta();
+				listadoCuentas = (ArrayList<Cuenta>) cuentaNegocio.obtenerTodas();
+			} catch (SQLException e1) {
 				
-				
-				ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
-				IClienteNegocioDao clienteNegocio = new ClienteNegocioDaoImp();
-				ArrayList<TipoCuenta> tiposCuenta = new ArrayList<TipoCuenta>(); 
+				e1.printStackTrace();
+			}
+						
+
+			listadoNombres = listarNombres(listadoCuentas, clienteNegocio);	
+			listadoDni=listarDni(listadoCuentas, clienteNegocio);	
+
+			session.setAttribute("estadoCuentaSeleccionado","Todas");
+			session.setAttribute("estadoCuentaSeleccionado","Todas");
+			request.setAttribute("tiposCuenta",tiposCuenta);
+			request.setAttribute("listadoNombres",listadoNombres);
+			request.setAttribute("listadoDni",listadoDni);
+			request.setAttribute("listadoCuentas",listadoCuentas);
+			RequestDispatcher rd = request.getRequestDispatcher("/CuentasClientes.jsp");   
+	        rd.forward(request, response);
+			
+		}
+		
+		if(request.getParameter("Cuentas")!=null && request.getParameter("btnLimpiarFiltros")==null && request.getParameter("btnfiltrar")==null) {
+			
+			limpiarSession(session);
+		
+			
 				try {
 					tiposCuenta = (ArrayList<TipoCuenta>) cuentaNegocio.listarTiposCuenta();
-					listadoCuentas = (ArrayList<Cuenta>) cuentaNegocio.obtenerTodas();
+					listadoCuentas = (ArrayList<Cuenta>) cuentaNegocio.obtenerActivas();
 				} catch (SQLException e1) {
 					
 					e1.printStackTrace();
@@ -68,7 +93,7 @@ public class ServletCuentasClientes extends HttpServlet {
 
 				listadoNombres = listarNombres(listadoCuentas, clienteNegocio);	
 				listadoDni=listarDni(listadoCuentas, clienteNegocio);	
-
+				session.setAttribute("estadoCuentaSeleccionado","Solo Activas");
 				request.setAttribute("tiposCuenta",tiposCuenta);
 				request.setAttribute("listadoNombres",listadoNombres);
 				request.setAttribute("listadoDni",listadoDni);
@@ -82,8 +107,7 @@ public class ServletCuentasClientes extends HttpServlet {
 
 		if(request.getParameter("btnfiltrar")!=null && request.getParameter("btnLimpiarFiltros")==null) {
 			
-			ArrayList<Cuenta> listaFiltradaxTipo  = new ArrayList<Cuenta>();
-					
+			ArrayList<Cuenta> listaFiltradaxTipo  = new ArrayList<Cuenta>();					
 			ICuentaNegocioDao cuentaNegocio = new CuentaNegocioDaoImp ();
 			IClienteNegocioDao clienteNegocio = new ClienteNegocioDaoImp();
 			ArrayList<TipoCuenta> tiposCuenta = new ArrayList<TipoCuenta>(); 
@@ -99,6 +123,9 @@ public class ServletCuentasClientes extends HttpServlet {
 				
 				// ESTADO CUENTAS			
 				if(request.getParameter("EstadoCuenta")!=null) {
+					
+					String estadoCuentaSeleccionado = request.getParameter("EstadoCuenta").toString();
+					session.setAttribute("estadoCuentaSeleccionado",estadoCuentaSeleccionado);
 					
 					try {
 					if(request.getParameter("EstadoCuenta").toString().equals("Todas")) {
@@ -124,9 +151,10 @@ public class ServletCuentasClientes extends HttpServlet {
 				}
 				
 				//TIPOS DE CUENTA
-				int codigotipocuenta = 0;
+				String tipocuenta = null;
 				if(request.getParameter("TipoCuenta")!=null) {
-					codigotipocuenta = Integer.valueOf(request.getParameter("TipoCuenta"));
+					tipocuenta = request.getParameter("TipoCuenta").toString();
+					session.setAttribute("tipoCuentaSeleccionado", tipocuenta);
 				}
 				
 				
@@ -134,6 +162,7 @@ public class ServletCuentasClientes extends HttpServlet {
 				String importeSeleccionado=null;
 				if(request.getParameter("Importes")!=null) {
 					importeSeleccionado=request.getParameter("Importes");
+					session.setAttribute("rangoImportesSeleccionado",importeSeleccionado);
 				}
 				String montoImporte=null;
 				if(request.getParameter("rangoImporte")!=null && !request.getParameter("rangoImporte").isEmpty()) {
@@ -145,18 +174,22 @@ public class ServletCuentasClientes extends HttpServlet {
 				String fechaHasta=null;
 				if(request.getParameter("cuentaDesde")!=null && !request.getParameter("cuentaDesde").isEmpty()) {
 					fechaDesde=request.getParameter("cuentaDesde");
+					session.setAttribute("fechadesdeSeleccionada",fechaDesde);
 				}
 				if(request.getParameter("cuentaHasta")!=null && !request.getParameter("cuentaHasta").isEmpty()) {
 					fechaHasta=request.getParameter("cuentaHasta");
+					session.setAttribute("fechahastaSeleccionada", fechaHasta);
 				}
 				
-				
+		
 				for(Cuenta c : listadoCuentas) {
 				//if(codigotipocuenta==c.getTipoCuenta().getId()) {
 									
 					//Tipos cuenta
-					if(codigotipocuenta!=0) {
-						if(codigotipocuenta!=c.getTipoCuenta().getId()) {
+					if(tipocuenta!=null) {
+			
+						if(!tipocuenta.equals("Todas") && !tipocuenta.equals(c.getTipoCuenta().getDescripcion())) {
+							
 							continue;
 						}
 						
@@ -213,10 +246,11 @@ public class ServletCuentasClientes extends HttpServlet {
 				listadoNombres = listarNombres(listaFiltradaxTipo, clienteNegocio);
 				listadoDni = listarDni(listaFiltradaxTipo, clienteNegocio);
 				request.setAttribute("listadoCuentas",listaFiltradaxTipo);
-				//request.setAttribute("listadoCuentas",listadoCuentas);
+				request.setAttribute("tiposCuenta",tiposCuenta);		
 				request.setAttribute("listadoNombres",listadoNombres);
 				request.setAttribute("listadoDni",listadoDni);
-				request.setAttribute("tiposCuenta",tiposCuenta);
+			
+				
 				
 				RequestDispatcher rd = request.getRequestDispatcher("/CuentasClientes.jsp");   
 		        rd.forward(request, response);
@@ -402,7 +436,16 @@ public class ServletCuentasClientes extends HttpServlet {
 				}
 			return listadoDni;
 		}
-		
+		protected void limpiarSession( HttpSession session) {
+			session.removeAttribute("fechahastaSeleccionada");
+			session.setAttribute("fechahastaSeleccionada", null);
+			session.removeAttribute("fechadesdeSeleccionada");
+			session.setAttribute("fechadesdeSeleccionada",null);
+			session.removeAttribute("rangoImportesSeleccionado");
+			session.setAttribute("rangoImportesSeleccionado",null);
+			session.removeAttribute("tipoCuentaSeleccionado");
+			session.setAttribute("tipoCuentaSeleccionado", null);
+		}
 	}
 
 

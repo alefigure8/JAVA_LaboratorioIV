@@ -31,15 +31,28 @@ import negocioDaoImp.*;
 public class ServletEstadisticasPrestamos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	ArrayList<Prestamo> listadoTodosPrestamos = null;
-	ArrayList<Prestamo>[] vectorDeListasPorMesesPrestamos= null; 
-	ArrayList<Prestamo> listaFiltradaPrestamos = null;
-	ArrayList  <CuotaPrestamo> listadoTodosCuotas = null;
-	ArrayList  <CuotaPrestamo> listaFiltradaCuotas = null;
-	ArrayList<CuotaPrestamo>[] vectordeListasdeMesesCuotas = null;
+	ArrayList<Prestamo> listadoTodosPrestamos = new ArrayList<Prestamo> ();
+
+
+	ArrayList<Prestamo> listaFiltradaPrestamos = new ArrayList<Prestamo> ();
+	ArrayList  <CuotaPrestamo> listadoTodosCuotas = new ArrayList<CuotaPrestamo> ();
+	ArrayList  <CuotaPrestamo> listaFiltradaCuotas = new ArrayList<CuotaPrestamo> ();
+	ArrayList<CuotaPrestamo>[] vectordeListasdeMesesCuotas = new ArrayList[12];
+	ArrayList<Prestamo>[] vectorDeListasPorMesesPrestamos = new ArrayList[12];
 	ArrayList<Provincia> listaDeProvincias = null;
-	IPrestamosNegocioDao negocioPrestamo = null;
-	IProvinciaNegocioDao provinciaDao = null;
+	IPrestamosNegocioDao negocioPrestamo = new PrestamosNegocioDaoImpl();;
+	IProvinciaNegocioDao provinciaDao = new ProvinciaNegocioDaoImp();
+	IClienteNegocioDao negocioCliente = new ClienteNegocioDaoImp();
+	double promedioTasas[] = new double[12];
+	double promedioMorosos[] = new double [12];
+	int prestamosOtorgados[]= new int[12];
+	int prestamosRechazados[] = new int[12];
+	double montoTotalOtorgado[] = new double[12]; 
+	int pagosRecibidos[] = new int[12];
+	double sumaGananciaenIntereses[] = new double[12];
+	double sumaEnPagosCuotas[] = new double[12];
+	double sumaEnMora[] = new double[12];
+	int cuotasMorosas[] = new int[12];
 	
     public ServletEstadisticasPrestamos() {
         super();
@@ -50,136 +63,174 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 
 		
 		HttpSession session = request.getSession();
-
 		
-		
+		// LOAD
 		if(request.getParameter("Estadisticas")!=null) {
 			
+			limpiarSession(session);
 			String value = request.getParameter("Estadisticas");
 				
-			if(value.compareTo("Prestamos")==0) {
-	
-					
-				limpiarSession(session);			
-			
-				IProvinciaNegocioDao provinciaDao = new ProvinciaNegocioDaoImp();
-				negocioPrestamo 	= new PrestamosNegocioDaoImpl();	
-	
+			if(value.compareTo("Prestamos")==0) {	
+				
+				session.removeAttribute("provinciaSeleccionada");	
+				session.setAttribute("provinciaSeleccionada",null);
+				session.removeAttribute("sexoSeleccionado");	
+				session.setAttribute("sexoSeleccionado",null);
+				session.removeAttribute("anio");	
+				session.setAttribute("anio",null);
+				session.removeAttribute("edadMinSeleccionada");	
+				session.removeAttribute("edadMaxSeleccionada");	
+				session.setAttribute("edadMinSeleccionada",null);			
+				session.setAttribute("edadMaxSeleccionada",null);
+				
 				try {
 					listaDeProvincias = (ArrayList<Provincia>) provinciaDao.obtenerTodas();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				listadoTodosPrestamos =	(ArrayList<Prestamo>) negocioPrestamo .obtenerTodos();
-				listadoTodosCuotas= (ArrayList<CuotaPrestamo>) negocioPrestamo .obtenertodas();						
-				cargarTablaxAnio(2023,session);
+				listadoTodosCuotas.clear();
+				listadoTodosPrestamos.clear();
+				listadoTodosPrestamos =	(ArrayList<Prestamo>) negocioPrestamo .obtenerTodos();								
+				listadoTodosCuotas= (ArrayList<CuotaPrestamo>) negocioPrestamo .obtenertodas();				
+				cargarTablaxAnio(2023,session, listadoTodosPrestamos,listadoTodosCuotas);
 			
-				
 				session.setAttribute("listaDeProvincias", listaDeProvincias);
 				RequestDispatcher rd = request.getRequestDispatcher("/EstadisticasPrestamos.jsp");   
 		        rd.forward(request, response);
 			
 			}
 			}
+		if(request.getParameter("btnReestablecer")!=null) {
+			
+			session.removeAttribute("provinciaSeleccionada");	
+			session.setAttribute("provinciaSeleccionada",null);
+			session.removeAttribute("sexoSeleccionado");	
+			session.setAttribute("sexoSeleccionado",null);
+			session.removeAttribute("anio");	
+			session.setAttribute("anio",null);
+			session.removeAttribute("edadMinSeleccionada");	
+			session.removeAttribute("edadMaxSeleccionada");	
+			session.setAttribute("edadMinSeleccionada",null);			
+			session.setAttribute("edadMaxSeleccionada",null);
+			
+			try {
+				listaDeProvincias = (ArrayList<Provincia>) provinciaDao.obtenerTodas();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			listadoTodosCuotas.clear();
+			listadoTodosPrestamos.clear();
+			listadoTodosPrestamos =	(ArrayList<Prestamo>) negocioPrestamo .obtenerTodos();								
+			listadoTodosCuotas= (ArrayList<CuotaPrestamo>) negocioPrestamo .obtenertodas();				
+			cargarTablaxAnio(2023,session, listadoTodosPrestamos,listadoTodosCuotas);
 		
+			session.setAttribute("listaDeProvincias", listaDeProvincias);
+			RequestDispatcher rd = request.getRequestDispatcher("/EstadisticasPrestamos.jsp");   
+	        rd.forward(request, response);
+			
+			
+		}
+		// BOTON FILTRAR
 		if(request.getParameter("btnFiltrar")!=null) {
+					
+			if(request.getParameter("Sexo")!=null && request.getParameter("EdadMin")!=null &&request.getParameter("EdadMax")!=null && request.getParameter("Provincia")!=null){
 			
-			
+			int anio;
 			limpiarSession(session);	
-			listaFiltradaCuotas = new ArrayList<CuotaPrestamo> ();
-			listaFiltradaPrestamos = new ArrayList<Prestamo> ();
-			negocioPrestamo  = new PrestamosNegocioDaoImpl();	
+			
+			listadoTodosCuotas.clear();
+			listadoTodosPrestamos.clear();
+			listaFiltradaCuotas.clear();
+			listaFiltradaPrestamos.clear();
 			listadoTodosPrestamos =	(ArrayList<Prestamo>) negocioPrestamo .obtenerTodos();
-			listadoTodosCuotas= (ArrayList<CuotaPrestamo>) negocioPrestamo .obtenertodas();
-			IClienteNegocioDao negocioCliente = new ClienteNegocioDaoImp();
+			listadoTodosCuotas= (ArrayList<CuotaPrestamo>) negocioPrestamo .obtenertodas();	
 			int edadMinseleccionada = Integer.valueOf(request.getParameter("EdadMin").toString());
-			int edadMaxseleccionada = Integer.valueOf(request.getParameter("EdadMax").toString());
 
+			int edadMaxseleccionada = Integer.valueOf(request.getParameter("EdadMax").toString());
+	
+		
+			
+			String sexoSeleccionado = request.getParameter("Sexo").toString();
+			session.setAttribute("sexoSeleccionado",sexoSeleccionado);
+			String provinciaSeleccionada = request.getParameter("Provincia").toString();
+			session.setAttribute("provinciaSeleccionada",provinciaSeleccionada);
+			anio = Integer.valueOf(request.getParameter("Anio"));
+			session.setAttribute("anioSeleccionado",anio);
+			
 			try {
 				if(edadMaxseleccionada-edadMinseleccionada<10) {
 				throw new RangoException();
-				}
-				if(request.getParameter("Anio")!=null) {
-					int anio = Integer.valueOf(request.getParameter("Anio"));
-						
-					for (int i=0 ; i<listadoTodosPrestamos.size(); i++) {
+				}				
+											
+				for (int i=0 ; i<listadoTodosPrestamos.size(); i++) {
 
-						if(listadoTodosPrestamos.get(i).getFechaPrestamo().getYear()==Integer.valueOf(request.getParameter("Anio"))) {
-						
+
 										
-						
-						if(listadoTodosPrestamos.get(i).getIdCliente()!=1) {
-						
-							
-							int idcliente = listadoTodosPrestamos.get(i).getIdCliente();
-							Cliente cliente = negocioCliente.obtenerUno(idcliente);
-			
-							boolean resultadofiltro = filtroPorTipoCliente(cliente,request, response); 
-							
+				//OBTENEMOS EL CLIENTE QUE LO SOLICITO
+				int idcliente = listadoTodosPrestamos.get(i).getIdCliente();
+				Cliente cliente = negocioCliente.obtenerUno(idcliente);
+	
+				
+				boolean resultadofiltro = filtroPorTipoCliente(cliente,sexoSeleccionado,edadMinseleccionada,edadMaxseleccionada, provinciaSeleccionada); 
+
+							// SI EL CLIENTE COINCIDE ENTRA A LISTA FILTRADA
 							if(resultadofiltro) {
 										
-								
-										listaFiltradaPrestamos.add(listadoTodosPrestamos.get(i));
-							}
+								ArrayList  <CuotaPrestamo> cuotasxprestamo = new ArrayList<CuotaPrestamo>();
+								Prestamo prestamo = new Prestamo();
+								prestamo = listadoTodosPrestamos.get(i);						
 									
+								
+								for (CuotaPrestamo cp : listadoTodosCuotas) {
+									
+										
+									if(cp.getFechaVencimiento().getYear()==anio && cp.getIdPrestamo()==prestamo.getId()) {
+										
+										listaFiltradaCuotas.add(cp);
+									}
+								}
+								
+								// OBTENEMOS LOS PRESTAMOS DEL AÑO SELECCIONADO
+								if(listadoTodosPrestamos.get(i).getFechaPrestamo().getYear()==anio) {
+								
+								listaFiltradaPrestamos.add(prestamo);
+																
+								// CARGAMOS LA LISTA FILTRADA DE CUOTAS
 								}
 							}
-							
-
-
-						}
+									
 					
+							}	
+				
+			
+				cargarTablaxAnio(anio, session,listaFiltradaPrestamos,listaFiltradaCuotas);	
 					
-					
-
-						for (int y=0 ; y<listaFiltradaPrestamos.size(); y++) {
-							
-										
-							ArrayList  <CuotaPrestamo> cuotasxpresamo =	(ArrayList  <CuotaPrestamo>) negocioPrestamo.obtenerCuotasxprestamo(listaFiltradaPrestamos.get(y).getId());
-							
-						for (CuotaPrestamo cp : cuotasxpresamo) {
-							
-							if(cp.getFechaVencimiento().getYear()==anio)
-							listaFiltradaCuotas.add(cp);
-							}
-						}
-
-					
-																				
-						
-					cargarTablaFiltrada(session,request,response);	
-						
-					}
+				    session.setAttribute("anio", anio);
 					session.setAttribute("edadMinSeleccionada",edadMinseleccionada);			
 					session.setAttribute("edadMaxSeleccionada",edadMaxseleccionada);
 					RequestDispatcher rd = request.getRequestDispatcher("/EstadisticasPrestamos.jsp");   
 			        rd.forward(request, response);	
 				
-				
 			}
+				
+				
+			
 			catch (RangoException e) {
 				
-				session.setAttribute("edadMinSeleccionada",edadMinseleccionada);			
-				session.setAttribute("edadMaxSeleccionada",edadMaxseleccionada);
+				session.setAttribute("edadMinSeleccionada",20);			
+				session.setAttribute("edadMaxSeleccionada",80);
 				limpiarSession(session);
-				int anio = Integer.valueOf(request.getParameter("Anio"));
-				cargarTablaxAnio(anio,session);
+				cargarTablaxAnio(2023,session, listadoTodosPrestamos,listadoTodosCuotas);
 				request.setAttribute("errorRangoEdad",true);
 				request = GUI.mensajes(request, "error", "Verifica el rango de edad", e.getMessage());
 				
 				RequestDispatcher rd = request.getRequestDispatcher("/EstadisticasPrestamos.jsp");   
 		        rd.forward(request, response);
 				
+			}			
 			}
-		
-			
-			
-						
-			
-			
-			
 		}
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
@@ -189,254 +240,18 @@ public class ServletEstadisticasPrestamos extends HttpServlet {
 		doGet(request, response);
 	}
 
-	protected void cargarTablaxAnio(int anio,HttpSession session) {
+	protected void cargarTablaxAnio(int anio,HttpSession session, 	ArrayList<Prestamo> listadoPrestamos, 	ArrayList  <CuotaPrestamo> listaCuotas) {
 
-		limpiarSession(session);
 		
-		double promedioTasas[] = new double[12];
-		double promedioMorosos[] = new double [12];
- 		int prestamosOtorgados[]= new int[12];
-		int prestamosRechazados[] = new int[12];
-		int prestamosCancelados[] = new int[12];
-		double montoTotalOtorgado[] = new double[12]; 
-		double montoAcumuladoaPagarAnual[] = new double[12];
-		double pagosRecibidos[] = new double[12];
-		
-		// INSTANCIO VECTORES
-		vectorDeListasPorMesesPrestamos = new ArrayList[12];
-		vectordeListasdeMesesCuotas = new ArrayList[12];
-		
-		// INSTANCIO ARRAYLISTS
-		for (int i=0;i<12; i++) {
-		vectordeListasdeMesesCuotas[i] = new ArrayList<CuotaPrestamo>();	
-		vectorDeListasPorMesesPrestamos[i] = new ArrayList<Prestamo>(); 
-		montoTotalOtorgado[i] = 0; 
-		montoAcumuladoaPagarAnual[i] = 0;
-		}
-		//System.out.println("listaPrestamos:"+listadoTodosPrestamos.size());
-		// PROCESO LISTADO TOTAL PRESTAMOS
-		for (Prestamo p : listadoTodosPrestamos) {
-		
-	
-		if(p.getFechaPrestamo().getYear() == anio) {
-		
-		
-		
-		int mesIndice = p.getFechaPrestamo().getMonthValue()-1;
-		vectorDeListasPorMesesPrestamos[mesIndice].add(p);
-		System.out.println(p.getFechaPrestamo());
-		
-	
+		InicializarVectoresdeCalculos();
+		CargarVectoresMensuales(anio, listadoPrestamos, listaCuotas);
+		CargarVectoresdeCalculos();
+		CargarSession(session); 
 		
 		}
-		
-		}	
-		//System.out.println("listaCuotas:"+listadoTodosCuotas.size());
-		//PROCESO LISTADO TOTAL CUOTAS
-		for (CuotaPrestamo cp : listadoTodosCuotas) {
-		
-		
-			
-		if(cp.getFechaVencimiento().getYear() == anio) { 	
-			
-		
-		int mesIndice = cp.getFechaVencimiento().getMonthValue()-1;
-		vectordeListasdeMesesCuotas[mesIndice].add(cp);
 
-				 			      
-		}
-		}
-		// PROCESO VECTORES MENSUALES
-		for (int i = 0; i<12;i++) {
-			
-			for (CuotaPrestamo c: vectordeListasdeMesesCuotas[i]) {
 	
-				
-				if(cuotaMorosaEseMes(c, i)) {
-					
-				promedioMorosos[i]++;
-					
-				}
-				//ACUMULO PAGOS RECIBIDOS POR MES
-				if(isPagaEseMes(c,i)) {
-			
-				pagosRecibidos[i]+=c.getMontoCuota();
-				}
-				
-				if (c.getFechaPago()==null){
-				
-				montoAcumuladoaPagarAnual[i] += c.getMontoCuota(); 
-					
-				}
-				
-				
-			}
-			// PRESTAMOS
-			for (Prestamo p : vectorDeListasPorMesesPrestamos[i]) {
-			
-				
-				if (isAceptadoEseMes(p,i)) {	
-			
-				// ACUMULAMOS LAS TASAS DE INTERES DE CADA MES
-				promedioTasas[i] += p.getTipoTasa().getTasaInteres();		
-				prestamosOtorgados[i]++;
-				montoTotalOtorgado[i] += p.getMontoPedido();
-				}
-				if(isCanceladoEseMes(p, i)) {
-					
-					
-					prestamosCancelados[i]++;
-				}
-				if(isRechazadoEseMes(p,i)) {
-					
-					prestamosRechazados[i]++;
-				}
-			
-			}
-		
-			
-		}
-		
-		for (int i = 0; i<12;i++) {
-		
-		//SACAMOS EL PROMEDIO DE LAS TASAS POR MES
-		promedioTasas[i] = (promedioTasas[i]/prestamosOtorgados[i])/100;
 
-		// PROMEDIAMOS MOROSOS
-		promedioMorosos[i] = promedioMorosos[i]/vectordeListasdeMesesCuotas[i].size();		
-
-		}
-		
-		
-		session.setAttribute("promedioMorosos",promedioMorosos);
-		session.setAttribute("pagosRecibidos",pagosRecibidos);
-		session.setAttribute("promedioTasas", promedioTasas);
-		session.setAttribute("prestamosOtorgados", prestamosOtorgados);
-		session.setAttribute("prestamosRechazados", prestamosRechazados);
-		session.setAttribute("montoTotalOtorgado", montoTotalOtorgado);
-		session.setAttribute("montoAcumuladoaPagarAnual", 	montoAcumuladoaPagarAnual);
-		}
-	
-	protected void cargarTablaFiltrada(HttpSession session,HttpServletRequest request, HttpServletResponse response) {
-	
-	limpiarSession(session);
-	double promedioTasas[] = new double[12];
-	double promedioMorosos[] = new double [12];
-	int prestamosOtorgados[]= new int[12];
-	int prestamosRechazados[] = new int[12];
-	int prestamosCancelados[] = new int[12];
-	double montoTotalOtorgado[] = new double[12]; 
-	double montoAcumuladoaPagarAnual[] = new double[12];
-	double pagosRecibidos[] = new double[12];
-	
-	// INSTANCIO VECTORES
-	vectorDeListasPorMesesPrestamos = new ArrayList[12];
-	vectordeListasdeMesesCuotas = new ArrayList[12];
-	
-	// INSTANCIO ARRAYLISTS
-	for (int i=0;i<12; i++) {
-	vectordeListasdeMesesCuotas[i] = new ArrayList<CuotaPrestamo>();	
-	vectorDeListasPorMesesPrestamos[i] = new ArrayList<Prestamo>(); 
-	montoAcumuladoaPagarAnual[i] = 0;
-	}
-	
-	//System.out.println("listafiltradaP:"+listaFiltradaPrestamos.size());
-	// PROCESO LISTA FILTRADA PRESTAMOS
-	for (Prestamo p : listaFiltradaPrestamos) {
-	
-	
-	int mesIndice = p.getFechaPrestamo().getMonthValue()-1;
-	vectorDeListasPorMesesPrestamos[mesIndice].add(p);
-	
-	}	
-	//System.out.println("listafiltradaC:"+listaFiltradaCuotas.size());
-	//PROCESO LISTADO TOTAL CUOTAS
-	for (CuotaPrestamo cp : listaFiltradaCuotas) {
-	
-	//System.out.println("Cuotas:"+cp.getFechaVencimiento());
-	int mesIndice = cp.getFechaVencimiento().getMonthValue()-1;
-	vectordeListasdeMesesCuotas[mesIndice].add(cp);
-	}
-			 			      
-	
-	
-	// PROCESO VECTORES MENSUALES
-	for (int i = 0; i<12;i++) {
-		//System.out.println("vectorlistameses:"+vectordeListasdeMesesCuotas[i].size());
-		for (CuotaPrestamo c: vectordeListasdeMesesCuotas[i]) {
-
-			
-			if(cuotaMorosaEseMes(c, i)) {
-				
-			promedioMorosos[i]++;
-				
-			}
-			//ACUMULO PAGOS RECIBIDOS POR MES
-			if(isPagaEseMes(c,i)) {
-		
-			pagosRecibidos[i]+=c.getMontoCuota();
-			}
-			
-			if (c.getFechaPago()==null){
-			
-			
-			montoAcumuladoaPagarAnual[i] =+ c.getMontoCuota(); 
-			
-			}
-						
-		}
-		if(i>0) {
-		montoAcumuladoaPagarAnual[i]+= montoAcumuladoaPagarAnual[i-1];
-		}
-		// PRESTAMOS
-		//System.out.println("vectorlistaprestamos:"+vectorDeListasPorMesesPrestamos[i].size());
-		for (Prestamo p : vectorDeListasPorMesesPrestamos[i]) {
-		
-			
-			if (isAceptadoEseMes(p,i)) {	
-		
-			// ACUMULAMOS LAS TASAS DE INTERES DE CADA MES
-			promedioTasas[i] += p.getTipoTasa().getTasaInteres();		
-			prestamosOtorgados[i]++;
-			montoTotalOtorgado[i] += p.getMontoPedido();
-			}
-			if(isCanceladoEseMes(p, i)) {
-				
-				
-				prestamosCancelados[i]++;
-			}
-			if(isRechazadoEseMes(p,i)) {
-				
-				prestamosRechazados[i]++;
-			}
-		
-		}
-		
-	}
-	
-	
-	for (int i = 0; i<12;i++) {
-	
-		
-		//SACAMOS EL PROMEDIO DE LAS TASAS POR MES
-		promedioTasas[i] = (promedioTasas[i]/prestamosOtorgados[i])/100;
-		
-		// PROMEDIAMOS MOROSOS
-		promedioMorosos[i] = promedioMorosos[i]/vectordeListasdeMesesCuotas[i].size();	
-		System.out.println(montoAcumuladoaPagarAnual[i]);
-	}
-	
-	
-	session.setAttribute("promedioMorosos",promedioMorosos);
-	session.setAttribute("pagosRecibidos",pagosRecibidos);
-	session.setAttribute("promedioTasas", promedioTasas);
-	session.setAttribute("prestamosOtorgados", prestamosOtorgados);
-	session.setAttribute("prestamosRechazados", prestamosRechazados);
-	session.setAttribute("montoTotalOtorgado", montoTotalOtorgado);
-	session.setAttribute("montoAcumuladoaPagarAnual", 	montoAcumuladoaPagarAnual);
-	
-	}
-		
 		
 protected boolean isAceptadoEseMes(Prestamo p,int indiceMes) {
 			
@@ -451,18 +266,6 @@ protected boolean isAceptadoEseMes(Prestamo p,int indiceMes) {
 				return false;
 			
 		}
-protected boolean isCanceladoEseMes(Prestamo p, int indiceMes) {
-			
-	negocioPrestamo  = new PrestamosNegocioDaoImpl();
-	CuotaPrestamo ultimaCuota = negocioPrestamo .obtenerUltimaCuota(p);
-	if (p.isCancelado()) {
-		if(ultimaCuota.getFechaPago()!=null && ultimaCuota.getFechaPago().getMonthValue()==indiceMes) 
-			return true;
-			else return false;
-			}
-	return false;
-	}
-
 protected boolean isRechazadoEseMes(Prestamo p, int indiceMes) {
 	
 	if(p.getEstado().getIdEstado()==3 && (p.getFechaPrestamo().getMonthValue()-1) == indiceMes) {
@@ -471,112 +274,232 @@ protected boolean isRechazadoEseMes(Prestamo p, int indiceMes) {
 	else { return false;}
 	
 }		
+protected boolean isMorosa (CuotaPrestamo cp) {
+
+	
+	if(cp.getFechaPago()!=null) {
 		
-protected boolean cuotaMorosaEseMes (CuotaPrestamo cp, int mesIndice) {
-		
-	 
-		if(cp.getFechaPago()==null) {
-		if((cp.getFechaVencimiento().getMonthValue()-1>(mesIndice+1))){
-			
-			return false;
-			
-		}else if(cp.getFechaVencimiento().getMonthValue()-1<=(mesIndice+1)) {
-			
-			return true;
-		}
-		}
+		if(!cp.getFechaVencimiento().isAfter(cp.getFechaPago())){
 		return false;
-		
-		
-		
-			
-	
-		}
-	
-protected boolean isPagaEseMes (CuotaPrestamo cp, int i) {
-		
-		if (cp.getFechaPago()!=null && cp.getFechaPago().getMonthValue()-1==i) { 
-			return true;
 		}
 		else {
-			return false;
-		} 
-			
-	}
-	
-@SuppressWarnings("null")
-protected boolean filtroPorTipoCliente (Cliente cliente,HttpServletRequest request, HttpServletResponse response) {
-		
-		if(request.getParameter("Sexo")!=null && request.getParameter("EdadMin")!=null &&request.getParameter("EdadMax")!=null && request.getParameter("Provincia")!=null){
-		
-		String sexo = request.getParameter("Sexo").toString();
-		int edadMin = Integer.valueOf(request.getParameter("EdadMin").toString());
-		int edadMax = Integer.valueOf(request.getParameter("EdadMax").toString());
-		String Provincia = request.getParameter("Provincia").toString(); 
-		String sexoCliente = cliente.getSexo(); 
-		
-		if(sexoCliente.equals("M")) {
-			
-			sexoCliente = "Masculino";
-		
+			return true;	
 		}
-		if(sexoCliente.equals("F")){
+	} 
+	
+	
+	return true;	
+	}	
+@SuppressWarnings("null")
+protected boolean filtroPorTipoCliente (Cliente cliente, String sexo, int edadMin,int edadMax,String provincia) {
 		
+		
+		String sexoCliente="";
+		Period tiempodevida = Period.between(cliente.getNacimiento(), LocalDate.now());
+		int edad = tiempodevida.getYears();	
+	
+		if(cliente.getSexo().equals("M")) {
 			
+			sexoCliente = "Masculino";		
+		}
+		else{
+				
 			sexoCliente = "Femenino";
 	
 		}
-	
-			
-		Period tiempodevida = Period.between(cliente.getNacimiento(), LocalDate.now());
-		int edad = tiempodevida.getYears(); 
-
-		if(!sexoCliente.equals(sexo)) {
+		System.out.println("sexoCliente" +sexoCliente);
+		System.out.println(sexo);
+		
+		if(!sexoCliente.equals(sexo)&&!sexo.equals("Indistinto")) {
 	
 			return false;
 		}
-		else if (!cliente.getDireccion().getProvincia().getNombre().equals(Provincia)) {
-			
-			
+		
+		System.out.println(cliente.getDireccion().getProvincia().getNombre());
+		if(!provincia.equals("Todas")) {
+		if (!cliente.getDireccion().getProvincia().getNombre().equals(provincia)) {
+					
 			return false;
 		}
-		else if (edad<edadMin || edad>edadMax){
+		}
+		if (edad<edadMin || edad>edadMax){
 			return false;
 		}
-		else {
+		
 			
-			return true;
-		}
-		}
-		return false;
+			return true;		
 		
 	}	
-			
 public void limpiarSession(HttpSession session) {
 		
 
-		
-		session.removeAttribute("tasasInteres");
-		session.removeAttribute("promedioMorosos");
+	session.removeAttribute("sumaEnPagosCuotas");	
+	session.setAttribute("sumaEnPagosCuotas",null);
+		session.removeAttribute("promedioMorosos");	
+	session.setAttribute("promedioMorosos",null);
+	session.removeAttribute("tasasInteres");
+	session.setAttribute("tasasInteres", null);	
 		session.removeAttribute("prestamosOtorgados");
-		session.removeAttribute("prestamosRechazados");
+		session.setAttribute("prestamosOtorgados", null);		
 		session.removeAttribute("montoTotalOtorgado");
-		session.removeAttribute("prestamosCancelados");
-		session.removeAttribute("pagosRecibidos");
-		session.removeAttribute("montoAcumuladoaPagarAnual");
-		
-		session.setAttribute("tasasInteres", null);
-		session.setAttribute("promedioMorosos",null);
-		session.setAttribute("prestamosOtorgados", null);
-		session.setAttribute("prestamosRechazados", null);
 		session.setAttribute("montoTotalOtorgado",null);
-		session.setAttribute("prestamosCancelados", null);
-		session.setAttribute("pagosRecibidos", null);		
-		session.setAttribute("montoAcumuladoaPagarAnual",null);
+		session.removeAttribute("pagosRecibidos");
+		session.setAttribute("pagosRecibidos", null);
+		session.removeAttribute("sumaGananciaenIntereses");
+		session.setAttribute("sumaGananciaenIntereses",null);
+		session.removeAttribute("prestamosRechazados");		
+		session.setAttribute("prestamosRechazados", null);
+		session.removeAttribute("sumaEnMora");		
+		session.setAttribute("sumaEnMora",null);
+		session.removeAttribute("cuotasMorosas");
+		session.setAttribute("cuotasMorosas",null);
 
 		
 	}
+public void CargarSession(HttpSession session) {
+	
+	
+	
+	session.setAttribute("sumaEnMora",sumaEnMora);
+	session.setAttribute("cuotasMorosas",cuotasMorosas);
+	session.setAttribute("sumaEnPagosCuotas",sumaEnPagosCuotas);
+	session.setAttribute("sumaGananciaenIntereses",sumaGananciaenIntereses);
+	session.setAttribute("promedioMorosos",promedioMorosos);
+	session.setAttribute("pagosRecibidos",pagosRecibidos);
+	session.setAttribute("promedioTasas", promedioTasas);
+	session.setAttribute("prestamosOtorgados", prestamosOtorgados);
+	session.setAttribute("prestamosRechazados", prestamosRechazados);
+	session.setAttribute("montoTotalOtorgado", montoTotalOtorgado);
+	
+	
+}
 
+private void CargarVectoresMensuales(int anio , ArrayList<Prestamo> listaPrestamos, ArrayList  <CuotaPrestamo> listaCuotas) {
+
+	
+	
+for (Prestamo p : listaPrestamos) {
+	
+	
+	if(p.getFechaPrestamo().getYear() == anio) {
+	
+	
+	
+	int mesIndice = p.getFechaPrestamo().getMonthValue()-1;
+	vectorDeListasPorMesesPrestamos[mesIndice].add(p);
+	
+	}
+	
+	}	
+	//System.out.println("listaCuotas:"+listadoTodosCuotas.size());
+	//PROCESO LISTADO TOTAL CUOTAS
+	for (CuotaPrestamo cp : listaCuotas) {
+			
+			if(cp.getFechaVencimiento().getYear() == anio) {			
+				
+				int mesIndice = cp.getFechaVencimiento().getMonthValue()-1;
+			
+				vectordeListasdeMesesCuotas[mesIndice].add(cp);
+				
+			}		
+		
+		}
+		}
+
+
+private void InicializarVectoresdeCalculos() {
+
+// INSTANCIO ARRAYLISTS
+for (int i=0;i<12; i++) {
+vectordeListasdeMesesCuotas[i] = new ArrayList<CuotaPrestamo>();	
+vectorDeListasPorMesesPrestamos[i] = new ArrayList<Prestamo>(); 
+vectorDeListasPorMesesPrestamos[i].clear();
+vectordeListasdeMesesCuotas[i].clear();
+montoTotalOtorgado[i] = 0; 
+promedioTasas[i] = 0;
+promedioMorosos[i] = 0;
+prestamosOtorgados[i] = 0 ;
+prestamosRechazados[i] = 0;
+pagosRecibidos[i] = 0;
+sumaEnPagosCuotas[i] = 0;
+sumaEnMora[i] = 0;
+sumaGananciaenIntereses[i] = 0;
+cuotasMorosas[i] = 0;
+}
+}
+
+private void CargarVectoresdeCalculos() {
+	
+for (int i = 0; i<12;i++) {
+		
+
+	
+		for (CuotaPrestamo c: vectordeListasdeMesesCuotas[i]) {
+			
+					
+			if(c.getEstado()==EstadoCuota.Pagado) {
+				//ACUMULO PAGOS RECIBIDOS POR MES
+					
+			pagosRecibidos[i]+=1;
+			
+			sumaEnPagosCuotas[i]+=c.getMontoCuota();
+			
+			}
+			else {
+				
+			sumaEnMora[i]+=c.getMontoCuota();
+				
+			cuotasMorosas[i]+=1;				
+			 
+			}
+			 
+				
+								
+			
+		}
+		// PRESTAMOS
+		for (Prestamo p : vectorDeListasPorMesesPrestamos[i]) {
+		
+			
+			if (isAceptadoEseMes(p,i)) {	
+		
+		// ACUMULAMOS LAS TASAS DE INTERES DE CADA MES
+
+	
+			promedioTasas[i] += p.getTipoTasa().getTasaInteres();
+			prestamosOtorgados[i]++;
+			montoTotalOtorgado[i] += p.getMontoPedido();
+			sumaGananciaenIntereses[i]+= p.getMontoConIntereses()-p.getMontoPedido();
+			
+			}
+		
+			if(isRechazadoEseMes(p,i)) {
+				
+				prestamosRechazados[i]++;
+			}
+		
+		}
+	
+		
+	}
+	
+	for (int i = 0; i<12;i++) {
+	
+	//SACAMOS EL PROMEDIO DE LAS TASAS POR MES
+	if (promedioTasas[i]!=0) {
+	promedioTasas[i] = (promedioTasas[i]/prestamosOtorgados[i])/100;
+
+	}
+	// PROMEDIAMOS MOROSOS
+	
+	if(vectordeListasdeMesesCuotas[i].size()!=0) {
+	promedioMorosos[i] = (double)cuotasMorosas[i]/(double)vectordeListasdeMesesCuotas[i].size();		
+	}
+	
+
+	}
+	
+}
 }
 	
 	

@@ -16,9 +16,9 @@ public class Conexion {
 	private String user = "root";
 	
 	/* PASS*/
-	private String pass = "root";
+	//private String pass = "root";
 	//private String pass = "1234";
-	//private String pass = "Gato21226";
+	private String pass = "Gato21226";
 
 	/* DB */
 	private String dbName = "bdBancos";
@@ -28,8 +28,8 @@ public class Conexion {
 		
 		try
 		{
-			//Class.forName("com.mysql.cj.jdbc.Driver");
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			//Class.forName("com.mysql.jdbc.Driver");
 			//this.connection = DriverManager.getConnection(host,user,pass);
 			this.connection = DriverManager.getConnection(host+dbName,user,pass);
 			this.connection.setAutoCommit(false);

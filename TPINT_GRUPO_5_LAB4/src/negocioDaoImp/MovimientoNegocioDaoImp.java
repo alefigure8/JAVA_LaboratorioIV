@@ -189,7 +189,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 			
 			if(cuenta.getSaldo() < monto) {
 				//Lanzar error de saldo insuficiente
-				throw new SaldoInsuficienteException();
+			//	throw new SaldoInsuficienteException();
 			}
 			
 			//Movimiento Entrada a Destinatario

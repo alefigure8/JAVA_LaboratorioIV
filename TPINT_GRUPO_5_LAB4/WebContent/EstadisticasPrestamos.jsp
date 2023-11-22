@@ -24,18 +24,52 @@
 		<jsp:param name="titulo" value="<%=URL%>"/>
 	</jsp:include>
 	<body class="d-flex flex-column">
-		<%double[] promedioTasa = new double[12];
-			double[] promedioMorosos = new double[12];
+		<%
+		ArrayList<Provincia> listaDeProvincias = new ArrayList<Provincia>();
+		
 			int [] prestamosOtorgados = new int[12];
-			int [] prestamosRechazados = new int[12];
+			int [] prestamosRechazados = new int[12];			
+			int [] pagosRecibidos = new int [12];
+			int cuotasMorosas[] = new int[12];
+			double[] promedioTasa = new double[12];
 			double [] montoTotalOtorgado = new double[12]; 
-			int [] prestamosCancelados = new int[12];
-			double [] pagosRecibidos = new double [12];
-			double montoAcumuladoaPagarAnual[] = new double[12];
-			ArrayList<Provincia> listaDeProvincias = null;
+			double[] promedioMorosos = new double[12];
+			double SumaGananciaenIntereses[] = new double[12];
+			double sumaEnPagosCuotas[] = new double[12];
+			double sumaEnMora[] = new double[12];
 			
+			int edadMinseleccionada=20;
+			int edadMaxseleccionada=80;
+			String sexoSeleccionado ="";
+			String provinciaSeleccionada="";
+			
+	    	int acumCuotasMorosas=0;
+			int acumOtorgados=0;
+			int acumRechazados=0;
+			int acumPagosRecibidos=0;
+			double acumPromedioMorosos=0;
+			double acumSumaGananciaenIntereses=0;
+			double acumsumaEnPagosCuotas=0;
+			double acumsumaEnMora=0;
+			double acumPromedioTasa = 0;
+			double acumMontoTotalOtorgado = 0;
+			
+			int anio=2023;
 			 DecimalFormat formatodinero = new DecimalFormat("$#");
 			 DecimalFormat formatoporcentaje = new DecimalFormat("#%");
+	
+
+			 
+			 if (session.getAttribute("sexoSeleccionado")!=null){
+				 
+				 sexoSeleccionado = session.getAttribute("sexoSeleccionado").toString();
+			 }
+
+			 
+ if (session.getAttribute("provinciaSeleccionada")!=null){
+	 
+	 provinciaSeleccionada = session.getAttribute("provinciaSeleccionada").toString();
+ }
 			 
 		      if (session.getAttribute("promedioTasas")!=null){
 			        promedioTasa = (double[])session.getAttribute("promedioTasas");
@@ -43,6 +77,12 @@
 			        if (session.getAttribute("promedioMorosos")!=null){
 			        promedioMorosos = (double[])session.getAttribute("promedioMorosos");
 			        }
+			        if (session.getAttribute("anio")!=null){
+				        anio = (int)session.getAttribute("anio");
+				        }
+			        if (session.getAttribute("sumaEnMora")!=null){
+			        	sumaEnMora = (double[])session.getAttribute("sumaEnMora");
+				        }
 			        if (session.getAttribute("prestamosOtorgados")!=null){
 			        	prestamosOtorgados = (int[])session.getAttribute("prestamosOtorgados");
 				        }
@@ -51,23 +91,48 @@
 				        }
 			        if (session.getAttribute("montoTotalOtorgado")!=null){
 			        	montoTotalOtorgado = (double[])session.getAttribute("montoTotalOtorgado");
-				        }
-			        if (session.getAttribute("prestamosCancelados")!=null){
-			        	prestamosCancelados = (int[])session.getAttribute("prestamosCancelados");
-				        }
+				        }			     
 			        if (session.getAttribute("pagosRecibidos")!=null){
-			        	pagosRecibidos = (double[])session.getAttribute("pagosRecibidos");
-				        }  		       
-			        if (session.getAttribute("montoAcumuladoaPagarAnual")!=null){
-			        	montoAcumuladoaPagarAnual = (double[])session.getAttribute("montoAcumuladoaPagarAnual");
+			        	pagosRecibidos = (int[])session.getAttribute("pagosRecibidos");
+				        }
+			        if (session.getAttribute("cuotasMorosas")!=null){
+			        	cuotasMorosas = (int[])session.getAttribute("cuotasMorosas");
+				        }  		   
+			    
+			        if (session.getAttribute("sumaGananciaenIntereses")!=null){
+			        	SumaGananciaenIntereses = (double[])session.getAttribute("sumaGananciaenIntereses");
+				    
+			        }
+			        if (session.getAttribute("sumaEnPagosCuotas")!=null){
+			        	sumaEnPagosCuotas = (double[])session.getAttribute("sumaEnPagosCuotas");
 				        } 
-			        
+						        
 			        if (session.getAttribute("listaDeProvincias")!=null){
 				 listaDeProvincias = (ArrayList<Provincia>)session.getAttribute("listaDeProvincias");
-					        }      
+					     }      
 				             
-			        
 					
+			        int mesconprestamo=0; 
+			        
+			        for(int i=0;i<12;i++){
+			        	
+			    	acumCuotasMorosas+=cuotasMorosas[i];
+					acumOtorgados+=prestamosOtorgados[i];
+					acumRechazados+=prestamosRechazados[i];
+					acumPagosRecibidos+=pagosRecibidos[i];
+					acumPromedioMorosos+=promedioMorosos[i];
+					acumSumaGananciaenIntereses+=SumaGananciaenIntereses[i];
+					acumsumaEnPagosCuotas+=sumaEnPagosCuotas[i];
+					acumsumaEnMora+=sumaEnMora[i];
+					
+					if(promedioTasa[i]>0){
+					acumPromedioTasa += promedioTasa[i];
+					mesconprestamo+=1;
+			        }
+					acumMontoTotalOtorgado += montoTotalOtorgado[i];
+			        }
+					
+			        acumPromedioTasa = acumPromedioTasa / mesconprestamo; 
 					
 			
 			%>	
@@ -82,16 +147,15 @@
 	     <!--MAIN-->
 	      <div class="col-lg-9 col-md-12 d-flex flex-column justify-content-center" >
 	        <div class="w-100 pt-2" >
-	          <h1 id="tituloCliente" style="margin-bottom:5%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS PRESTAMOS</h1>
+	          <h1 id="tituloCliente" style="margin-bottom:1%"> <i class="fas fa-chart-line me-2"></i>ESTADISTICAS PRESTAMOS</h1>
 	        </div>
-	        <div class="flex-grow-1" >
-	      
+	        <div class="flex-grow-1" >   
 	       
 	            
 	        
 	        	        
       		<!--CONTENT-->
-	        <div class="col-lg-9 col-md-12 d-flex flex-column" style="width:100%;">
+	        <div class="col-lg-10 col-md-12 d-flex flex-column" style="width:100%;">
 	
 
 	            <div class="card" style="padding-bottom:0px;padding-top:0px; margin-bottom: 5px; margin-top: 0px;"  >
@@ -106,17 +170,20 @@
 	                        
 	                        <select name="Anio" id="Año" class="form-select">
 	                            <option value="2023">2023</option>
-	                            <option value="2022">2022</option>
+	                            <option <%if(anio==2022){%> selected="selected" <%} %> value="2022">2022</option>
 	                            <!-- Agrega más opciones según sea necesario -->
 	                        </select>
 	                    </div>
+	                    
+	                    	<% %>
 	                    <div class="col-md-2">
 	                        <label for="Sexo">Sexo:</label>
 	                        <select Name="Sexo"id="Sexo" class="form-select">
-	                            <option value="Masculino">Masculino</option>
-	                            <option value="Femenino">Femenino</option>
-	                        
-	                        </select>
+	                            <option value="Indistinto" <%if(sexoSeleccionado.equals("Indistinto")){ %>selected="selected"<%} %>>Indistinto</option>
+	                            <option value="Masculino" <%if(sexoSeleccionado.equals("Masculino")){ %> selected="selected"<%} %>>Masculino</option>
+	                            <option value="Femenino"<%if(sexoSeleccionado.equals("Femenino")){ %> selected="selected"<%} %>>Femenino</option>
+	                         </select>
+	                         
 	                    </div>
 	                    <div class="col-md-3">
 	                        <label for="Rangoedad" style="margin-left:-20px;">Rango de Edad:</label>
@@ -157,15 +224,20 @@
 	                        <label for="provinceSelect">Provincia:</label>
 	                        
 	                        <select id="provinceSelect" name="Provincia" class="form-select">
-	                        	
+	                        	          <option value="Todas">Todas</option>
 	                        <%for(Provincia provincia :listaDeProvincias){ %>
-	                            <option name=Provincia value="<%=provincia.getNombre()%>"><%=provincia.getNombre()%></option>
+	                            <option name=Provincia <%if(provinciaSeleccionada.equals(provincia.getNombre())){ %> selected="selected" <%} %> value="<%=provincia.getNombre()%>"><%=provincia.getNombre()%></option>
 	                                <%}%>
 	                            
 	                        </select>
 	                    </div>
-	                   <div class="col-md-2 d-flex flex-column align-items-center position-relative"> 
+	                   <div class="col-md-2 d-flex flex-column position-relative"> 
+    <button type="submit" name="btnReestablecer" class="btn btn-outline-primary" style="margin-top: 2px;">Reestablecer</button>
     <button type="submit" name="btnFiltrar" class="btn btn-primary btnEnviar" style="width: 100%; margin-top: 2px;">Filtrar</button>
+    
+</div>
+	                   
+    
     
 </div>
 </div>
@@ -176,89 +248,113 @@
 		    </div>
 		 
     		<div>
-				<div class="card overflow-y-auto">
+				<div class="card overflow-y-auto mb-5">
 		
 		   <table style="table-layout: fixed; height: 300px; width: 100%;">
-		            <thead>
-				        <tr> 
-				            <th style="background-color: var(--color-main); color: whitesmoke;width:10%;">Concepto</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Enero</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Febrero</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Marzo</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Abril</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Mayo</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Junio</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Julio</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Agosto</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke; width:8%">Septiembre</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Octubre</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Noviembre</th>
-				            <th style="background-color: var(--color-main); color: whitesmoke;">Diciembre</th> 
-				        </tr>
-			        </thead>
+		       <thead>
+<tr> 
+    <th style="background-color: var(--color-main); color: whitesmoke; width: 150px; font-size: 12px; text-align: center;" >Concepto</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px; text-align: center;">Enero</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Febrero</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Marzo</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Abril</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Mayo</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Junio</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Julio</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Agosto</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Septiembre</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Octubre</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Noviembre</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Diciembre</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px; text-align: center;">+=</th> 
+</tr>
+
+</thead>
+
 			
 			
 			        <tbody>
-				        <tr> <td> Promedio Tasa de Interes </td>
-				         
-				        <%
-				  		        
+			        	   			        	
+			        	<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Prestamos Otorgados  </td>  
+				  	   <%  for(int i = 0; i<12;i++){if((anio==2023 && LocalDate.now().getMonthValue()-1<i)){%> <td style = "text-align: right ;">-</td>
+				  	    <% } else { %> <td style = "text-align: right; font-weight: bolder;"> <%=prestamosOtorgados[i]%></td> <%}}%>  <td style = "text-align: right;font-weight: bolder; "><%=acumOtorgados%> </td> 
+				            
+				        
+				                       
+				           
+				        
+<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;"> Prestamos Rechazados</td>  
+				      <% 	        for(int i = 0; i<12;i++ ){   if((anio==2023 && LocalDate.now().getMonthValue()-1<i) ||  prestamosRechazados[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %> 
+				               <td style = "text-align: right;"><%=prestamosRechazados[i] %></td> <%}} %> <td style = "text-align: right;font-weight: bolder; "><%=acumRechazados%> </td>
+				        
+		<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Total Otorgado </td> 
+				          <% 	        for(int i = 0; i<12;i++){ 
+				        	  if((anio==2023 && LocalDate.now().getMonthValue()-1<i )|| montoTotalOtorgado[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				               <td style = "text-align: right;"><%=formatodinero.format( montoTotalOtorgado[i])%></td><%}} %> <td style = "text-align: right;font-weight: bolder;"><%=formatodinero.format(acumMontoTotalOtorgado)%> </td>
+				             
+				             
+				                  
+				                  
+				        <tr> <td style = "font-weight: bold; text-align: center;"> Ganancias en Interes</td>
+				         <%	  for(int i = 0; i<12;i++){				       
+				        	 if((anio==2023 && LocalDate.now().getMonthValue()-1<i) || SumaGananciaenIntereses[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>	
+				        		
+				        	<td style = "text-align: right;"><%=formatodinero.format(SumaGananciaenIntereses[i])%></td>
+				        <%}} %>   <td style = "text-align: right;font-weight: bold;"><%=formatodinero.format(acumSumaGananciaenIntereses)%> </td>   </tr>                 
+				          
+				        				        
+				    
+				        
+				        	        
+		<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;"> Promedio Tasas Interes </td>
+				         <%			  		        
 				        
 				        for(int i = 0; i<12;i++){
 				        
-				        	if(LocalDate.now().getMonthValue()-1>=i && promedioTasa[i]>0){
-				        	
-				        %>
-				        
+				       	 if((anio==2023 && LocalDate.now().getMonthValue()-1<i) || promedioTasa[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				        					        
 				        					        					        	
-				            <td><%=formatoporcentaje.format(promedioTasa[i])%></td>
-				        <%}else { %> <td>N/A</td>  <%}} %>
-				        </tr>   
-				        <tr> <td>Indice de Morosidad </td> 
-				       
-				        <% 	        for(int i = 0; i<12;i++){
-				        	  	if(LocalDate.now().getMonthValue()-1>=i && promedioMorosos[i]>0){%>
-				            <td><%=formatoporcentaje.format(promedioMorosos[i])%></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>
-				        </tr>
-				      
-				      
-				        <tr> <td>Cantidad de Prestamos Otogrados </td>  
-				  	   <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=prestamosOtorgados[i] %></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>
+				               <td style = "text-align: right;"><%=formatoporcentaje.format(promedioTasa[i])%></td>
+				        <%}} %>
+				          <td style = "text-align: right;font-weight: bold; "><%=formatoporcentaje.format(acumPromedioTasa)%> </td></tr>
+				         
+
+				        
+				     				        
+<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Pagos recibidos </td>  
+				          <% 	        for(int i = 0; i<12;i++){ 
+				        		 if((anio==2023 && LocalDate.now().getMonthValue()-1<i) || pagosRecibidos[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				           <td style = "text-align: right;"><%=pagosRecibidos[i]%></td>         <%}} %>    <td style = "text-align: right;font-weight: bold; "><%=acumPagosRecibidos%> </td></tr>
 				            
-				            				            
-				         <tr> <td>Cantidad de Prestamos Rechazados </td>  
-				      <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=prestamosRechazados[i] %></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>
 				        
-				        <tr> <td>Cantidad de Prestamos Cancelados al 100% </td> 
-				      <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=prestamosCancelados[i] %></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>
-				        
-				        <tr> <td>Monto Total Otogrado </td> 
-				          <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=formatodinero.format( montoTotalOtorgado[i]) %></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>
-				        
-				        <tr> <td>Monto en Pagos recibidos </td>  
-				          <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=formatodinero.format(pagosRecibidos[i])%></td>
-				            <% } else { %> <td>N/A</td>  <%}} %>   
-				        <tr> <td>Monto a recibir acumulado Anual </td> 
+				            <tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Ingresos en Pagos </td> 
 				              <% 	        for(int i = 0; i<12;i++){ 
-				  	     	if(LocalDate.now().getMonthValue()-1>=i){%>
-				            <td><%=formatodinero.format(montoAcumuladoaPagarAnual[i])%></td>
-				         <% } } %> 
+				            	  if((anio==2023 && LocalDate.now().getMonthValue()-1<i) || sumaEnPagosCuotas[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				             <td style = "text-align: right;"><%=formatodinero.format(sumaEnPagosCuotas[i])%></td>	<%}} %> 
+				       <td style = "text-align: right;font-weight: bold;"><%=formatodinero.format(acumsumaEnPagosCuotas)%> </td></tr>
+				         
+		<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Cuotas no Cobradas </td> 
+				              <% 	        for(int i = 0; i<12;i++){ 
+				            	  if(anio==2023 && LocalDate.now().getMonthValue()-1<i){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				            <td style = "text-align: right;"><%=cuotasMorosas[i]%></td>          <%}} %> <td style = "text-align: right;font-weight: bold; "><%=acumCuotasMorosas%> </td></tr>
+				         
+	<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Monto no cobrado </td> 
+				              <% 	        for(int i = 0; i<12;i++){ 
+				            	  if(anio==2023 && LocalDate.now().getMonthValue()-1<i){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				              <td style = "text-align: right;"><%=formatodinero.format(sumaEnMora[i])%></td>
+				         <%}} %> <td style = "text-align: right;font-weight: bold; "><%=formatodinero.format(acumsumaEnMora)%> </td></tr>
 				         </tr>
+				         
+				         		<tr> <td style = "font-weight: bold; text-align: center; padding-top: 5px; padding-bottom: 5px;">Vencimientos Incumplidos</td> 
+				       		      <%	    for(int i = 0; i<12;i++){
+				         if((anio==2023 && LocalDate.now().getMonthValue()-1<i) || promedioMorosos[i]==0){%> <td style = "text-align: right ;">-</td>   <% } else { %>
+				      
+				              <td style = "text-align: right;"><%=formatoporcentaje.format(promedioMorosos[i])%></td>
+				             <%}} %> <td style = "text-align: right;font-weight: bold;"><%=formatoporcentaje.format((acumPromedioMorosos/12))%> </td></tr>
+				        </tr>                   				            				            
+				     
+	
+				         
 				 
 			          </tbody>
 		    		</table>
@@ -272,7 +368,7 @@
 				
 			</div>
 		</div>
-      </div>
+ 
      
 		<!-- FIN MAIN -->
 	 	<!--FOOTER-->

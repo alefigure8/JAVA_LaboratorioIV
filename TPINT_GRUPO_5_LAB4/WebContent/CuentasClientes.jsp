@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="entidad.Usuario"%>
 <%@page import="entidad.TipoAcceso"%>
 <%@page import="entidad.Cuenta"%>
@@ -41,6 +42,11 @@
         ArrayList<Cuenta> listadoCuentas = new ArrayList<>();
      	String [] listadoNombres = null;
 		ArrayList<TipoCuenta> tiposCuenta = null;
+		String estadoCuentaSeleccionado="";
+		String tipoCuentaSeleccionado="";
+		String rangoImportesSeleccionado="";
+		String fechadesdeSeleccionada = null;
+		String fechahastaSeleccionada = null;
 		int [] listadoDni=null;
 		
          if (request.getAttribute("listadoCuentas")!=null){
@@ -61,6 +67,20 @@
         	 listadoDni=(int[])request.getAttribute("listadoDni");
          }
          
+         if(session.getAttribute("estadoCuentaSeleccionado")!=null){
+        	 
+        	 estadoCuentaSeleccionado = session.getAttribute("estadoCuentaSeleccionado").toString();
+         }
+         
+         if(session.getAttribute("tipoCuentaSeleccionado")!=null){
+        	 
+        	 tipoCuentaSeleccionado = session.getAttribute("tipoCuentaSeleccionado").toString();
+         }
+    if(session.getAttribute("rangoImportesSeleccionado")!=null){
+        	 
+    	rangoImportesSeleccionado = session.getAttribute("rangoImportesSeleccionado").toString();
+         }
+
  %>
             
       <!--CONTENIDO-->
@@ -76,7 +96,7 @@
 				
      		<!--MAIN-->
       		 
-	        <div class="col-9 d-flex flex-column justify-content-between">
+	        <div class="col-10 d-flex flex-column justify-content-between">
 	          <div class="w-100 pt-2">
 	            <!--TIUTLO PAGINA-->
 	            <h1 class="mt-4"><i class="fas fa-address-card me-2"></i>CUENTAS CLIENTES</h1>
@@ -84,8 +104,7 @@
 	          <div class="flex-grow-1">
 	            <!--FILTRO-->
 				 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center w-100 mt-2 mb-2">
-	
-				   	
+		
 
 			
 			    <form class="d-flex gap-2 align-items-end" action="ServletCuentasClientes" method="get" onsubmit="return validarFechas()">
@@ -93,10 +112,9 @@
 			    <div>
 			    <label for="estadoCuenta" style="font-size: 11px;"> Estado de Cuentas: </label>
 			        <select id="estadoCuenta" name="EstadoCuenta" class="form-select align-items-end">	
-			     		 
-	                    <option value="Todas" selected="selected">Todas</option>			
-	                 	 <option value="Solo Activas">Solo Activas</option>
-	                    <option value="Solo Inactivas">Solo Inactivas</option>			
+			            <option value="Todas">Todas</option>	
+			     		<option value="Solo Activas" <%if(estadoCuentaSeleccionado.equals("Solo Activas")){ %> selected="selected"<%} %> >Solo Activas</option>	                		
+	                     <option value="Solo Inactivas" <%if(estadoCuentaSeleccionado.equals("Solo Inactivas")){ %> selected="selected"<%} %> >Solo Inactivas</option>			
 	                    			
 	                  </select>
 	                  
@@ -104,10 +122,11 @@
 			    <div style="max-width: 110px; min-width: 110px;">
 			          <label for="tipoCuenta" style="font-size: 11px;"> Tipos de Cuenta: </label>
 			        <select id="tipoCuenta" Name="TipoCuenta" class="form-select align-items-end">
-			            <option value="0">Todas</option>
-			            <%if(tiposCuenta != null){ %>
+			             <%if(tiposCuenta != null){ %>
+			              <option value="Todas">Todas</option>
 				            <% for (TipoCuenta tc : tiposCuenta) { %>
-				                <option value="<%=String.valueOf(tc.getId())%>"><%=tc.getDescripcion() %></option>
+				            
+				                <option value="<%=String.valueOf(tc.getDescripcion())%>" <%if(tc.getDescripcion().equals(tipoCuentaSeleccionado)){ %> selected="selected"<%} %>><%=tc.getDescripcion() %></option>
 				            <% }
 			            }%>
 			        </select>
@@ -115,10 +134,10 @@
 			        <div>
 			        <label for="importes" style="font-size: 11px;"> Rangos de Importe:</label>
 			        <select id="importes" name="Importes" class="form-select align-items-end">			
-	                    <option value="Todos los importes" >Todos</option>			
-	                    <option value="Mayor a">Mayor a</option>			
-	                    <option value="Igual a">Igual a</option>			
-	                    <option value="Menor a">Menor a</option>			
+	                    <option value="Todos los importes">Todos</option>			
+	                    <option value="Mayor a" <%if(rangoImportesSeleccionado.equals("Mayor a")){ %> selected="selected"<%} %>>Mayor a</option>			
+	                    <option value="Igual a"<%if(rangoImportesSeleccionado.equals("Igual a")){ %> selected="selected"<%} %>>Igual a</option>			
+	                    <option value="Menor a"<%if(rangoImportesSeleccionado.equals("Menor a")){ %> selected="selected"<%} %>>Menor a</option>			
 	                  </select>		
 	                         </div>	
 	                          <div>
@@ -128,11 +147,11 @@
 	                  			
 	                  <div style="max-width: 110px; min-width: 110px;">			
 		            <label for="desdeInput" style="font-size: 11px;"> Desde:</label>    		
-		                <input type="date" name="cuentaDesde" id="desdeInput" style="max-width: 110px; min-width: 110px;" >		
+		                <input type="date" name="cuentaDesde" id="desdeInput" <% if(fechadesdeSeleccionada!=null){%>value="<%=fechadesdeSeleccionada%>"<%} %> style="max-width: 110px; min-width: 110px;" >		
 		              </div>		
 		              <div  style="max-width: 110px; min-width: 110px;">		
 		                <label for="hastaInput" style="font-size: 11px;"> Hasta:</label>	
-		                <input type="date" name="cuentaHasta" id="hastaInput"  style="max-width: 110px; min-width: 110px;" >		
+		                <input type="date" name="cuentaHasta" id="hastaInput" <% if(fechahastaSeleccionada!=null){%>value="<%=fechadesdeSeleccionada%>"<%} %>  style="max-width: 110px; min-width: 110px;" >		
 		              </div>		
 			
 			        

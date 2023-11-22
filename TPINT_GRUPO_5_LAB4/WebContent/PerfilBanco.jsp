@@ -39,10 +39,15 @@
 					        <div class="col-md-4">
 					            <div class="row">
 					                <div class="col-md-12">
-					                    <a href="ServletListarClientes?obtener=true&filtro=Activos" class="btn btn-primary btnEnviar col-12 p-3 m-1">
-					                        <i class="fas fa-users fa-2x me-2"></i>LISTADO DE CLIENTES
+					                    <a href="AltaCuentaCliente.jsp" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                       <i class="fas fa-money-check fa-2x me-2"></i>ALTA DE CUENTA
 					                    </a>
 					                </div>
+					                   <div class="col-md-12">
+					                    <a href="/TPINT_GRUPO_5_LAB4/ServletCuentasClientes?Cuentas=CuentasClientes" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-users fa-2x me-2"></i>LISTADO DE CUENTAS
+					                    </a>
+					                </div>	
 					                 <div class="col-md-12">
 					                    <a href="ServletPrestamos?Prestamos=true" class="btn btn-primary btnEnviar col-12 p-3 m-1">
 					                        <i class="fas fa-hand-holding-usd fa-2x me-2"></i>PRESTAMOS
@@ -64,10 +69,10 @@
 					                    </a>
 					                </div>
 					                <div class="col-md-12">
-					                    <a href="AltaCuentaCliente.jsp" class="btn btn-primary btnEnviar col-12 p-3 m-1">
-					                       <i class="fas fa-money-check fa-2x me-2"></i>ALTA DE CUENTA
+					                    <a href="ServletListarClientes?obtener=true&filtro=Activos" class="btn btn-primary btnEnviar col-12 p-3 m-1">
+					                        <i class="fas fa-users fa-2x me-2"></i>LISTADO DE CLIENTES
 					                    </a>
-					                </div>
+					                </div>					                
 					              
 					                 <div class="col-md-12">
 					                    <a href="ServletEstadisticasPrestamos?Estadisticas=Prestamos" class="btn btn-primary btnEnviar col-12 p-3 m-1">

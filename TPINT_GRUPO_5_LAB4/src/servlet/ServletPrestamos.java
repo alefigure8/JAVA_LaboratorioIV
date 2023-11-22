@@ -182,7 +182,7 @@ public class ServletPrestamos extends HttpServlet {
 					        LocalDate fechaPrestamo = prestamo.getFechaPrestamo();
 					        LocalDate desde = LocalDate.parse(fechaDesde);
 					        LocalDate hasta = LocalDate.parse(fechaHasta);
-					        System.out.println("FECHA PRESTAMO " + fechaPrestamo);
+					        
 
 					        if (fechaPrestamo.isBefore(desde) || fechaPrestamo.isAfter(hasta)) {
 					            continue;
@@ -205,7 +205,12 @@ public class ServletPrestamos extends HttpServlet {
 					session.setAttribute("clientes", clientesFiltrados);
 				}
 				
-			
+			request.setAttribute("estadoSeleccionado", estadoSeleccionado);
+			request.setAttribute("importeSeleccionado", importeSeleccionado);
+			request.setAttribute("montoImporte", montoImporte);
+			request.setAttribute("fechaDesde", fechaDesde);
+			request.setAttribute("fechaHasta", fechaHasta);
+				
 			RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
 			rDispatcher.forward(request, response);
 			

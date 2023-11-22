@@ -285,9 +285,6 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Concepción', 23);
 
 
-/******** INSERT TIPOS DE CUENTA ********/
-insert into TiposCuenta (descripcion) values ('Caja de ahorro');
-insert into TiposCuenta (descripcion) values ('Cuenta corriente');
 
 -- Insertar Estados
 insert into Estados (descripcion) values ("Aprobado"), ("Pendiente"), ("Rechazado");
