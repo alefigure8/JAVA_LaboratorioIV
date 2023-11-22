@@ -21,7 +21,7 @@ public class Conexion {
 	//private String pass = "Gato21226";
 
 	/* DB */
-	private String dbName = "bdBancos?characterEncoding=utf8";
+	private String dbName = "bdBancos";
 		
 	private Conexion()
 	{

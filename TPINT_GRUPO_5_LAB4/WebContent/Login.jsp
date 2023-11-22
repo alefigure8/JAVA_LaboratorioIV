@@ -3,16 +3,10 @@
     pageEncoding="ISO-8859-1"%>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html class="">
+<html >
 	<!--HEAD-->
-	<% 
-		//TITULO DEL ARCHIVO COMO TITULO DE LA PAGINA
-		String PATH = request.getRequestURI().split("/")[2];
-		String[] palabras = PATH.split("(?=[A-Z]|\\s)");
-		String URL = String.join(" ", palabras).split(".jsp")[0];
-	%>
 	<jsp:include page= "/WEB-INF/Components/head.jsp">
-		<jsp:param name="titulo" value="<%=URL%>"/>
+		<jsp:param name="titulo" value="Login"/>
 	</jsp:include>
 	<!--FIN HEAD-->
 	

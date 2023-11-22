@@ -98,7 +98,6 @@ session.removeAttribute("totalCalculado"); %>
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
 	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
-			              		<form action="ServletDetalleMovimiento" method="get">
 	                        		<table class="table table-bordered mt-2">
 				                       <tr>
 							                <th>Tipo de Operación</th>
@@ -118,14 +117,10 @@ session.removeAttribute("totalCalculado"); %>
 					            				 <% } else{ %>
 					            				 	<th  style=color:#ff0000;>$<%=m.getMonto() %></th>
 					            				 <%} %>
-					            				 
-				           				  		<input type="hidden" class="btn btn-primary btnEnviar" name="idmovimiento" value="<%=m.getId()%>">
-				            				   	 <th><input type="submit" class="btn btn-primary btnEnviar" name="btnVerDetalleMovimiento" value="VER"></th>	        				
-			        						
+	        									<th><a class="btn btn-primary btnEnviar" href="ServletDetalleMovimiento?idmovimiento=<%=m.getId()%>&btnVerDetalleMovimiento=VER">VER</a></th>
 			            					</tr>
 	        						<%} %>
 						  		</table>
-        					</form>
 	   					</div>
 					</div>
 		    	</div>

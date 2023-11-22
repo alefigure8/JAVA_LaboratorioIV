@@ -3,8 +3,7 @@
     <welcome-file-list>
         <welcome-file>Login.jsp</welcome-file>
     </welcome-file-list>
-
-    <!-- Definición del filtro -->
+	    <!-- Definición del filtro -->
     <filter>
         <filter-name>ErrorFilter</filter-name>
         <filter-class>Helper.ErrorFilter</filter-class>
@@ -31,4 +30,5 @@
         <error-code>404</error-code>
         <location>/Login.jsp</location>
     </error-page>
+
 </web-app>
