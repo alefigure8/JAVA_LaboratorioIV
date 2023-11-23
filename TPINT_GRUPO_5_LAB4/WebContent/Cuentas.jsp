@@ -74,7 +74,7 @@
 						                    <form action="ServletDetalleCuenta" method="get">
 						                        <ul class="list-group border-0">
 						                            <li class="list-group-item border-0 bg-transparent d-flex justify-content-between align-items-center">
-						                                <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=c.getSaldo()%></h6>
+						                                <h6><%=c.getTipoCuenta().getDescripcion()%> | $<%=String.format("%,.2f",c.getSaldo())%></h6>
 						                                <input type="submit" class="btn btn-primary btnEnviar" name="btnVerMovimientos" value="VER MOVIMIENTOS">
 						                                <input type="hidden" name="numeroCuenta" value="<%=c.getNumeroCuenta()%>">
 						                            </li>

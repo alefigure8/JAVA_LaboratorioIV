@@ -57,5 +57,18 @@
 		      	"order": [[0, "desc"]]
 			});
 		});
+		
+		//Ordenar Columna por fecha y por id
+		$(document).ready(function() {
+		    $('#table_id_3').DataTable({
+		        "language": {
+		            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+		        },
+		        "order": [
+		            [0, "desc"], 
+		            [3, "desc"]  
+		        ]
+		    });
+		});
 	</script>
  </head>

@@ -195,7 +195,7 @@
 		                      
 		                      <td><span class="black-75"><%= c.getCbu() %></span></td>
 		                      <td><span class="black-75"><%=c.getTipoCuenta().getDescripcion() %></span></td>
-		                      <td><span class="black-75"><%=c.getSaldo() %></span></td>
+		                      <td><span class="black-75"><%=String.format("%,.2f",c.getSaldo()) %></span></td>
 		                      <% if(listadoNombres != null) {%>
 		                      	<td><i class="fa-solid fa-user opacity-50 me-2"></i><%=listadoNombres[listadoCuentas.indexOf(c)] %></td>
 		                      <%}%>

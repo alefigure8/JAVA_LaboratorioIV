@@ -80,7 +80,7 @@
 		          <h1><i class="fas fa-wallet me-2"></i>CUENTA SELECCIONADA: <%=cuenta.getTipoCuenta().getDescripcion() %></h1>
 		          <h5 class="mt-4">Numero de cuenta: <%=CuentaFormateada.toString() %></h5>
 		          <h5>CBU: <%=cuenta.getCbu() %></h5>
-		          <h5>Saldo: $<%=cuenta.getSaldo()%></h5>
+		          <h5>Saldo: $<%=String.format("%,.2f",cuenta.getSaldo())%></h5>
 		        </div>
 		        
 		         <div class="flex-grow-1">
@@ -137,7 +137,7 @@
 		          	<!-- CONTENIDO-->
 		      	 	<!--  <li class="list-group-item border-0 border-bottom border-secondary bg-transparent"></li>		 -->     	     	 
 
-			      	<table class="table" id="table_id_2">
+			      	<table class="table" id="table_id_3">
 					  <thead>
 					    <tr> 
 					      <th>FECHA</th>
@@ -162,9 +162,9 @@
 					      <td><%= m.getId() %></td>
 					      <td><%= m.getOperacion() %></td>
 					      <% if (m.getOperacion().equals("Entrada")) { %>
-					      <td style="color:#00a000;">$<%= m.getMonto() %></td>
+					      <td style="color:#00a000;">$<%= String.format("%,.2f",m.getMonto()) %></td>
 					      <% } else { %>
-					      <td style="color:#ff0000;">$<%= m.getMonto() %></td>
+					      <td style="color:#ff0000;">$<%= String.format("%,.2f",m.getMonto()) %></td>
 					      <% } %>
 					      <td>
 					        <form action="ServletDetalleMovimiento" method="get">

@@ -84,8 +84,9 @@ public class ServletNuevaTransferencia extends HttpServlet {
 					//Bucamos usuario por CBU
 					ClienteNegocioDaoImp clienteNegocioDaoImp = new ClienteNegocioDaoImp();
 					Cliente destinatario = clienteNegocioDaoImp.obtenerClientePorCBU(cbu);
-	
-					if(destinatario.getNombre() != null && cuentasCliente.size() != 0) {
+					Cuenta cuenta = cuentaNegocioDaoImp.obtenerUnaPorCBU(cbu);
+					
+					if(destinatario.getActivo() && cuenta.isActivo() && cuentasCliente.size() != 0) {
 	
 						/* Transferencia a otro destinatario*/
 						if(destinatario.getId() != cliente.getId()) {
@@ -104,7 +105,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 							List<Cuenta> cuentasATransferir =  new ArrayList<Cuenta>();
 							
 							for(Cuenta cuentaATransferir : cuentasCliente) {
-								if(cuentaATransferir.getCbu().compareTo(cbu) != 0) {
+								if(cuentaATransferir.getCbu().compareTo(cbu) != 0 && cuentaATransferir.isActivo()) {
 										cuentasATransferir.add(cuentaATransferir);
 								}
 							}
@@ -130,7 +131,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 					} else {
 						
 						/* Mensaje error cliente no encontrado */
-						request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado");
+						request = GUI.mensajes(request, "error", "Cliente Incorrecto", "Destinatario no encontrado o dado de baja");
 						
 						/* Request */
 						RequestDispatcher rd = request.getRequestDispatcher(url);

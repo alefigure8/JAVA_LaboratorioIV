@@ -67,17 +67,19 @@
 					               <%
 								    Double tasaSeleccionada = null;
 					               String tipoTasa="";
+					               
 					               	if(request.getAttribute("tipoTasaSeleccionada")!=null){
 								    tipoTasa = request.getAttribute("tipoTasaSeleccionada").toString();
 								    tasaSeleccionada=Double.parseDouble(tipoTasa);
 								    System.out.println("TASA SEELCCIONADA" + tasaSeleccionada);
 					               	}
 								    
-								
+									
 								    for (TipoTasa tasas : tiposTasa) {
 								    	
 								    	 System.out.println("TASA del for" + tasas.getTasaInteres());
-								        String selected = (tasaSeleccionada != null && tasaSeleccionada == tasas.getTasaInteres()) ? "selected" : "";
+								        
+								    	String selected = (tasaSeleccionada != null && tasaSeleccionada == tasas.getTasaInteres()) ? "selected" : "";
 								%>
 								        <option value="<%= tasas.getTasaInteres() %>" <%= selected %>> <%= tasas.getCantCuotas() %> </option>
 								<%
@@ -112,7 +114,33 @@
 							    %>
 					            <label for="totalMonto">Total (Monto + Intereses):</label>
 					            <input type="text" class="form-control" id="totalMonto" value="<%= request.getAttribute("totalCalculado") != null ?  montoTotalFormateado : "" %>"  name="totalMonto" disabled>
-					        
+					        	
+					        	<!-- MONTO POR CUOTA -->
+					        	<%	
+					        	
+					        	
+					               	String cantCuotas="";
+					               	if(request.getAttribute("tipoTasaSeleccionada")!=null){
+								    tipoTasa = request.getAttribute("tipoTasaSeleccionada").toString();
+								    tasaSeleccionada=Double.parseDouble(tipoTasa);
+					               	
+								    for (TipoTasa tasas : tiposTasa) {
+								    	if(tasaSeleccionada!=null && tasaSeleccionada==tasas.getTasaInteres()){
+								    		cantCuotas=String.valueOf(tasas.getCantCuotas());
+								    	}
+								    }
+					               	}
+					        		String montoCuotaFormateado="";
+					        		if(request.getAttribute("totalCalculado")!=null){
+					        			double totalCuota=(double)request.getAttribute("totalCalculado")/Integer.parseInt(cantCuotas);
+					        			montoCuotaFormateado= String.format("%,.2f",totalCuota);
+						        	}
+					        		
+					        		
+					        	%>
+					            <label for="totalMonto">Monto por cuota:</label>
+					            <input type="text" class="form-control" id="totalCuota" value="<%= request.getAttribute("totalCalculado") != null ?  montoCuotaFormateado : "" %>"  name="totalMonto" disabled>
+					       
 					        </div>
 					        
 					        <div class="form-group mt-2">

@@ -118,6 +118,10 @@ session.removeAttribute("totalCalculado"); %>
 			    <p>Importe con intereses: $<%=decimalFormat.format(importeConInteres)%> </p>
 			    
 			    <p>Cantidad de Cuotas: <%=prestamo.getTipoTasa().getCantCuotas() %></p>
+			    
+			    <% double importeCuota=importeConInteres/prestamo.getTipoTasa().getCantCuotas(); %>
+			    <p>Importe por cuota: $<%= decimalFormat.format(importeCuota)%></p>
+			    
 			</div>
 
 		<!-- Cuadro para detalles de cuotas -->

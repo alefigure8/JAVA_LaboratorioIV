@@ -65,7 +65,7 @@
               <p class="mb-0">Fecha de Alta</p>
               <p class="fs-5"><%=m.getFechaMovimiento() %> </p>
               <p class="mb-0">Monto Incial</p>
-              <p class="fs-5"><%=m.getMonto() %> </p>
+              <p class="fs-5"><%=String.format("%,.2f",m.getMonto()) %> </p>
               <p class="mb-0">Cuenta</p>
               <p class="fs-5"><%=m.getCuenta().getCbu() %> </p>        
                 
@@ -89,15 +89,15 @@
               <p class="mb-0">Fecha de Alta</p>
               <p class="fs-5"><%=m.getFechaMovimiento() %> </p>
               <p class="mb-0">Monto Otorgado</p>
-              <p class="fs-5"><%=p.getMontoPedido() %> </p>
+              <p class="fs-5"><%=String.format("%,.2f",p.getMontoPedido()) %> </p>
               <p class="mb-0">Monto con Intereses</p>
-              <p class="fs-5"><%=p.getMontoConIntereses() %> </p>
+              <p class="fs-5"><%=String.format("%,.2f",p.getMontoConIntereses()) %> </p>
               <p class="mb-0">Cantidad de Cuotas</p>
               <p class="fs-5"><%=p.getTipoTasa().getCantCuotas()%> </p>
               <p class="mb-0">Tasa de interes</p>
               <p class="fs-5"><%=p.getTipoTasa().getTasaInteres()%> </p>
               <p class="mb-0">Monto por Cuota</p>
-              <p class="fs-5"><%= String.format("%.1f", p.getMontoxMes())%> </p>
+              <p class="fs-5"><%= String.format("%,.2f", p.getMontoxMes())%> </p>
                 <%
                 
                   break;
@@ -146,7 +146,7 @@
              <p class="mb-0">Cuenta Destino</p>
               <p class="fs-5"><%=m.getNumeroReferencia() %> </p>
              <p class="mb-0">Monto</p>
-              <p class="fs-5"><%=m.getMonto() %> </p>
+              <p class="fs-5"><%=String.format("%,.2f",m.getMonto()) %> </p>
              
                     <%
                 

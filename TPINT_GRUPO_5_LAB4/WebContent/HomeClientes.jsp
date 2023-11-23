@@ -2,6 +2,7 @@
 <%@page import="entidad.Movimiento"%>
 <%@page import="entidad.Cuenta"%>
 <%@page import="java.util.ArrayList"%>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
@@ -102,7 +103,9 @@ session.removeAttribute("totalCalculado"); %>
 					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
-	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | <%=CuentaFormateada%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
+	                    
+	                    <% String saldoFormateado= String.format("%,.2f",cuenta.getSaldo());%>
+	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | <%=CuentaFormateada%> | Saldo: $<span id="saldo"><%=saldoFormateado %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
 	                        		<table class="table table-bordered mt-2">
 				                       <tr>
 							                <th>Tipo de Operación</th>
@@ -147,7 +150,7 @@ session.removeAttribute("totalCalculado"); %>
 	 	visibilidad.addEventListener("click", function(){
 	 		saldoVisible=!saldoVisible;
 	 		if(saldoVisible){
-	 			saldo.textContent="<%=cuenta.getSaldo() %>";
+	 			saldo.textContent="<%=String.format("%,.2f", cuenta.getSaldo()) %>";
 	 			eye.classList.remove("fa-eye-slash");
 	 			eye.classList.add("fa-eye");
 	 		}else{
