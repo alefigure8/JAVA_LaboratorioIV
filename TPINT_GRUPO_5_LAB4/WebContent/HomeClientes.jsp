@@ -35,7 +35,8 @@ session.removeAttribute("totalCalculado"); %>
 	ArrayList<Movimiento> movimientosCuenta = null;
 	String tipoCuenta = null;
 	String numerocuenta= null;
-	Cuenta cuenta=new Cuenta();
+	Cuenta cuenta=null;
+	
 	if(request.getAttribute("tipoCuenta")!=null){
 		tipoCuenta = request.getAttribute("tipoCuenta").toString();
 	}
@@ -47,8 +48,11 @@ session.removeAttribute("totalCalculado"); %>
 	}
 	
 	StringBuilder CuentaFormateada = new StringBuilder();
-	String cuentastring = String.valueOf(cuenta.getNumeroCuenta());
-	CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+	
+	if(cuenta != null){
+		String cuentastring = String.valueOf(cuenta.getNumeroCuenta());
+		CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+	}
 	
  	%>
 	    <div class="row flex-grow-1 m-0">
@@ -100,10 +104,11 @@ session.removeAttribute("totalCalculado"); %>
 					</div>
 
 
-					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
+					<!-- ÚLTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
 	                    
+					<%if(movimientosCuenta != null){ %>
 	                    <% String saldoFormateado= String.format("%,.2f",cuenta.getSaldo());%>
 	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | <%=CuentaFormateada%> | Saldo: $<span id="saldo"><%=saldoFormateado %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
 	                        		<table class="table table-bordered mt-2">
@@ -121,14 +126,21 @@ session.removeAttribute("totalCalculado"); %>
 					            				 <th><%=m.getFechaMovimiento() %></th>
 					            				 
 				            					 <% if(m.getOperacion().equals("Entrada")) { %>
-					            				 	<th style=color:#00a000;>$<%=m.getMonto() %></th>
+					            				 	<th style=color:#00a000;>$<%=String.format("%,.2f", m.getMonto()) %></th>
 					            				 <% } else{ %>
-					            				 	<th  style=color:#ff0000;>$<%=m.getMonto() %></th>
+					            				 	<th  style=color:#ff0000;>$<%=String.format("%,.2f", m.getMonto()) %></th>
 					            				 <%} %>
 	        									<th><a class="btn btn-primary btnEnviar" href="ServletDetalleMovimiento?idmovimiento=<%=m.getId()%>&btnVerDetalleMovimiento=VER">VER</a></th>
 			            					</tr>
 	        						<%} %>
 						  		</table>
+					<% } 
+
+					if(movimientosCuenta == null){ %>
+						<div class="d-flex justify-content-center">
+							<h3>NO POSEE CUENTAS</h3>
+						</div>
+					<%} %>
 	   					</div>
 					</div>
 		    	</div>
@@ -141,11 +153,14 @@ session.removeAttribute("totalCalculado"); %>
 	 
 	 
 	 <script>
+	 
+	 <%if(movimientosCuenta != null){ %>
 	 document.addEventListener("DOMContentLoaded", function() {
 	 	const visibilidad=document.getElementById("visibilidad");
 	 	const saldo=document.getElementById("saldo");
 	 	const eye=document.getElementById("eye");
 	 	let saldoVisible=true;
+	 	console.log(visibilidad)
 	 	
 	 	visibilidad.addEventListener("click", function(){
 	 		saldoVisible=!saldoVisible;
@@ -159,8 +174,9 @@ session.removeAttribute("totalCalculado"); %>
 	 			eye.classList.add("fa-eye-slash");
 	 		}
 	 	});
+	 	
 	 });
-	 
+	 <%}%>
 	 </script>
 	 
 	 

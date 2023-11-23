@@ -652,7 +652,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 	 "inner join Cuentas C " + 
 	 "on C.CBU=M.CBU "+  
 	 "inner join TiposCuenta TC " +
-	 "on TC.IdTipoCuenta=C.IdTipoCuenta WHERE M.CBU = ? ORDER BY M.FechaMovimiento DESC, id LIMIT 3";
+	 "on TC.IdTipoCuenta=C.IdTipoCuenta WHERE M.CBU = ? ORDER BY M.FechaMovimiento DESC, id DESC LIMIT 3";
 	@Override
 		public List<Movimiento> obtenerUltimosTresMovimientos(String CBU) throws SQLException {
 		    PreparedStatement pStatement;

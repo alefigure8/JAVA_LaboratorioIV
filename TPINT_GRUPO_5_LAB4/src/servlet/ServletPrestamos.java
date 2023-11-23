@@ -219,7 +219,7 @@ public class ServletPrestamos extends HttpServlet {
 		
 		//SOLICITAR PRESTAMO
 			if(request.getParameter("btnSolicitarPrestamo")!=null) {
-				System.out.println("NO ES NULL");
+
 				if(session.getAttribute("usuario") != null){
 					usuario = (Usuario)session.getAttribute("usuario");
 				}
@@ -246,8 +246,7 @@ public class ServletPrestamos extends HttpServlet {
 			if(request.getParameter("btnCalcularIntereses")!=null) {
 				
 				
-					double montoSeleccionado = Double.parseDouble(request.getParameter("monto"));
-					System.out.println("MONTO SELECCIONADO: "+montoSeleccionado);
+					double montoSeleccionado = Double.parseDouble(request.getParameter("monto"));				
 			        double tipoTasaSeleccionada = Double.parseDouble(request.getParameter("cuotas")) ;
 
 			        Double interesCalculado = (montoSeleccionado * tipoTasaSeleccionada/ 100);
