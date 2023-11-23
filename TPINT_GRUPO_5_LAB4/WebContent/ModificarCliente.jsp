@@ -264,20 +264,32 @@
 	 	//VALIDAR FECHA
 	 	function validarFecha(input){
 	 		const fecha = input.value;
-	 		const arrayFecha = fecha.split("-");
-	 		if(parseInt(arrayFecha[0]) > new Date().getFullYear() - 18){
-	 			input.setCustomValidity('');
-	 			input.setCustomValidity(`Debe ser mayor de edad`);
-	 			input.classList.add("is-invalid");
-	 		} else if (parseInt(arrayFecha[0]) < 1900){
-	 			input.setCustomValidity('');
-	 			input.setCustomValidity(`Fecha invalida`);
-	 			input.classList.add("is-invalid");
-	 		} else {
-	 			input.setCustomValidity('');
-    	        input.classList.remove("is-invalid");
-    	        input.classList.add("is-valid");
-	 		}
+	 	    const arrayFecha = fecha.split("-");
+	 	    const añoNacimiento = parseInt(arrayFecha[0]);
+	 	    const mesNacimiento = parseInt(arrayFecha[1]) - 1; 
+	 	    const diaNacimiento = parseInt(arrayFecha[2]);
+	 	    
+	 	    const fechaNacimiento = new Date(añoNacimiento, mesNacimiento, diaNacimiento);
+	 	    const fechaActual = new Date();
+	 	    const añoActual = fechaActual.getFullYear();
+
+	 	    const edad = añoActual - añoNacimiento;
+
+	 	    
+	 	    if (
+	 	        edad < 18 ||
+	 	        (edad === 18 && (fechaActual < new Date(añoActual, mesNacimiento, diaNacimiento)))
+	 	    ) {
+	 	        input.setCustomValidity('Debe ser mayor de edad');
+	 	        input.classList.add("is-invalid");
+	 	    } else if (añoNacimiento < 1900) {
+	 	        input.setCustomValidity('Fecha inválida');
+	 	        input.classList.add("is-invalid");
+	 	    } else {
+	 	        input.setCustomValidity('');
+	 	        input.classList.remove("is-invalid");
+	 	        input.classList.add("is-valid");
+	 	    }
 	 	}
 	    
 	    var provinciasArray = [];

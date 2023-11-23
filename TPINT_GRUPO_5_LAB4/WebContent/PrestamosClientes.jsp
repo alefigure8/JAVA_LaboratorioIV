@@ -7,6 +7,7 @@
 <%@page import="entidad.Prestamo" %>
 <%@page import="entidad.Estado" %>
 <%@page import="java.util.ArrayList"%>
+<%@ page import="java.text.DecimalFormat" %>
 
 
 <!-- AUTENTICACION -->
@@ -18,6 +19,7 @@
 	if(session.getAttribute("usuario") != null){
 		usuario = (Usuario)session.getAttribute("usuario");
 	}
+	
 %>
 
 
@@ -29,10 +31,6 @@
 <!-- FIN AUTENTICACION -->
 
 <% 
-session.removeAttribute("montoSeleccionado");
-session.removeAttribute("tipoTasaSeleccionada");
-session.removeAttribute("interesCalculado");
-session.removeAttribute("totalCalculado"); 
 
 	String estado = null;
 	String importe = null;
@@ -231,10 +229,15 @@ session.removeAttribute("totalCalculado");
                        <!--  -->
                       
                        <td><span class="black-75"><%=prestamos.get(x).getNumeroCuenta() %></span></td>
-                      <td><span class="black-75">$<%=prestamos.get(x).getMontoPedido() %></span></td>
-                      <td><span class="black-75">
-                              $<%= Math.abs(prestamos.get(x).getMontoPedido() - prestamos.get(x).getMontoConIntereses())  %>
-                      </span></td>
+                       
+                       <%
+						DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+						double montoPedido = prestamos.get(x).getMontoPedido();
+						double montoCalculado = Math.abs(prestamos.get(x).getMontoPedido() - prestamos.get(x).getMontoConIntereses());
+						%>
+                      <td><span class="black-75">$<%= decimalFormat.format(montoPedido) %></span></td>
+					  <td><span class="black-75">$<%= decimalFormat.format(montoCalculado) %></span></td>
+                      
                       <td><span class="black-75"><%=prestamos.get(x).getTipoTasa().getCantCuotas() %></span></td>
                       <td><span class="black-75"><%=prestamos.get(x).getFechaPrestamo() %></span></td>
                       

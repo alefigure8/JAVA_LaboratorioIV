@@ -45,7 +45,7 @@
            			 <div class="col-12">
 					      <form action="ServletAltaCuenta" method="post" class="mx-auto" style="width: 300px;">
 					      	<label for="dni"></label>
-					      	<input type="text" id="dni" name="dni" required placeholder="Ingrese Dni de cliente">
+					      	<input type="text" id="dni" name="dni" required placeholder="Ingrese Dni de cliente" oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 8);validateInput(this, 1);">
 					      	<input type="submit" name="btnBuscarDni" value="Buscar" class="btn btn-primary btnEnviar">
 					      	 	<% if(request.getAttribute("existedni")!=null && (boolean)request.getAttribute("existedni")==false){
 						

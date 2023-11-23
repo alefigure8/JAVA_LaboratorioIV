@@ -6,6 +6,7 @@
 <%@page import="entidad.Cliente"%>
 <%@page import="entidad.Usuario"%>
 <%@page import="entidad.TipoAcceso"%>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <!-- AUTENTICACION -->
@@ -102,9 +103,20 @@ session.removeAttribute("totalCalculado"); %>
 			    <p>Nro. Cuenta del Prestamo: <%=prestamo.getNumeroCuenta()%></p>
 			    <p>Estado: <%=prestamo.getEstado().getDescripcion()%></p>
 			    <p>Saldado: <%if(prestamo.isCancelado()){%> SI <%}else{%> NO <%}%></p>
-			    <p>Importe solicitado: <%=prestamo.getMontoPedido() %></p>
-			    <%Double importeConInteres = prestamo.getMontoPedido() * ((prestamo.getTipoTasa().getTasaInteres() / 100) + 1); %>
-			    <p>Importe con intereses: <%=importeConInteres%> </p>
+			    
+			    <%DecimalFormat decimalFormat = new DecimalFormat("#,##0.00"); 
+			    	Double montoPedido=prestamo.getMontoPedido();
+			    %>
+			    <p>Importe solicitado: $<%=decimalFormat.format(montoPedido) %></p>
+			    
+			    <%Double importeConInteres = prestamo.getMontoPedido() * ((prestamo.getTipoTasa().getTasaInteres() / 100) + 1); 
+			     double montoCalculado = Math.abs(prestamo.getMontoPedido() - prestamo.getMontoConIntereses());
+			    %>
+			    
+			    
+			    <p>Intereses: $<%= decimalFormat.format(montoCalculado)%></p>
+			    <p>Importe con intereses: $<%=decimalFormat.format(importeConInteres)%> </p>
+			    
 			    <p>Cantidad de Cuotas: <%=prestamo.getTipoTasa().getCantCuotas() %></p>
 			</div>
 
@@ -128,7 +140,9 @@ session.removeAttribute("totalCalculado"); %>
 			        <% for(CuotaPrestamo cuota : listaCuota) { %>
 			            <tr>
 			                <td><%=cuota.getNumeroCuota()%></td>
-			                <td><%=cuota.getMontoCuota()%></td>
+			                
+			                <td>$<%=decimalFormat.format(cuota.getMontoCuota())%></td>
+			                
 			                <td><%=cuota.getEstado()%></td>
 			                <!-- CUENTA DE PAGO NO DE DEPOSITO DEL PRESTAMO -->
 			                <% if(cuota.getFechaPago() != null && cuentasPago != null && indice < cuentasPago.size()) { %>

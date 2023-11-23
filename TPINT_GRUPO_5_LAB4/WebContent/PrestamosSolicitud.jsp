@@ -4,6 +4,8 @@
 <%@page import="entidad.TipoTasa"%>
 <%@page import="entidad.Cuenta"%>
 <%@page import="java.util.List"%>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.text.NumberFormat" %>
 <!-- AUTENTICACION -->
 <jsp:include page="/WEB-INF/Components/autenticacion/autenticacion.jsp"> 
 	<jsp:param name="TipoUsuarioPagina" value="<%=TipoAcceso.Cliente%>" />
@@ -48,12 +50,16 @@
 	      <form action="ServletPrestamos" method="get">
 			      <div class="row d-flex ">
 					    <div class="col-md-4 mx-auto">
-					        <div class="form-group mt-2">
-					            <label for="monto">Monto:</label>
-					            <!-- INGRESO DE MONTO  (NUMERO POSITIVO) -->
-					            <input type="text" class="form-control" id="monto" name="monto" value="<%= session.getAttribute("montoSeleccionado") != null ?  session.getAttribute("montoSeleccionado") : ""%>"required oninput="this.value = this.value.replace(/[^0-9]/g, '');this.value = this.value.substring(0, 10);validateInput(this, 1);">
-					       		<label style="color:orange;">* El monto minimo es de $10.000</label>
-					        </div>
+					       <div class="form-group mt-2">
+							    <label for="monto">Monto:</label>
+							    <!-- INGRESO DE MONTO (NUMERO POSITIVO) -->
+							    
+								
+								<input type="text" class="form-control" id="monto" name="monto" value="<%= request.getAttribute("montoSeleccionado") != null ?  request.getAttribute("montoSeleccionado") : ""%>" required oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.substring(0, 7); validateInput(this, 1);">
+														    
+							    <label style="color:orange;">* El monto mínimo es de $10.000</label>
+							</div>
+
 					        <div class="form-group mt-2">
 					            <label for="cuotas">Cantidad de Cuotas:</label>
 					            <select class="form-control" id="cuotas" name="cuotas">
@@ -61,8 +67,8 @@
 					               <%
 								    Double tasaSeleccionada = null;
 					               String tipoTasa="";
-					               	if(session.getAttribute("tipoTasaSeleccionada")!=null){
-								    tipoTasa = session.getAttribute("tipoTasaSeleccionada").toString();
+					               	if(request.getAttribute("tipoTasaSeleccionada")!=null){
+								    tipoTasa = request.getAttribute("tipoTasaSeleccionada").toString();
 								    tasaSeleccionada=Double.parseDouble(tipoTasa);
 								    System.out.println("TASA SEELCCIONADA" + tasaSeleccionada);
 					               	}
@@ -82,14 +88,31 @@
 					        </div>
 					        <div class="form-group mt-2">
 					        	<!-- MONTO * % INTERES DEL DESPLEGABLE SELECCIONADO -->
-					        	
+					        	<% 
+					        	String interesFormateado="";
+					        	if(request.getAttribute("interesCalculado")!=null){
+					        		double interesCalculado = (double)request.getAttribute("interesCalculado");
+							        interesFormateado = String.format("%,.2f", interesCalculado);
+							        
+					        	}
+							    %>
 					            <label for="interesTotal">Total de Intereses:</label>
-					            <input type="text" class="form-control" id="interesTotal" value="<%= session.getAttribute("interesCalculado") != null ?  session.getAttribute("interesCalculado") : ""%>" name="interesTotal" disabled>
+					            <input type="text" class="form-control" id="interesTotal" value="<%= request.getAttribute("interesCalculado") != null ?  interesFormateado : ""%>" name="interesTotal" disabled>
+					       
 					        </div>
 					        <div class="form-group mt-2">
 					        	<!-- MONTO + INTERESES -->
+					        	<% 
+					        	String montoTotalFormateado="";
+					        	if(request.getAttribute("totalCalculado")!=null){
+					        		double totalCalculado = (double)request.getAttribute("totalCalculado");
+					        		montoTotalFormateado = String.format("%,.2f", totalCalculado);
+					        		
+					        	}
+							    %>
 					            <label for="totalMonto">Total (Monto + Intereses):</label>
-					            <input type="text" class="form-control" id="totalMonto" value="<%= session.getAttribute("totalCalculado") != null ?  session.getAttribute("totalCalculado") : "" %>"  name="totalMonto" disabled>
+					            <input type="text" class="form-control" id="totalMonto" value="<%= request.getAttribute("totalCalculado") != null ?  montoTotalFormateado : "" %>"  name="totalMonto" disabled>
+					        
 					        </div>
 					        
 					        <div class="form-group mt-2">

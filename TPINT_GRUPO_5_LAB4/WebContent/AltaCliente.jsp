@@ -658,16 +658,27 @@
   //VALIDAR FECHA					
 
 	 	function validarFecha(input) {
-	 	    const fecha = input.value;
+	 		const fecha = input.value;
 	 	    const arrayFecha = fecha.split("-");
 	 	    const añoNacimiento = parseInt(arrayFecha[0]);
-	 	    const añoActual = new Date().getFullYear();
+	 	    const mesNacimiento = parseInt(arrayFecha[1]) - 1; 
+	 	    const diaNacimiento = parseInt(arrayFecha[2]);
+	 	    
+	 	    const fechaNacimiento = new Date(añoNacimiento, mesNacimiento, diaNacimiento);
+	 	    const fechaActual = new Date();
+	 	    const añoActual = fechaActual.getFullYear();
 
-	 	    if (añoNacimiento > añoActual - 18) {
+	 	    const edad = añoActual - añoNacimiento;
+
+	 	    
+	 	    if (
+	 	        edad < 18 ||
+	 	        (edad === 18 && (fechaActual < new Date(añoActual, mesNacimiento, diaNacimiento)))
+	 	    ) {
 	 	        input.setCustomValidity('Debe ser mayor de edad');
 	 	        input.classList.add("is-invalid");
 	 	    } else if (añoNacimiento < 1900) {
-	 	        input.setCustomValidity('Fecha invalida');
+	 	        input.setCustomValidity('Fecha inválida');
 	 	        input.classList.add("is-invalid");
 	 	    } else {
 	 	        input.setCustomValidity('');

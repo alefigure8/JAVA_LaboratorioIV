@@ -246,16 +246,23 @@ public class ServletPrestamos extends HttpServlet {
 			if(request.getParameter("btnCalcularIntereses")!=null) {
 				
 				
-				double montoSeleccionado = Double.parseDouble(request.getParameter("monto"));
-		        double tipoTasaSeleccionada = Double.parseDouble(request.getParameter("cuotas")) ;
+					double montoSeleccionado = Double.parseDouble(request.getParameter("monto"));
+					System.out.println("MONTO SELECCIONADO: "+montoSeleccionado);
+			        double tipoTasaSeleccionada = Double.parseDouble(request.getParameter("cuotas")) ;
 
-		        Double interesCalculado = (montoSeleccionado * tipoTasaSeleccionada/ 100);
-		        Double totalCalculado =(montoSeleccionado + interesCalculado);
+			        Double interesCalculado = (montoSeleccionado * tipoTasaSeleccionada/ 100);
+			        Double totalCalculado =(montoSeleccionado + interesCalculado);
+					
+					/*session.setAttribute("montoSeleccionado", montoSeleccionado);
+					session.setAttribute("tipoTasaSeleccionada", tipoTasaSeleccionada);
+					session.setAttribute("interesCalculado", interesCalculado);
+					session.setAttribute("totalCalculado", totalCalculado);*/
+			        request.setAttribute("montoSeleccionado", montoSeleccionado);
+			        request.setAttribute("tipoTasaSeleccionada", tipoTasaSeleccionada);
+			        request.setAttribute("interesCalculado", interesCalculado);
+			        request.setAttribute("totalCalculado", totalCalculado);
 				
-				session.setAttribute("montoSeleccionado", montoSeleccionado);
-				session.setAttribute("tipoTasaSeleccionada", tipoTasaSeleccionada);
-				session.setAttribute("interesCalculado", interesCalculado);
-				session.setAttribute("totalCalculado", totalCalculado);
+				
 				RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosSolicitud.jsp");
 				rDispatcher.forward(request, response);
 			}
@@ -303,10 +310,10 @@ public class ServletPrestamos extends HttpServlet {
 		        //INSERTAR PRESTAMO
 		        if(prestamosNegocio.insertarprestamo(prestamo)) {
 		        	System.out.println("PRESTAMO SOLICITADO");
-		        	session.removeAttribute("montoSeleccionado");
+		        	/*session.removeAttribute("montoSeleccionado");
 		        	session.removeAttribute("tipoTasaSeleccionada");
 		        	session.removeAttribute("interesCalculado");
-		        	session.removeAttribute("totalCalculado");
+		        	session.removeAttribute("totalCalculado");*/
 		        	cargarPrestamos(request);
 		        	request=GUI.mensajes(request, "exito", "Prestamo solicitado", "El prestamo se solicit� correctamente");
 		        	RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
