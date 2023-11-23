@@ -44,6 +44,11 @@ session.removeAttribute("totalCalculado"); %>
 	if(request.getAttribute("cuentaVisible")!=null){
 		cuenta=(Cuenta)request.getAttribute("cuentaVisible");
 	}
+	
+	StringBuilder CuentaFormateada = new StringBuilder();
+	String cuentastring = String.valueOf(cuenta.getNumeroCuenta());
+	CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
+	
  	%>
 	    <div class="row flex-grow-1 m-0">
 	      <!--SIDEBAR-->
@@ -97,7 +102,7 @@ session.removeAttribute("totalCalculado"); %>
 					<!-- ï¿½LTIMOS MOVIMIENTOS // CAJA AHORRO DEFAULT -->
 	                <div class="container mt-4 d-flex justify-content-left align-items-start">
 	                    <div class="form-group col-md-12 d-flex flex-column">
-	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
+	                        <h5>Ultimos movimientos | <%=tipoCuenta%> | <%=CuentaFormateada%> | Saldo: $<span id="saldo"><%=cuenta.getSaldo() %></span><a href="#" id="visibilidad"><i id="eye" class="fa-regular fa-eye fa-2x ms-2"></i></a></h5>
 	                        		<table class="table table-bordered mt-2">
 				                       <tr>
 							                <th>Tipo de Operación</th>

@@ -56,7 +56,7 @@ public class ServletHomeCliente extends HttpServlet {
 			}
 		
 			try {
-				cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasCliente(cliente.getId());
+				cuentasCliente = (ArrayList<Cuenta>)negocioCuenta.obtenerCuentasActivasCliente(cliente.getId());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -76,7 +76,7 @@ public class ServletHomeCliente extends HttpServlet {
 			}
 			
 			if(movimientosCuenta.size() > 0) {
-				int cantidad=movimientosCuenta.size();
+		
 				List<Movimiento> movimientos=new ArrayList<Movimiento>();
 				try {
 					movimientos = negocioMovimiento.obtenerUltimosTresMovimientos(cuentaVisible.getCbu());

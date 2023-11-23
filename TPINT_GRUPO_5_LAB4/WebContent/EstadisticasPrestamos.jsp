@@ -262,7 +262,7 @@
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Junio</th>
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Julio</th>
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Agosto</th>
-    <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Septiembre</th>
+    <th style="background-color: var(--color-main); color: whitesmoke; width: 100px; font-size: 12px;text-align: center;">Septiembre</th>
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Octubre</th>
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Noviembre</th>
     <th style="background-color: var(--color-main); color: whitesmoke; width: auto; font-size: 12px;text-align: center;">Diciembre</th>

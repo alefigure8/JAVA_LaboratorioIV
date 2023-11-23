@@ -93,7 +93,7 @@ public class MovimientoNegocioDaoImp implements IMovimientoNegocioDao{
 	public static int generarNumeroReferencia(int idMovimiento) {
 		
         LocalDateTime fechaHoraActual = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
         String fechaFormateada = fechaHoraActual.format(formatter);
         String numeroReferencia = fechaFormateada+ idMovimiento;
         return Integer.parseInt(numeroReferencia);

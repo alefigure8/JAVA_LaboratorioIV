@@ -147,11 +147,11 @@
 	                  			
 	                  <div style="max-width: 110px; min-width: 110px;">			
 		            <label for="desdeInput" style="font-size: 11px;"> Desde:</label>    		
-		                <input type="date" name="cuentaDesde" id="desdeInput" <% if(fechadesdeSeleccionada!=null){%>value="<%=fechadesdeSeleccionada%>"<%} %> style="max-width: 110px; min-width: 110px;" >		
+		                <input type="date" name="cuentaDesde" id="desdeInput" style="max-width: 110px; min-width: 110px;" >		
 		              </div>		
 		              <div  style="max-width: 110px; min-width: 110px;">		
 		                <label for="hastaInput" style="font-size: 11px;"> Hasta:</label>	
-		                <input type="date" name="cuentaHasta" id="hastaInput" <% if(fechahastaSeleccionada!=null){%>value="<%=fechadesdeSeleccionada%>"<%} %>  style="max-width: 110px; min-width: 110px;" >		
+		                <input type="date" name="cuentaHasta" id="hastaInput"  style="max-width: 110px; min-width: 110px;" >		
 		              </div>		
 			
 			        

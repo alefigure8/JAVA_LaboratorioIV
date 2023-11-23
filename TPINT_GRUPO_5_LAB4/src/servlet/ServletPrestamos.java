@@ -227,7 +227,7 @@ public class ServletPrestamos extends HttpServlet {
 				List<TipoTasa> tiposTasa=(List<TipoTasa>)prestamosNegocio.obtenerTodosTiposTasas();
 				List<Cuenta> cuentasCliente=new ArrayList<Cuenta>();
 				try {
-					cuentasCliente=(List<Cuenta>)cuentaNegocio.obtenerCuentasCliente(usuario.getId());
+					cuentasCliente=(List<Cuenta>)cuentaNegocio.obtenerCuentasActivasCliente(usuario.getId());
 				} catch (SQLException e) {
 					
 					e.printStackTrace();
@@ -308,7 +308,7 @@ public class ServletPrestamos extends HttpServlet {
 		        	session.removeAttribute("interesCalculado");
 		        	session.removeAttribute("totalCalculado");
 		        	cargarPrestamos(request);
-		        	request=GUI.mensajes(request, "exito", "Prestamo solicitado", "El prestamo se solicitó correctamente");
+		        	request=GUI.mensajes(request, "exito", "Prestamo solicitado", "El prestamo se solicitï¿½ correctamente");
 		        	RequestDispatcher rDispatcher=request.getRequestDispatcher("PrestamosClientes.jsp");
 					rDispatcher.forward(request, response);
 		        }
@@ -371,7 +371,7 @@ public class ServletPrestamos extends HttpServlet {
 						if(movimientoNegocio.insertar(movimiento)) {
 							if(cuentaNegocio.editar(cuenta)) {
 								cargarPrestamos(request);
-								request=GUI.mensajes(request, "exito", "Prestamo aceptado", "El prestamo se aceptó correctamente");
+								request=GUI.mensajes(request, "exito", "Prestamo aceptado", "El prestamo se aceptï¿½ correctamente");
 							}
 							
 						}
@@ -400,7 +400,7 @@ public class ServletPrestamos extends HttpServlet {
 			int idPrestamo=Integer.parseInt(request.getParameter("idPrestamo").toString());
 			if(prestamosNegocio.rechazar(idPrestamo)) {
 				cargarPrestamos(request);
-				request=GUI.mensajes(request, "exito", "Prestamo rechazado", "El prestamo se rechazó correctamente");
+				request=GUI.mensajes(request, "exito", "Prestamo rechazado", "El prestamo se rechazï¿½ correctamente");
 				
 			}
 			else {
@@ -487,7 +487,7 @@ public class ServletPrestamos extends HttpServlet {
 								boolean abonado=prestamosNegocio.prestamoSaldado(idprestamo);
 								System.out.println(abonado);
 									cargarPrestamos(request);
-									request=GUI.mensajes(request, "exito", "Pago exitoso", "La cuota se abonó con éxito");
+									request=GUI.mensajes(request, "exito", "Pago exitoso", "La cuota se abonï¿½ con ï¿½xito");
 									
 								
 							}

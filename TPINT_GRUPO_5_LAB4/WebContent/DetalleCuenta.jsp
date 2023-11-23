@@ -41,6 +41,7 @@
 		
 		cuenta = (Cuenta)request.getAttribute("cuenta");	
 		String cuentastring = String.valueOf(cuenta.getNumeroCuenta());
+
 		CuentaFormateada.append(cuentastring, 0, 2).append("-").append(cuentastring, 2, 9).append("/").append(cuentastring.charAt(9));
 	};
 	ArrayList<Movimiento> listaMovimientos=null;

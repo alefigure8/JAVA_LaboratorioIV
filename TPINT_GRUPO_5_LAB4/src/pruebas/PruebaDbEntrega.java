@@ -54,8 +54,8 @@ public static void 	insertarMovimientosporCliente (List<Cliente> listadoClientes
 		if(c.getId()<listadoClientes.get(listadoClientes.size()-1).getId()) {
 		
 		System.out.println(c.getId());	
-		List <Cuenta> cuentasCliente = cueNegocio.obtenerCuentasCliente(c.getId());
-		List <Cuenta> cuentasCliente2 = cueNegocio.obtenerCuentasCliente(c.getId()+1);
+		List <Cuenta> cuentasCliente = cueNegocio.obtenerCuentasActivasCliente(c.getId());
+		List <Cuenta> cuentasCliente2 = cueNegocio.obtenerCuentasActivasCliente(c.getId()+1);
 		System.out.println(cuentasCliente2.size());	
 		
 		// INSERTAR PRIMER TRANSFERENCIA INTERNA

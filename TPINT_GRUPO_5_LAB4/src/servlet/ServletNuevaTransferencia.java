@@ -51,7 +51,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 		List<Cuenta> cuentasCliente = new ArrayList<Cuenta>();
 
 		try {
-			cuentasCliente = cuentaNegocioDaoImp.obtenerCuentasCliente(cliente.getId());
+			cuentasCliente = cuentaNegocioDaoImp.obtenerCuentasActivasCliente(cliente.getId());
 			request.setAttribute("cuentas", cuentasCliente);
 		} catch (Exception e) {
 			
@@ -121,7 +121,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 						} else {
 													
 							/* Mensaje cliente no cuenta con suficientes cuentas*/
-							request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sí mismo");
+							request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sï¿½ mismo");
 							
 							/* Request */
 							RequestDispatcher rd = request.getRequestDispatcher(urlRegresar);
@@ -148,7 +148,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 			}
 		}
 		
-		/* Realización de la transferencia */
+		/* Realizaciï¿½n de la transferencia */
 		if(request.getParameter("btnTransferir")!=null) {
 			
 			if(
@@ -171,7 +171,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 						session.removeAttribute("destinatario");
 						
 						/* Mensaje de exito */
-						request = GUI.mensajes(request, "exito", "Transferencia realizada", "La transferencia se realizó correctamente.");
+						request = GUI.mensajes(request, "exito", "Transferencia realizada", "La transferencia se realizo correctamente.");
 						
 						/* Request */
 						RequestDispatcher rd = request.getRequestDispatcher("ServletListaTransferencias?listado=true&todos=true");

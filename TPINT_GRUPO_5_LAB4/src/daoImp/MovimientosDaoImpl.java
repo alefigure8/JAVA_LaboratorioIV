@@ -66,7 +66,7 @@ public class MovimientosDaoImpl implements IMovimientosDao{
 														"on C.CBU=M.CBU " +
 														"inner join TiposCuenta TC " +
 														"on TC.IdTipoCuenta=C.IdTipoCuenta "+
-														"where C.CBU = ?";
+														"where M.CBU = ?";
 
 	private static final String selectPorNumeroCliente =	"select *,TC.descripcion as tipoCuentaDescripcion, TM.descripcion as tipoMovimientoDescripcion, E.descripcion as estadoDescripcion from Movimientos M " +
 															"inner join Estados E " +
