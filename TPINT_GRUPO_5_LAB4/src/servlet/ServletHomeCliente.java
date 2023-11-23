@@ -65,12 +65,7 @@ public class ServletHomeCliente extends HttpServlet {
 			}
 			
 			if(cuentasCliente.size()>0) {
-				//cuentaVisible = cuentasCliente.get(0);
-				for(Cuenta cuenta : cuentasCliente) {
-					if(cuenta.isActivo()) {
-						cuentaVisible = cuenta;
-					}
-				}
+				cuentaVisible = cuentasCliente.get(0);
 			}
 			
 			if(cuentaVisible!=null) {

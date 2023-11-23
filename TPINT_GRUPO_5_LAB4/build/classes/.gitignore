@@ -1,2 +1,9 @@
-/servlet/
+/Helper/
+/dao/
 /daoImp/
+/entidad/
+/excepciones/
+/negocioDao/
+/negocioDaoImp/
+/pruebas/
+/servlet/

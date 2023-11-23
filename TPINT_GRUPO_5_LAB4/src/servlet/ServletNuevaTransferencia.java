@@ -28,9 +28,6 @@ import negocioDaoImp.ClienteNegocioDaoImp;
 import negocioDaoImp.CuentaNegocioDaoImp;
 import negocioDaoImp.MovimientoNegocioDaoImp;
 
-/**
- * Servlet implementation class ServletNuevaTransferencia
- */
 @WebServlet("/ServletNuevaTransferencia")
 public class ServletNuevaTransferencia extends HttpServlet {
 	private static final long serialVersionUID = 1L;
