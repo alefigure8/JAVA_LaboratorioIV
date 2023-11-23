@@ -122,7 +122,7 @@ public class ServletNuevaTransferencia extends HttpServlet {
 						} else {
 													
 							/* Mensaje cliente no cuenta con suficientes cuentas*/
-							request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sï¿½ mismo");
+							request = GUI.mensajes(request, "error", "Cuentas Insuficientes", "No cuenta con suficientes cuentas para transferirse a sí mismo");
 							
 							/* Request */
 							RequestDispatcher rd = request.getRequestDispatcher(urlRegresar);
