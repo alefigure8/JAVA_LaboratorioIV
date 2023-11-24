@@ -9,6 +9,23 @@
 ##
 Proyecto realizado con Java JDBC, SERVLET y JSP; utilizando como base de datos MySQL
 
+# Instalación y Ejecución del Proyecto Java Web
+
+## Requisitos Previos
+
+- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/javase-downloads.html)
+- [Apache Tomcat](http://tomcat.apache.org/) (o cualquier otro contenedor de servlets)
+- [Base de Datos](https://github.com/alefigure8/JAVA_LaboratorioIV/blob/main/TPINT_GRUPO_5_LAB4/BdProyectoBanco5_Entrega.sql)
+
+Modificar el archivo Conexión:
+
+```bash
+jdbc.url=jdbc:mysql://localhost:3306/tu-base-de-datos
+jdbc.username=tu-usuario
+jdbc.password=tu-contraseña
+```
+
+
 ## **CLIENTE**
 ![Login](https://i.imgur.com/yvcJ1SI.jpg "Login")
 ![user_main](https://i.imgur.com/nSpCkZg.jpg "user_main")
