@@ -2,9 +2,12 @@
 ## LABORATORIO IV
 ### JAVA
 
-**UNIVERSIDAD TECNLÓGIC NACIONAL** </br>
+**UNIVERSIDAD TECNLÓGICA NACIONAL** </br>
 **Regional Pacheco** </br>
 **2023** </br>
+
+##
+Proyecto realizado con Java JDBC, SERVLET y JSP; utilizando como base de datos MySQL
 
 ## **CLIENTE**
 ![Login](https://i.imgur.com/yvcJ1SI.jpg "Login")
@@ -23,3 +26,6 @@
 ![Imgur](https://i.imgur.com/NP1HphW.jpg)
 ![Imgur](https://i.imgur.com/elEVS0U.png)
 ![Imgur](https://i.imgur.com/4j3G0iT.jpg)
+
+## **BASE DE DATOS**
+![Imgur](https://i.imgur.com/RNenQHt.png)
