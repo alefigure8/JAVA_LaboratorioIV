@@ -1,12 +1,15 @@
 # TRABAJO PRÁCTICO INTEGRADOR  
 ## LABORATORIO IV
-### JAVA
 
-**UNIVERSIDAD TECNLÓGICA NACIONAL** </br>
+**UNIVERSIDAD TECNOLÓGICA NACIONAL** </br>
 **Regional Pacheco** </br>
 **2023** </br>
 
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F2415%2FPNG%2F512%2Fjava_original_wordmark_logo_icon_146459.png&f=1&nofb=1&ipt=7bf3140d0254e1126c5bf88041b4028e5667eca4ff1bc1d589c5f3da2bca34ac&ipo=images" alt="Logo de Java" width="90" height="90">
+
 ##
+Sistema de gestión para un banco en donde existirán dos tipos de usuarios: administrador del banco y clientes.
+</br>
 Proyecto realizado con Java JDBC, SERVLET y JSP; utilizando como base de datos MySQL
 
 # Instalación y Ejecución del Proyecto Java Web
