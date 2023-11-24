@@ -1,4 +1,4 @@
-DROP DATABASE BDbANCOS;
+DROP DATABASE bdBancos;
 create database bdBancos;
 use bdBancos;
 
@@ -135,9 +135,9 @@ CREATE TABLE Movimientos (
 /******** INSERTS ********/
 /******** PROVINCIAS  ********/
 INSERT INTO Provincias (NombreProvincia) VALUES
-('Buenos Aires'), ('Catamarca'), ('Chaco'), ('Chubut'), ('CÃ³rdoba'), ('Corrientes'), ('Entre RÃ­os'), 
-('Formosa'), ('Jujuy'), ('La Pampa'), ('La Rioja'), ('Mendoza'), ('Misiones'), ('NeuquÃ©n'), ('RÃ­o Negro'), 
-('Salta'), ('San Juan'), ('San Luis'), ('Santa Cruz'), ('Santa Fe'), ('Santiago del Estero'), ('Tierra del Fuego'), ('TucumÃ¡n');
+('Buenos Aires'), ('Catamarca'), ('Chaco'), ('Chubut'), ('Córdoba'), ('Corrientes'), ('Entre Ríos'), 
+('Formosa'), ('Jujuy'), ('La Pampa'), ('La Rioja'), ('Mendoza'), ('Misiones'), ('Neuquén'), ('Río Negro'), 
+('Salta'), ('San Juan'), ('San Luis'), ('Santa Cruz'), ('Santa Fe'), ('Santiago del Estero'), ('Tierra del Fuego'), ('Tucumán');
 
 /******** LOCALIDADES ********/
 -- Insertar 3 localidades para Buenos Aires
@@ -148,8 +148,8 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('San Fernando del Valle de Catamarca', 2),
-('Santa MarÃ­a', 2),
-('AndalgalÃ¡', 2);
+('Santa María', 2),
+('Andalgalá', 2);
 
 /******** LOCALIDADES ********/
 
@@ -157,7 +157,7 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Resistencia', 3),
 ('Barranqueras', 3),
-('Presidencia Roque SÃ¡enz PeÃ±a', 3);
+('Presidencia Roque Sáenz Peña', 3);
 
 -- Insertar 3 localidades para Chubut (IDProvincia = 4)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
@@ -165,11 +165,11 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Comodoro Rivadavia', 4),
 ('Trelew', 4);
 
--- Insertar 3 localidades para CÃ³rdoba (IDProvincia = 5)
+-- Insertar 3 localidades para Córdoba (IDProvincia = 5)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
-('CÃ³rdoba', 5),
-('Villa MarÃ­a', 5),
-('RÃ­o Cuarto', 5);
+('Córdoba', 5),
+('Villa María', 5),
+('Río Cuarto', 5);
 
 -- Insertar 3 localidades para Corrientes (IDProvincia = 6)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
@@ -177,11 +177,11 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Goya', 6),
 ('Mercedes', 6);
 
--- Insertar 3 localidades para Entre RÃ­os (IDProvincia = 7)
+-- Insertar 3 localidades para Entre Ríos (IDProvincia = 7)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
-('ParanÃ¡', 7),
+('Paraná', 7),
 ('Concordia', 7),
-('GualeguaychÃº', 7);
+('Gualeguaychú', 7);
 
 /******** LOCALIDADES ********/
 
@@ -189,12 +189,12 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Formosa', 8),
 ('Clorinda', 8),
-('PiranÃ©', 8);
+('Pirané', 8);
 
 -- Insertar 3 localidades para Jujuy (IDProvincia = 9)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('San Salvador de Jujuy', 9),
-('PalpalÃ¡', 9),
+('Palpalá', 9),
 ('La Quiaca', 9);
 
 -- Insertar 3 localidades para La Pampa (IDProvincia = 10)
@@ -220,16 +220,16 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 -- Insertar 3 localidades para Misiones (IDProvincia = 13)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Posadas', 13),
-('Puerto IguazÃº', 13),
-('OberÃ¡', 13);
+('Puerto Iguazú', 13),
+('Oberá', 13);
 
--- Insertar 3 localidades para NeuquÃ©n (IDProvincia = 14)
+-- Insertar 3 localidades para Neuquén (IDProvincia = 14)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
-('NeuquÃ©n', 14),
-('Cutral CÃ³', 14),
+('Neuquén', 14),
+('Cutral Có', 14),
 ('Plottier', 14);
 
--- Insertar 3 localidades para RÃ­o Negro (IDProvincia = 15)
+-- Insertar 3 localidades para Río Negro (IDProvincia = 15)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Viedma', 15),
 ('General Roca', 15),
@@ -238,7 +238,7 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 -- Insertar 3 localidades para Salta (IDProvincia = 16)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Salta', 16),
-('San RamÃ³n de la Nueva OrÃ¡n', 16),
+('San Ramón de la Nueva Orán', 16),
 ('Cafayate', 16);
 
 -- Insertar 3 localidades para San Juan (IDProvincia = 17)
@@ -256,35 +256,38 @@ INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 
 -- Insertar 3 localidades para Santa Cruz (IDProvincia = 19)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
-('RÃ­o Gallegos', 19),
+('Río Gallegos', 19),
 ('Caleta Olivia', 19),
-('Puerto San JuliÃ¡n', 19);
+('Puerto San Julián', 19);
 
 -- Insertar 3 localidades para Santa Fe (IDProvincia = 20)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Santa Fe', 20),
 ('Rosario', 20),
-('Santo TomÃ©', 20);
+('Santo Tomé', 20);
 
 -- Insertar 3 localidades para Santiago del Estero (IDProvincia = 21)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Santiago del Estero', 21),
 ('La Banda', 21),
-('Termas de RÃ­o Hondo', 21);
+('Termas de Río Hondo', 21);
 
 -- Insertar 3 localidades para Tierra del Fuego (IDProvincia = 22)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
 ('Ushuaia', 22),
-('RÃ­o Grande', 22),
+('Río Grande', 22),
 ('Tolhuin', 22);
 
--- Insertar 3 localidades para TucumÃ¡n (IDProvincia = 23)
+-- Insertar 3 localidades para Tucumán (IDProvincia = 23)
 INSERT INTO Localidades (NombreLocalidad, IDProvincia) VALUES
-('San Miguel de TucumÃ¡n', 23),
+('San Miguel de Tucumán', 23),
 ('Yerba Buena', 23),
-('ConcepciÃ³n', 23);
+('Concepción', 23);
 
 
+/******** INSERT TIPOS DE CUENTA ********/
+insert into TiposCuenta (descripcion) values ('Caja de ahorro');
+insert into TiposCuenta (descripcion) values ('Cuenta corriente');
 
 -- Insertar Estados
 insert into Estados (descripcion) values ("Aprobado"), ("Pendiente"), ("Rechazado");
@@ -315,13 +318,13 @@ VALUES ('cliente1', 'cliente1', 'Cliente', '2023-11-01');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (1, 1000, 'Calle 1', 123, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente1 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio1= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insertar Cliente 1
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Juan', 'PÃ©rez',@id_cliente1, 12345678, 20123456781, 'M', 'Argentina', '1990-05-15', 'cliente1@email.com', 1123456789, @id_domicilio1);
+VALUES ('Juan', 'Pérez',@id_cliente1, 12345678, 20123456781, 'M', 'Argentina', '1990-05-15', 'cliente1@email.com', 1123456789, @id_domicilio1);
 
 
 /**** CLIENTE 2 ****/
@@ -334,13 +337,13 @@ VALUES ('cliente2', 'cliente2', 'Cliente', '2023-12-01');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (2, 2000, 'Calle 2', 456, 'Departamento', 'A1');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente2 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio2= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insertar Cliente 2
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Carlos', 'GÃ³mez', @id_cliente2, 23456789, 20234567890, 'M', 'Argentina','1961-05-15', 'cliente2@email.com', 1124561000, @id_domicilio2);
+VALUES ('Carlos', 'Gómez', @id_cliente2, 23456789, 20234567890, 'M', 'Argentina','1961-05-15', 'cliente2@email.com', 1124561000, @id_domicilio2);
 
 
 /**** CLIENTE 3 ****/
@@ -353,13 +356,13 @@ VALUES ('cliente3', 'cliente3', 'Cliente', '2023-10-01');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (3, 3000, 'Calle 3', 789, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente3 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio3= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insertar Cliente 3
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Luis', 'RodrÃ­guez', @id_cliente3, 34567890, 20345678901, 'M', 'Argentina', '1971-05-15', 'cliente3@email.com', 1145678901, @id_domicilio3);
+VALUES ('Luis', 'Rodríguez', @id_cliente3, 34567890, 20345678901, 'M', 'Argentina', '1971-05-15', 'cliente3@email.com', 1145678901, @id_domicilio3);
 
 /**** CLIENTE 4 ****/
 
@@ -371,12 +374,12 @@ VALUES ('cliente4', 'cliente4', 'Cliente', '2023-09-01');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (1, 1500, 'Calle 4', 321, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente4 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio4= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Mario', 'HernÃ¡ndez', @id_cliente4, 45678912, 20456789121, 'M', 'Argentina', '1981-05-15', 'cliente4@email.com', 1145890012, @id_domicilio4);
+VALUES ('Mario', 'Hernández', @id_cliente4, 45678912, 20456789121, 'M', 'Argentina', '1981-05-15', 'cliente4@email.com', 1145890012, @id_domicilio4);
 
 /**** CLIENTE 5 ****/
 
@@ -388,13 +391,13 @@ VALUES ('cliente5', 'cliente5', 'Cliente', '2023-11-15');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (2, 2500, 'Calle 5', 654, 'Departamento', 'B2');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente5 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio5= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Jorge', 'LÃ³pez', @id_cliente5, 36890123, 20368901231, 'M', 'Argentina','2001-05-15' , 'cliente5@email.com', 1156789012, @id_domicilio5);
+VALUES ('Jorge', 'López', @id_cliente5, 36890123, 20368901231, 'M', 'Argentina','2001-05-15' , 'cliente5@email.com', 1156789012, @id_domicilio5);
 
 /**** CLIENTE 6 ****/
 
@@ -406,13 +409,13 @@ VALUES ('cliente6', 'cliente6', 'Cliente', '2023-08-01');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (3, 3500, 'Calle 6', 987, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente6 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio6= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 6
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('MarÃ­a', 'GÃ³mez', @id_cliente6, 54890124, 20548901240, 'F', 'Argentina','1980-09-22' , 'cliente6@email.com', 1154789012, @id_domicilio6);
+VALUES ('María', 'Gómez', @id_cliente6, 54890124, 20548901240, 'F', 'Argentina','1980-09-22' , 'cliente6@email.com', 1154789012, @id_domicilio6);
 
 
 /**** CLIENTE 7 ****/
@@ -425,13 +428,13 @@ VALUES ('cliente7', 'cliente7', 'Cliente', '2023-11-22');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (1, 1200, 'Calle 7', 555, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente7 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio7= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 7
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Laura', 'MartÃ­nez', @id_cliente7, 35789012, 20357890120, 'F', 'Argentina','1975-03-10' , 'cliente7@email.com', 1138890125, @id_domicilio7);
+VALUES ('Laura', 'Martínez', @id_cliente7, 35789012, 20357890120, 'F', 'Argentina','1975-03-10' , 'cliente7@email.com', 1138890125, @id_domicilio7);
 
 /**** CLIENTE 8 ****/
 
@@ -443,13 +446,13 @@ VALUES ('cliente8', 'cliente8', 'Cliente', '2023-10-10');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (2, 2200, 'Calle 8', 888, 'Departamento', 'C3');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente8 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio8= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 8
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Ana', 'RodrÃ­guez', @id_cliente8, 23890126, 20238901260, 'F', 'Argentina','1990-07-14' , 'cliente8@email.com', 1161230126, @id_domicilio8);
+VALUES ('Ana', 'Rodríguez', @id_cliente8, 23890126, 20238901260, 'F', 'Argentina','1990-07-14' , 'cliente8@email.com', 1161230126, @id_domicilio8);
 
 
 /**** CLIENTE 9 ****/
@@ -462,13 +465,13 @@ VALUES ('cliente9', 'cliente9', 'Cliente', '2023-09-15');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (3, 3200, 'Calle 9', 111, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente9 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio9= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 9
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Carolina', 'LÃ³pez', @id_cliente9, 28090127, 20280901270, 'F', 'Argentina','1985-11-03' , 'cliente9@email.com', 1152890127, @id_domicilio9);
+VALUES ('Carolina', 'López', @id_cliente9, 28090127, 20280901270, 'F', 'Argentina','1985-11-03' , 'cliente9@email.com', 1152890127, @id_domicilio9);
 
 /**** CLIENTE 10 ****/
 
@@ -480,13 +483,13 @@ VALUES ('cliente10', 'cliente10', 'Cliente', '2023-12-05');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (3, 3200, 'Calle 9', 111, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente10 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio10= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 10
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Susana', 'FernÃ¡ndez', @id_cliente10, 16890128, 20168901280, 'F', 'Argentina','1970-12-18' , 'cliente10@email.com', 1156789012, @id_domicilio10);
+VALUES ('Susana', 'Fernández', @id_cliente10, 16890128, 20168901280, 'F', 'Argentina','1970-12-18' , 'cliente10@email.com', 1156789012, @id_domicilio10);
 
 
 /**** CLIENTE 11 ****/
@@ -500,13 +503,13 @@ VALUES ('cliente11', 'cliente11', 'Cliente', '2023-11-10');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (4, 4000, 'Calle 12', 123, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente11 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio11= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 11
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Gabriela', 'SÃ¡nchez', @id_cliente11, 31890129, 20318901290, 'F', 'Argentina','1978-08-27' , 'cliente11@email.com', 1156750129, @id_domicilio11);
+VALUES ('Gabriela', 'Sánchez', @id_cliente11, 31890129, 20318901290, 'F', 'Argentina','1978-08-27' , 'cliente11@email.com', 1156750129, @id_domicilio11);
 
 
 
@@ -521,13 +524,13 @@ VALUES ('cliente12', 'cliente12', 'Cliente', '2023-10-05');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (7, 7000, 'Calle 13', 456, 'Departamento', 'E5');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente12 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio12= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 12
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Valeria', 'DÃ­az', @id_cliente12, 41090130, 20410901300, 'F', 'Argentina','1983-04-05' , 'cliente12@email.com', 1156590130, @id_domicilio12);
+VALUES ('Valeria', 'Díaz', @id_cliente12, 41090130, 20410901300, 'F', 'Argentina','1983-04-05' , 'cliente12@email.com', 1156590130, @id_domicilio12);
 
 
 /**** CLIENTE 13 ****/
@@ -540,13 +543,13 @@ VALUES ('cliente13', 'cliente13', 'Cliente', '2023-09-20');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (10, 10000, 'Calle 14', 789, 'Casa', NULL);
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente13 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio13= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 13
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Florencia', 'PÃ©rez', @id_cliente13, 17890131, 20178901310, 'F', 'Argentina','1995-01-20' , 'cliente13@email.com', 1159870131, @id_domicilio13);
+VALUES ('Florencia', 'Pérez', @id_cliente13, 17890131, 20178901310, 'F', 'Argentina','1995-01-20' , 'cliente13@email.com', 1159870131, @id_domicilio13);
 
 
 
@@ -560,13 +563,13 @@ VALUES ('cliente14', 'cliente14', 'Cliente', '2023-12-15');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (13, 13000, 'Calle 15', 321, 'Departamento', 'F6');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente14 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio14= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 14
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Silvina', 'HernÃ¡ndez', @id_cliente14, 35090132, 20350901320, 'F', 'Argentina','1965-06-12' , 'cliente14@email.com', 1157894132, @id_domicilio14);
+VALUES ('Silvina', 'Hernández', @id_cliente14, 35090132, 20350901320, 'F', 'Argentina','1965-06-12' , 'cliente14@email.com', 1157894132, @id_domicilio14);
 
 
 /**** CLIENTE 15 ****/
@@ -579,13 +582,13 @@ INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion
 VALUES (16, 16000, 'Calle 16', 654, 'Casa', NULL);
 
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente15 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio15= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 15
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Martina', 'GimÃ©nez', @id_cliente15, 42090133, 20420901330, 'F', 'Argentina','1987-09-08' , 'cliente15@email.com', 1146789013, @id_domicilio15);
+VALUES ('Martina', 'Giménez', @id_cliente15, 42090133, 20420901330, 'F', 'Argentina','1987-09-08' , 'cliente15@email.com', 1146789013, @id_domicilio15);
 
 /**** CLIENTE 16 ****/
 -- Insertar usuario Cliente 16
@@ -597,13 +600,13 @@ INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion
 VALUES (19, 19000, 'Calle 17', 123, 'Casa', NULL);
 
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente16 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio16= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 16
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('Alejandro', 'RamÃ­rez', @id_cliente16, 34890134, 20348901341, 'M', 'Argentina','1982-10-15' , 'cliente16@email.com', 1132890134, @id_domicilio16);
+VALUES ('Alejandro', 'Ramírez', @id_cliente16, 34890134, 20348901341, 'M', 'Argentina','1982-10-15' , 'cliente16@email.com', 1132890134, @id_domicilio16);
 
 
 
@@ -619,13 +622,13 @@ VALUES ('cliente17', 'cliente17', 'Cliente', '2023-10-18');
 INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion, NumeroDepartamento)
 VALUES (22, 22000, 'Calle 18', 456, 'Departamento', 'G7');
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente17 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio17= (SELECT MAX(IdDireccion) FROM Direcciones);
 
 -- Insert Cliente 17
 INSERT INTO Clientes (Nombre, Apellido, Id, Dni, Cuil, Sexo, Nacionalidad, FechaNacimiento, Correo, Telefono, IDDomicilio)
-VALUES ('MartÃ­n', 'SuÃ¡rez', @id_cliente17, 33780135, 20337801351, 'M', 'Argentina','1993-02-28' , 'cliente17@email.com', 1156789015, @id_domicilio17);
+VALUES ('Martín', 'Suárez', @id_cliente17, 33780135, 20337801351, 'M', 'Argentina','1993-02-28' , 'cliente17@email.com', 1156789015, @id_domicilio17);
 
 
 /**** CLIENTE 18 ****/
@@ -639,7 +642,7 @@ INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion
 VALUES (25, 25000, 'Calle 19', 789, 'Casa', NULL);
 
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente18 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio18= (SELECT MAX(IdDireccion) FROM Direcciones);
 
@@ -658,7 +661,7 @@ INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion
 VALUES (28, 28000, 'Calle 20', 321, 'Departamento', 'H8');
 
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente19 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio19= (SELECT MAX(IdDireccion) FROM Direcciones);
 
@@ -679,7 +682,7 @@ INSERT INTO Direcciones (IdLocalidad, CodigoPostal, Calle, Numero, TipoDireccion
 VALUES (31, 31000, 'Calle 21', 654, 'Casa', NULL);
 
 
--- Obtener el Ãºltimo ID insertado en Usuarios
+-- Obtener el último ID insertado en Usuarios
 SET @id_cliente20 = (SELECT MAX(Id) FROM Usuarios);
 SET @id_domicilio20= (SELECT MAX(IdDireccion) FROM Direcciones);
 
@@ -717,7 +720,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 3, '2023-10-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 3, '2023-09-15', 0);
 
@@ -734,7 +737,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 4, '2023-03-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 2, 4, '2023-09-15', 0);
 
@@ -751,7 +754,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 5, '2023-04-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 5, '2023-09-15', 0);
 
@@ -768,7 +771,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 6, '2023-02-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 6, '2023-06-15', 0);
 
@@ -785,7 +788,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 7, '2023-04-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)),0, 1, 7, '2023-03-15', 0);
 
@@ -802,7 +805,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 8, '2023-04-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 1, 8, '2023-03-15', 0);
 
@@ -818,7 +821,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 9, '2023-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 9, '2023-10-15', 0);
 
@@ -835,7 +838,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 10, '2023-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)),0, 1, 10, '2023-10-15', 0);
 
@@ -851,7 +854,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 11, '2022-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 11, '2022-10-15', 0);
 
@@ -867,7 +870,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 12, '2022-8-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 12, '2022-7-15', 0);
 
@@ -883,7 +886,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 13, '2022-05-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 13, '2022-04-15', 0);
 
@@ -899,7 +902,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 14, '2022-02-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 14, '2022-01-15', 0);
 
@@ -915,7 +918,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 15, '2022-02-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 15, '2022-01-15', 0);
 
@@ -931,7 +934,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 16, '2021-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)),0, 1, 16, '2021-10-15',0);
 
@@ -948,7 +951,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 17, '2021-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 17, '2021-10-15', 0);
 
@@ -964,7 +967,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 18, '2021-05-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 18, '2021-04-15', 0);
 
@@ -981,7 +984,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 19, '2021-05-15',  1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo) 
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 19, '2021-04-15',  0);
 
@@ -998,7 +1001,7 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 20, '2023-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 20, '2023-10-15', 0);
 
@@ -1015,6 +1018,6 @@ insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)
 VALUES (CAST(@CBU AS CHAR(22)), 10000.00, 2, 21, '2023-11-15', 1);
 
 set @CBU=@CBU+1;
--- Cuenta activa = 0 (inactivo), fecha de creaciÃ³n en un mes anterior
+-- Cuenta activa = 0 (inactivo), fecha de creación en un mes anterior
 insert into Cuentas (CBU, Saldo, IdTipoCuenta, IdCliente, fechaCreacion, Activo)  
 VALUES (CAST(@CBU AS CHAR(22)), 0, 1, 21, '2023-10-15', 0);
